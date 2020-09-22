@@ -1,0 +1,101 @@
+{
+    "BpbEnabled": {
+        "description": "BTI mitigations supported and enabled"
+    },
+    "BpbDisabledSystemPolicy": {
+        "description": "BTI mitigations disabled by system policy",
+        "invert": true
+    },
+    "BpbDisabledNoHardwareSupport": {
+        "description": "BTI mitigations disabled by absence of hardware support",
+        "invert": true
+    },
+    "SpecCtrlEnumerated": {
+        "description": "Processor supports IA32_SPEC_CTRL (Speculation Control) MSR"
+    },
+    "SpecCmdEnumerated": {
+        "description": "Processor supports IA32_PRED_CMD (Prediction Command) MSR"
+    },
+    "IbrsPresent": {
+        "description": "IBRS processor feature enabled"
+    },
+    "StibpPresent": {
+        "description": "STIBP processor feature enabled"
+    },
+    "SmepPresent": {
+        "description": "SMEP processor feature enabled"
+    },
+    "SpeculativeStoreBypassDisableAvailable": {
+        "description": "SSBD OS support present"
+    },
+    "SpeculativeStoreBypassDisableSupported": {
+        "description": "SSBD hardware support present"
+    },
+    "SpeculativeStoreBypassDisabledSystemWide": {
+        "description": "SSBD enabled for all transitions"
+    },
+    "SpeculativeStoreBypassDisabledKernel": {
+        "description": "SSBD enabled for kernel-mode transitions"
+    },
+    "SpeculativeStoreBypassDisableRequired": {
+        "description": "SSBD required for vulnerability mitigation",
+        "invert": true
+    },
+    "BpbDisabledKernelToUser": {
+        "description": "BTI mitigations disabled for kernel to user transitions",
+        "invert": true
+    },
+    "SpecCtrlRetpolineEnabled": {
+        "description": "Retpoline mitigation enabled for compatible drivers"
+    },
+    "SpecCtrlImportOptimizationEnabled": {
+        "description": "Retpoline mitigation import address table optimisation enabled"
+    },
+    "EnhancedIbrs": {
+        "description": "Enhanced IBRS processor feature present"
+    },
+    "HvL1tfStatusAvailable": {
+        "description": "L1TF VMM mitigation OS support present"
+    },
+    "HvL1tfProcessorNotAffected": {
+        "description": "Processor unaffected by L1TF VMM vulnerability"
+    },
+    "HvL1tfMigitationEnabled": {
+        "description": "L1TF VMM mitigation enabled"
+    },
+    "HvL1tfMigitationNotEnabled_Hardware": {
+        "description": "L1TF VMM mitigation disabled by absence of hardware support",
+        "invert": true
+    },
+    "HvL1tfMigitationNotEnabled_LoadOption": {
+        "description": "L1TF VMM mitigation disabled by hypervisor load option",
+        "invert": true
+    },
+    "HvL1tfMigitationNotEnabled_CoreScheduler": {
+        "description": "L1TF VMM mitigation not required due to usage of Core scheduler"
+    },
+    "EnhancedIbrsReported": {
+        "description": "Enhanced IBRS processor feature OS support present"
+    },
+    "MdsHardwareProtected": {
+        "description": "Processor unaffected by MDS vulnerabilities"
+    },
+    "MbClearEnabled": {
+        "description": "MDS mitigations enabled"
+    },
+    "MbClearReported": {
+        "description": "MDS mitigations OS support present"
+    },
+    "TsxControlStatus1": {
+        "description": "TSX RTM feature disabled (XBEGIN instruction)"
+    },
+    "TsxControlStatus2": {
+        "description": "TSX RTM & HLE feature enumeration disabled"
+    },
+    "TsxCtrlReported": {
+        "description": "TAA mitigation OS support present"
+    },
+    "TaaHardwareImmune": {
+        "description": "Processor unaffected by TAA vulnerability"
+    }
+}

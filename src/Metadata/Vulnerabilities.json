@@ -1,0 +1,220 @@
+{
+    "CVE-2017-5753": {
+        "name": "Bounds Check Bypass (BCB)",
+        "moniker": "Spectre (Variant 1)",
+        "class": "spectre",
+        "url": "https://spectreattack.com",
+        "advisory": "ADV180002",
+        "processors": [
+            "AMD",
+            "ARM",
+            "Intel"
+        ],
+        "requires": {
+            "firmware": false,
+            "software": true
+        }
+    },
+    "CVE-2017-5715": {
+        "name": "Branch Target Injection (BTI)",
+        "moniker": "Spectre (Variant 2)",
+        "class": "spectre",
+        "url": "https://spectreattack.com",
+        "advisory": "ADV180002",
+        "processors": [
+            "AMD",
+            "ARM",
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": true
+        }
+    },
+    "CVE-2017-5754": {
+        "name": "Rogue Data Cache Load (RDCL)",
+        "moniker": "Meltdown (Variant 3)",
+        "class": "meltdown",
+        "url": "https://meltdownattack.com",
+        "advisory": "ADV180002",
+        "processors": [
+            "ARM",
+            "Intel"
+        ],
+        "requires": {
+            "firmware": false,
+            "software": true
+        }
+    },
+    "CVE-2018-3640": {
+        "name": "Rogue System Register Read (RSRR)",
+        "moniker": "Variant 3a",
+        "class": "meltdown",
+        "advisory": "ADV180013",
+        "processors": [
+            "ARM",
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": false
+        }
+    },
+    "CVE-2018-3639": {
+        "name": "Speculative Store Bypass (SSB)",
+        "moniker": "Variant 4",
+        "class": "spectre",
+        "advisory": "ADV180012",
+        "processors": [
+            "AMD",
+            "ARM",
+            "Intel"
+        ],
+        "requires": {
+            "firmware": {
+                "AMD": false,
+                "ARM": true,
+                "Intel": true
+            },
+            "software": true
+        }
+    },
+    "CVE-2018-3665": {
+        "name": "Lazy FP State Restore (LazyFP)",
+        "class": "meltdown",
+        "advisory": "ADV180016",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": false,
+            "software": true
+        }
+    },
+    "CVE-2018-3693": {
+        "name": "Bounds Check Bypass Store (BCBS)",
+        "moniker": "Variant 1.1",
+        "class": "spectre",
+        "advisory": "ADV180002",
+        "processors": [
+            "ARM",
+            "Intel"
+        ],
+        "requires": {
+            "firmware": false,
+            "software": false
+        }
+    },
+    "CVE-2018-3615": {
+        "name": "L1 Terminal Fault (SGX)",
+        "moniker": "Foreshadow (SGX)",
+        "class": "meltdown",
+        "url": "https://foreshadowattack.eu",
+        "advisory": "ADV180018",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": false
+        }
+    },
+    "CVE-2018-3620": {
+        "name": "L1 Terminal Fault (OS/SMM)",
+        "moniker": "Foreshadow (OS, SMM)",
+        "class": "meltdown",
+        "url": "https://foreshadowattack.eu",
+        "advisory": "ADV180018",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": false,
+            "software": true
+        }
+    },
+    "CVE-2018-3646": {
+        "name": "L1 Terminal Fault (VMM)",
+        "moniker": "Foreshadow (VMM)",
+        "class": "meltdown",
+        "url": "https://foreshadowattack.eu",
+        "advisory": "ADV180018",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": true
+        }
+    },
+    "CVE-2018-12126": {
+        "name": "Microarchitectural Store Buffer Data Sampling (MSBDS)",
+        "moniker": "Fallout",
+        "class": "meltdown",
+        "url": "https://mdsattacks.com",
+        "advisory": "ADV190013",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": true
+        }
+    },
+    "CVE-2018-12127": {
+        "name": "Microarchitectural Load Port Data Sampling (MLPDS)",
+        "moniker": "RIDL",
+        "class": "meltdown",
+        "url": "https://mdsattacks.com",
+        "advisory": "ADV190013",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": true
+        }
+    },
+    "CVE-2018-12130": {
+        "name": "Microarchitectural Fill Buffer Data Sampling (MFBDS)",
+        "moniker": "RIDL / ZombieLoad",
+        "class": "meltdown",
+        "url": "https://zombieloadattack.com",
+        "advisory": "ADV190013",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": true
+        }
+    },
+    "CVE-2018-11091": {
+        "name": "Microarchitectural Data Sampling Uncacheable Memory (MDSUM)",
+        "moniker": "RIDL",
+        "class": "meltdown",
+        "url": "https://mdsattacks.com",
+        "advisory": "ADV190013",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": true
+        }
+    },
+    "CVE-2019-11135": {
+        "name": "TSX Asynchronous Abort (TAA)",
+        "moniker": "RIDL",
+        "class": "meltdown",
+        "url": "https://mdsattacks.com",
+        "advisory": "ADV190013",
+        "processors": [
+            "Intel"
+        ],
+        "requires": {
+            "firmware": true,
+            "software": true
+        }
+    }
+}

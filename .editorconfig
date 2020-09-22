@@ -12,9 +12,17 @@ indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+# Application manifests
+[*.manifest]
+indent_size = 2
+
 # Markdown
 [*.md]
 trim_trailing_whitespace = false
+
+# MSBuild configurations
+[*.{props,targets}]
+indent_size = 2
 
 # Visual Studio projects
 [*.*proj]
@@ -26,3 +34,24 @@ insert_final_newline = unset
 [*.sln]
 charset = utf-8-bom
 indent_style = tab
+
+
+#####################
+### Code Analysis ###
+#####################
+
+[*.cs]
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1304: Specify CultureInfo
+dotnet_diagnostic.CA1304.severity = none
+
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = none
+
+# CA1812: Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = none
+
+# IDE0063: Use simple 'using' statement
+csharp_prefer_simple_using_statement = false
