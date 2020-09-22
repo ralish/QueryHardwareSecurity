@@ -1,0 +1,28 @@
+# EditorConfig
+# http://EditorConfig.org
+
+# Don't search any further up the directory tree
+root = true
+
+# Baseline
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Markdown
+[*.md]
+trim_trailing_whitespace = false
+
+# Visual Studio projects
+[*.*proj]
+charset = unset
+indent_size = 2
+insert_final_newline = unset
+
+# Visual Studio solutions
+[*.sln]
+charset = utf-8-bom
+indent_style = tab
