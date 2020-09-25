@@ -1,6 +1,8 @@
 QueryHardwareSecurity
 =====================
 
+[![license](https://img.shields.io/github/license/ralish/QueryHardwareSecurity)](https://choosealicense.com/licenses/mit/)
+
 A work-in-progress utility to query Windows support for security features and mitigations with hardware dependencies.
 
 - [Requirements](#requirements)
