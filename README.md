@@ -6,6 +6,10 @@ QueryHardwareSecurity
 A work-in-progress utility to query Windows support for security features and mitigations with hardware dependencies.
 
 - [Requirements](#requirements)
+- [Resources](#resources)
+  - [Microsoft](#microsoft)
+  - [CPU Vendors](#cpu-vendors)
+  - [Miscellaneous](#miscellaneous)
 - [Glossary](#glossary)
 
 Requirements
@@ -16,6 +20,25 @@ Requirements
   *Built-in since Windows 8 and Server 2012.*
 - .NET Framework 4.6.2 (or newer)  
   *Built-in since Windows 10 1607 and Server 2016.*
+
+Resources
+---------
+
+### Microsoft
+
+- [KB4072698: Windows Server guidance to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4072698)
+- [KB4073119: Windows client guidance for IT Pros to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4073119)
+- [KB4073757: Protect your Windows devices against speculative execution side-channel attacks](https://support.microsoft.com/en-us/help/4073757)
+- [KB4457951: Windows guidance to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4457951)
+
+### CPU Vendors
+
+- [AMD Product Security](https://www.amd.com/en/corporate/product-security)
+- [ARM Security Updates](https://developer.arm.com/support/arm-security-updates)
+
+### Miscellaneous
+
+- [Transient Execution Attacks](https://transient.fail/)
 
 Glossary
 --------
