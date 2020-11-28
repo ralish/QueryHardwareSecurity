@@ -11,12 +11,12 @@ namespace QueryHardwareSecurity {
     internal class NativeMethods {
         #region FormatMessage
 
-        [DllImport("kernel32", CharSet = CharSet.Unicode, EntryPoint = "FormatMessageW", ExactSpelling = true, SetLastError = true)]
+        [DllImport("kernel32", EntryPoint = "FormatMessageW", ExactSpelling = true, SetLastError = true)]
         internal static extern uint FormatMessage(uint dwFlags,
                                                   IntPtr lpSource,
                                                   uint dwMessageId,
                                                   uint dwLanguageId,
-                                                  [Out] out string lpBuffer,
+                                                  out IntPtr lpBuffer,
                                                   uint nSize,
                                                   IntPtr arguments);
 
@@ -50,6 +50,13 @@ namespace QueryHardwareSecurity {
 
         [DllImport("kernel32", CharSet = CharSet.Unicode, EntryPoint = "LoadLibraryW", ExactSpelling = true, SetLastError = true)]
         internal static extern IntPtr LoadLibrary(string lpLibFileName);
+
+        #endregion
+
+        #region LocalFree
+
+        [DllImport("kernel32", ExactSpelling = true, SetLastError = true)]
+        internal static extern IntPtr LocalFree(IntPtr hMem);
 
         #endregion
 

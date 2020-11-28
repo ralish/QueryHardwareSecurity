@@ -108,18 +108,22 @@ namespace QueryHardwareSecurity {
                 }
             }
 
-            var fmFlags = (uint)(FormatMessageFlags.FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                                 FormatMessageFlags.FORMAT_MESSAGE_FROM_HMODULE |
-                                 FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM) |
-                          0xFF; // FORMAT_MESSAGE_MAX_WIDTH_MASK
-            var res = FormatMessage(fmFlags, _hLibNtdll, (uint)status, 0, out var errMsg, 0, IntPtr.Zero);
+            const uint flags = (uint)(FormatMessageFlags.FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                                      FormatMessageFlags.FORMAT_MESSAGE_FROM_HMODULE |
+                                      FormatMessageFlags.FORMAT_MESSAGE_FROM_SYSTEM) |
+                               0xFF; // FORMAT_MESSAGE_MAX_WIDTH_MASK
+            var msg = string.Empty;
+            var res = FormatMessage(flags, _hLibNtdll, (uint)status, 0, out var msgPtr, 0, IntPtr.Zero);
 
-            if (res == 0) {
+            if (res != 0) {
+                msg = Marshal.PtrToStringUni(msgPtr);
+                LocalFree(msgPtr);
+            } else {
                 var err = Marshal.GetLastWin32Error();
                 Console.Error.WriteLine($"Failed to call FormatMessage() with error: {err}\n");
             }
 
-            return errMsg;
+            return msg;
         }
 
         #endregion
