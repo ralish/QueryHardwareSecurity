@@ -94,7 +94,7 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region Code Integrity
+        #region NtQuerySystemInformation: CodeIntegrity
 
         [StructLayout(LayoutKind.Sequential)]
         internal class CodeIntegrityInformation {
@@ -126,7 +126,7 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region DMA Guard Policy
+        #region NtQuerySystemInformation: DmaGuardPolicy
 
         [Flags]
         internal enum DmaGuardPolicyFlags {
@@ -135,7 +135,7 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region Isolated User Mode
+        #region NtQuerySystemInformation: IsolatedUserMode
 
         internal struct IsolatedUserModeInformation {
             internal IsolatedUserModeFlags flags;
@@ -165,7 +165,7 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region Secure Boot
+        #region NtQuerySystemInformation: SecureBoot
 
         [Flags]
         internal enum SecureBootFlags {
@@ -175,7 +175,7 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region Security Model
+        #region NtQuerySystemInformation: SecurityModel
 
         [Flags]
         internal enum SecurityModelFlags {
@@ -185,7 +185,7 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region VSM Protection
+        #region NtQuerySystemInformation: VsmProtection
 
         [Flags]
         internal enum VsmProtectionFlags {
