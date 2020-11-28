@@ -48,8 +48,9 @@ namespace QueryHardwareSecurity.Collectors {
                 if (ntStatus == -1073741821 || ntStatus == -1073741822) {
                     WriteConsoleError($"System support for querying {Name} information not present.");
                 } else {
+                    WriteConsoleError($"Error on requesting {Name} information: {ntStatus}");
                     var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
-                    WriteConsoleError($"Error on requesting {Name} information: {ntStatus} ({symbolicNtStatus})");
+                    WriteConsoleError(symbolicNtStatus, false);
                 }
             }
 

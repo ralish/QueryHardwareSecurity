@@ -214,12 +214,12 @@ namespace QueryHardwareSecurity.Collectors {
             return LoadJsonResource(GetType().ToString());
         }
 
-        protected void WriteConsoleError(string msg) {
-            Utilities.WriteConsoleError($"[{ModuleName,-18}] {msg}");
+        protected void WriteConsoleError(string msg, bool prefix = true) {
+            Utilities.WriteConsoleError(prefix ? $"[{ModuleName,-18}] {msg}" : $"{new string(' ', 20)} {msg}");
         }
 
-        protected void WriteConsoleVerbose(string msg) {
-            Utilities.WriteConsoleVerbose($"[{ModuleName,-18}] {msg}");
+        protected void WriteConsoleVerbose(string msg, bool prefix = true) {
+            Utilities.WriteConsoleVerbose(prefix ? $"[{ModuleName,-18}] {msg}" : $"{new string(' ', 20)} {msg}");
         }
 
         #endregion
