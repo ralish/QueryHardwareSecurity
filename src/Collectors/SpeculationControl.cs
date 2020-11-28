@@ -10,7 +10,6 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     internal class SpeculationControl : Collector {
         internal SpeculationControlFlags Flags { get; private set; }
-        internal bool FlagsRetrieved { get; private set; }
 
         private readonly dynamic _metadata;
 
@@ -19,8 +18,9 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleWidthValue = 5;
             ConsoleWidthDescription = 64;
 
-            _metadata = LoadMetadata();
             RetrieveFlags();
+
+            _metadata = LoadMetadata();
             ParseFlags(Flags, _metadata);
         }
 
@@ -35,20 +35,23 @@ namespace QueryHardwareSecurity.Collectors {
                                                     IntPtr.Zero);
 
             if (ntStatus == 0) {
-                FlagsRetrieved = true;
                 Flags = (SpeculationControlFlags)Marshal.ReadInt32(sysInfo);
-            } else {
-                // STATUS_INVALID_INFO_CLASS, STATUS_NOT_IMPLEMENTED
-                if (ntStatus == -1073741821 || ntStatus == -1073741822) {
-                    WriteConsoleError($"System support for querying {Name} information not present.");
-                } else {
-                    WriteConsoleError($"Error on requesting {Name} information: {ntStatus}");
-                    var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
-                    WriteConsoleError(symbolicNtStatus, false);
-                }
             }
 
             Marshal.FreeHGlobal(sysInfo);
+
+            if (ntStatus != 0) {
+                // STATUS_INVALID_INFO_CLASS, STATUS_NOT_IMPLEMENTED
+                if (ntStatus == -1073741821 || ntStatus == -1073741822) {
+                    WriteConsoleError($"System support for querying {Name} information not present.");
+                    throw new NotImplementedException();
+                }
+
+                WriteConsoleError($"Error on requesting {Name} information: {ntStatus}");
+                var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
+                WriteConsoleError(symbolicNtStatus, false);
+                throw new Exception();
+            }
         }
 
         internal override string ConvertToJson() {

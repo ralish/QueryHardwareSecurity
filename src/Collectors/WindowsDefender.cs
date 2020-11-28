@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -74,7 +75,7 @@ namespace QueryHardwareSecurity.Collectors {
                 if (ex.StatusCode == 3) { // InvalidNamespace
                     // Only available from Windows 10 / Server 2016 and subject to product edition
                     WriteConsoleError("Skipping Device Guard collection as DeviceGuard WMI namespace is unavailable.");
-                    return;
+                    throw new NotImplementedException();
                 }
 
                 throw;
