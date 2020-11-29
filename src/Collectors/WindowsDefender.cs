@@ -78,6 +78,7 @@ namespace QueryHardwareSecurity.Collectors {
                     throw new NotImplementedException();
                 }
 
+                WriteConsoleError(ex.Message);
                 throw;
             }
 
@@ -127,16 +128,23 @@ namespace QueryHardwareSecurity.Collectors {
                 }
             }
 
-            var kmciStatusRaw = (uint)cimInstance.CimInstanceProperties["CodeIntegrityPolicyEnforcementStatus"].Value;
-            KmciStatus = kmciStatusRaw < CiStatuses.Length
-                ? CiStatuses[kmciStatusRaw]
-                : $"Unknown security status: {kmciStatusRaw}";
+            // Not present on earlier Windows 10 releases
+            var kmciStatusProperty = cimInstance.CimInstanceProperties["CodeIntegrityPolicyEnforcementStatus"];
+            if (kmciStatusProperty != null) {
+                var kmciStatusRaw = (uint)kmciStatusProperty.Value;
+                KmciStatus = kmciStatusRaw < CiStatuses.Length
+                    ? CiStatuses[kmciStatusRaw]
+                    : $"Unknown security status: {kmciStatusRaw}";
+            }
 
-            var umciStatusRaw = (uint)cimInstance.CimInstanceProperties["UsermodeCodeIntegrityPolicyEnforcementStatus"]
-                                                 .Value;
-            UmciStatus = umciStatusRaw < CiStatuses.Length
-                ? CiStatuses[umciStatusRaw]
-                : $"Unknown security status: {umciStatusRaw}";
+            // Not present on earlier Windows 10 releases
+            var umciStatusProperty = cimInstance.CimInstanceProperties["UsermodeCodeIntegrityPolicyEnforcementStatus"];
+            if (umciStatusProperty != null) {
+                var umciStatusRaw = (uint)umciStatusProperty.Value;
+                UmciStatus = umciStatusRaw < CiStatuses.Length
+                    ? CiStatuses[umciStatusRaw]
+                    : $"Unknown security status: {umciStatusRaw}";
+            }
         }
 
         internal override string ConvertToJson() {
