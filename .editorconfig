@@ -36,9 +36,9 @@ charset = utf-8-bom
 indent_style = tab
 
 
-#####################
-### Code Analysis ###
-#####################
+#######################################
+### .NET Code Quality Analysis (CA) ###
+#######################################
 
 [*.cs]
 # CA1303: Do not pass literals as localized parameters
@@ -52,6 +52,3 @@ dotnet_diagnostic.CA1305.severity = none
 
 # CA1812: Avoid uninstantiated internal classes
 dotnet_diagnostic.CA1812.severity = none
-
-# IDE0063: Use simple 'using' statement
-csharp_prefer_simple_using_statement = false
