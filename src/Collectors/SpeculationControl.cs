@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using Newtonsoft.Json;
@@ -50,7 +51,7 @@ namespace QueryHardwareSecurity.Collectors {
                 WriteConsoleError($"Error on requesting {Name} information: {ntStatus}");
                 var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
                 WriteConsoleError(symbolicNtStatus, false);
-                throw new Exception();
+                throw new Win32Exception(symbolicNtStatus);
             }
         }
 

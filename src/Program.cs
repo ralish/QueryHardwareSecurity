@@ -5,11 +5,19 @@ using System.CommandLine.Invocation;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
 using QueryHardwareSecurity.Collectors;
+
+
+// Mark assembly as not CLS compliant
+[assembly: CLSCompliant(false)]
+
+// For P/Invoke only search for native libraries in %windir%\System32
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 
 
 namespace QueryHardwareSecurity {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -56,7 +57,7 @@ namespace QueryHardwareSecurity.Collectors {
                 WriteConsoleError($"Error on requesting {Name} information: {ntStatus}");
                 var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
                 WriteConsoleError(symbolicNtStatus, false);
-                throw new Exception();
+                throw new Win32Exception(symbolicNtStatus);
             }
         }
 
