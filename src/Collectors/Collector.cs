@@ -22,6 +22,7 @@ namespace QueryHardwareSecurity.Collectors {
         // Console output
         internal bool ConsoleColorOutput { get; set; } = true;
         protected ConsoleOutputStyle ConsoleOutputStyle { get; set; } = ConsoleOutputStyle.Table;
+        private string ConsolePrefix { get; }
 
         // Console table output
         protected int ConsoleWidthName { get; set; } = 25;
@@ -34,6 +35,7 @@ namespace QueryHardwareSecurity.Collectors {
         protected Collector(string name) {
             Name = name;
             ModuleName = GetType().Name;
+            ConsolePrefix = $"[{ModuleName}]";
             JsonName = char.ToLower(ModuleName[0]) + ModuleName.Substring(1);
             WriteConsoleVerbose("Initializing collector ...");
         }
@@ -215,11 +217,11 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         protected void WriteConsoleError(string msg, bool prefix = true) {
-            Utilities.WriteConsoleError(prefix ? $"[{ModuleName,-18}] {msg}" : $"{new string(' ', 20)} {msg}");
+            Utilities.WriteConsoleError(prefix ? $"{ConsolePrefix,-20} {msg}" : $"{new string(' ', 20)} {msg}");
         }
 
         protected void WriteConsoleVerbose(string msg, bool prefix = true) {
-            Utilities.WriteConsoleVerbose(prefix ? $"[{ModuleName,-18}] {msg}" : $"{new string(' ', 20)} {msg}");
+            Utilities.WriteConsoleVerbose(prefix ? $"{ConsolePrefix,-20} {msg}" : $"{new string(' ', 20)} {msg}");
         }
 
         #endregion
