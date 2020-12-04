@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 
 using QueryHardwareSecurity.Collectors;
 
+using static QueryHardwareSecurity.Utilities;
+
 
 // Mark assembly as not CLS compliant
 [assembly: CLSCompliant(false)]
@@ -64,7 +66,7 @@ namespace QueryHardwareSecurity {
 
                     var colorOutput = !noColor;
                     if (colorOutput) {
-                        Utilities.ResetConsoleColor();
+                        ResetConsoleColor();
                     }
 
                     Enum.TryParse(outputFormatString, true, out OutputFormat outputFormat);
@@ -79,7 +81,10 @@ namespace QueryHardwareSecurity {
                         var collectorType = Type.GetType($"{CollectorsNamespace}.{collectorName}");
                         try {
                             collectors.Add((Collector)Activator.CreateInstance(collectorType));
-                        } catch (TargetInvocationException) { }
+                        } catch (TargetInvocationException ex) {
+                            WriteConsoleError(
+                                $"{collectorName} collector failed to initialize: {ex.InnerException.Message}");
+                        }
                     }
 
                     if (outputFormat == OutputFormat.Json) {
