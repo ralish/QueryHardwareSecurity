@@ -216,6 +216,10 @@ namespace QueryHardwareSecurity.Collectors {
             return LoadJsonResource(GetType().ToString());
         }
 
+        protected void WriteConsoleDebug(string msg, bool prefix = true) {
+            Utilities.WriteConsoleDebug(prefix ? $"{ConsolePrefix,-20} {msg}" : $"{new string(' ', 20)} {msg}");
+        }
+
         protected void WriteConsoleError(string msg, bool prefix = true) {
             Utilities.WriteConsoleError(prefix ? $"{ConsolePrefix,-20} {msg}" : $"{new string(' ', 20)} {msg}");
         }

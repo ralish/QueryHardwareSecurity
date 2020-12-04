@@ -46,6 +46,12 @@ namespace QueryHardwareSecurity {
             Console.ForegroundColor = DefaultForegroundColor;
         }
 
+        internal static void WriteConsoleDebug(string msg) {
+            if (Program.DebugOutput) {
+                Console.Error.WriteLine(msg);
+            }
+        }
+
         internal static void WriteConsoleError(string msg) {
             Console.Error.WriteLine(msg);
         }

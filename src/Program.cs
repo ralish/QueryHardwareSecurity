@@ -25,6 +25,7 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity {
     internal class Program {
         internal static bool VerboseOutput;
+        internal static bool DebugOutput;
 
 
         private enum OutputFormat {
@@ -50,6 +51,7 @@ namespace QueryHardwareSecurity {
 
             var rootCommand = new RootCommand {
                 new Option<bool>(new[] {"-v", "--verbose"}, "Verbose output"),
+                new Option<bool>(new[] {"-d", "--debug"}, "Debug output (implies verbose)"),
                 new Option<bool>(new[] {"-nc", "--no-color"}, "No colored output"),
                 new Option<string[]>(new[] {"-c", "--collectors"}, "Collectors to run") {
                     Name = "collectorsToRun", Argument = new Argument<string[]> {Arity = ArgumentArity.OneOrMore}
@@ -60,9 +62,13 @@ namespace QueryHardwareSecurity {
                 }.FromAmong(validOutputs)
             };
 
-            rootCommand.Handler = CommandHandler.Create<bool, bool, string[], string>(
-                (verbose, noColor, collectorsToRun, outputFormatString) => {
+            rootCommand.Handler = CommandHandler.Create<bool, bool, bool, string[], string>(
+                (verbose, debug, noColor, collectorsToRun, outputFormatString) => {
                     VerboseOutput = verbose;
+                    DebugOutput = debug;
+                    if (DebugOutput) {
+                        VerboseOutput = true;
+                    }
 
                     var colorOutput = !noColor;
                     if (colorOutput) {
