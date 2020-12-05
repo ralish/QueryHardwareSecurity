@@ -39,12 +39,10 @@ namespace QueryHardwareSecurity {
             $"{Assembly.GetExecutingAssembly().GetName().Name}.Collectors";
 
         private static readonly Type CollectorsBaseClass = Type.GetType($"{CollectorsNamespace}.Collector");
-        private static readonly string[] CollectorsRequired = {"SystemInfo"};
 
         public static async Task<int> Main(params string[] args) {
             var validCollectors = Assembly.GetExecutingAssembly().GetTypes()
-                                          .Where(type => type.IsSubclassOf(CollectorsBaseClass) &&
-                                                         !CollectorsRequired.Contains(type.Name))
+                                          .Where(type => type.IsSubclassOf(CollectorsBaseClass))
                                           .Select(collector => collector.Name)
                                           .ToArray();
             var validOutputs = Enum.GetNames(typeof(OutputFormat)).Select(format => format.ToLower()).ToArray();
@@ -54,7 +52,7 @@ namespace QueryHardwareSecurity {
                 new Option<bool>(new[] {"-d", "--debug"}, "Debug output (implies verbose)"),
                 new Option<bool>(new[] {"-nc", "--no-color"}, "No colored output"),
                 new Option<string[]>(new[] {"-c", "--collectors"}, "Collectors to run") {
-                    Name = "collectorsToRun", Argument = new Argument<string[]> {Arity = ArgumentArity.OneOrMore}
+                    Name = "collectorsSelected", Argument = new Argument<string[]> {Arity = ArgumentArity.OneOrMore}
                 }.FromAmong(validCollectors),
                 new Option<string>(new[] {"-o", "--output"}, "Output format") {
                     Name = "outputFormatString",
@@ -63,7 +61,7 @@ namespace QueryHardwareSecurity {
             };
 
             rootCommand.Handler = CommandHandler.Create<bool, bool, bool, string[], string>(
-                (verbose, debug, noColor, collectorsToRun, outputFormatString) => {
+                (verbose, debug, noColor, collectorsSelected, outputFormatString) => {
                     VerboseOutput = verbose;
                     DebugOutput = debug;
                     if (DebugOutput) {
@@ -78,10 +76,14 @@ namespace QueryHardwareSecurity {
                     Enum.TryParse(outputFormatString, true, out OutputFormat outputFormat);
 
                     var collectors = new List<Collector>();
-                    collectorsToRun = collectorsToRun ?? validCollectors;
+                    collectorsSelected = collectorsSelected ?? validCollectors;
 
-                    var systemInfo = new SystemInfo();
-                    collectors.Add(systemInfo);
+                    // Apply a canonical ordering to collectors
+                    var collectorsToRun = collectorsSelected.Where(collector => collector != "SystemInfo")
+                                                            .OrderBy(collector => collector).ToList();
+                    if (collectorsToRun.Count != collectorsSelected.Length) {
+                        collectorsToRun.Insert(0, "SystemInfo");
+                    }
 
                     foreach (var collectorName in collectorsToRun) {
                         var collectorType = Type.GetType($"{CollectorsNamespace}.{collectorName}");
