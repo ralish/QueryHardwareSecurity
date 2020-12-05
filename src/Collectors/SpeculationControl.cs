@@ -26,13 +26,13 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         private void RetrieveFlags() {
-            WriteConsoleVerbose("Retrieving SpeculationControl information class ...");
+            WriteConsoleVerbose("Retrieving SpeculationControl info ...");
 
-            var sysInfoLength = sizeof(SpeculationControlFlags);
+            const int sysInfoLength = sizeof(SpeculationControlFlags);
             var sysInfo = Marshal.AllocHGlobal(sysInfoLength);
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemSpeculationControlInformation,
                                                     sysInfo,
-                                                    (uint)sysInfoLength,
+                                                    sysInfoLength,
                                                     IntPtr.Zero);
 
             if (ntStatus == 0) {
@@ -42,15 +42,13 @@ namespace QueryHardwareSecurity.Collectors {
             Marshal.FreeHGlobal(sysInfo);
 
             if (ntStatus != 0) {
-                // STATUS_INVALID_INFO_CLASS, STATUS_NOT_IMPLEMENTED
+                // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
                 if (ntStatus == -1073741821 || ntStatus == -1073741822) {
-                    WriteConsoleError($"System support for querying {Name} information not present.");
-                    throw new NotImplementedException();
+                    throw new NotImplementedException($"System support for querying {Name} information not present.");
                 }
 
-                WriteConsoleError($"Error on requesting {Name} information: {ntStatus}");
+                WriteConsoleVerbose($"Error requesting {Name} information: {ntStatus}");
                 var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
-                WriteConsoleError(symbolicNtStatus, false);
                 throw new Win32Exception(symbolicNtStatus);
             }
         }

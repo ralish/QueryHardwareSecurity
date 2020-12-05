@@ -44,9 +44,9 @@ namespace QueryHardwareSecurity.Collectors {
             "Enabled (inactive)",
             "Enabled (running)"
         };
+        // @formatter:on
 
         private static readonly List<string> NoneList = new List<string> {"None"};
-        // @formatter:on
 
         [JsonProperty] internal string VbsStatus { get; private set; } = "Unavailable";
         [JsonProperty] internal List<string> VbsPropsRequired { get; private set; } = new List<string>();
@@ -62,10 +62,10 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleWidthName = 40;
             ConsoleWidthValue = 72;
 
-            RetrieveDeviceGuardInfo();
+            RetrieveInfo();
         }
 
-        private void RetrieveDeviceGuardInfo() {
+        private void RetrieveInfo() {
             WriteConsoleVerbose("Retrieving Device Guard info ...");
 
             CimInstance cimInstance;
@@ -74,11 +74,9 @@ namespace QueryHardwareSecurity.Collectors {
             } catch (CimException ex) {
                 if (ex.StatusCode == 3) { // InvalidNamespace
                     // Only available from Windows 10 / Server 2016 and subject to product edition
-                    WriteConsoleError("Skipping Device Guard collection as DeviceGuard WMI namespace is unavailable.");
-                    throw new NotImplementedException();
+                    throw new NotImplementedException("DeviceGuard WMI namespace is unavailable.");
                 }
 
-                WriteConsoleError(ex.Message);
                 throw;
             }
 

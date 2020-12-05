@@ -32,13 +32,13 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         private void RetrieveFlags() {
-            WriteConsoleVerbose("Retrieving KernelVaShadow information class ...");
+            WriteConsoleVerbose("Retrieving KernelVaShadow info ...");
 
-            var sysInfoLength = sizeof(KernelVaShadowFlags);
+            const int sysInfoLength = sizeof(KernelVaShadowFlags);
             var sysInfo = Marshal.AllocHGlobal(sysInfoLength);
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemKernelVaShadowInformation,
                                                     sysInfo,
-                                                    (uint)sysInfoLength,
+                                                    sysInfoLength,
                                                     IntPtr.Zero);
 
             if (ntStatus == 0) {
@@ -48,21 +48,19 @@ namespace QueryHardwareSecurity.Collectors {
             Marshal.FreeHGlobal(sysInfo);
 
             if (ntStatus != 0) {
-                // STATUS_INVALID_INFO_CLASS, STATUS_NOT_IMPLEMENTED
+                // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
                 if (ntStatus == -1073741821 || ntStatus == -1073741822) {
-                    WriteConsoleError($"System support for querying {Name} information not present.");
-                    throw new NotImplementedException();
+                    throw new NotImplementedException($"System support for querying {Name} information not present.");
                 }
 
-                WriteConsoleError($"Error on requesting {Name} information: {ntStatus}");
+                WriteConsoleVerbose($"Error requesting {Name} information: {ntStatus}");
                 var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
-                WriteConsoleError(symbolicNtStatus, false);
                 throw new Win32Exception(symbolicNtStatus);
             }
         }
 
         private void ParseFlagsInternal() {
-            var flagName = "InvalidPteBit";
+            const string flagName = "InvalidPteBit";
             var flagValue = (((int)Flags & InvalidPteBitMask) >> InvalidPteBitShift).ToString();
             var flagData = GetOrCreateDynamicObjectKey(_metadata, flagName);
             flagData.value = flagValue;

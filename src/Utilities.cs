@@ -109,7 +109,7 @@ namespace QueryHardwareSecurity {
 
                 if (_hLibNtdll == IntPtr.Zero) {
                     var err = Marshal.GetLastWin32Error();
-                    Console.Error.WriteLine($"Failed to load NTDLL library with error: {err}");
+                    WriteConsoleError($"Failure loading NTDLL library: {err}");
                     Environment.Exit(-1);
                 }
             }
@@ -126,7 +126,7 @@ namespace QueryHardwareSecurity {
                 LocalFree(msgPtr);
             } else {
                 var err = Marshal.GetLastWin32Error();
-                Console.Error.WriteLine($"Failed to call FormatMessage() with error: {err}\n");
+                WriteConsoleError($"Failure calling FormatMessage(): {err}\n");
             }
 
             return msg;

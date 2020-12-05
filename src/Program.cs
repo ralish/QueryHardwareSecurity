@@ -18,16 +18,12 @@ using static QueryHardwareSecurity.Utilities;
 // Mark assembly as not CLS compliant
 [assembly: CLSCompliant(false)]
 
-// For P/Invoke only search for native libraries in %windir%\System32
+// For P/Invoke only search in %windir%\System32
 [assembly: DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 
 
 namespace QueryHardwareSecurity {
     internal class Program {
-        internal static bool VerboseOutput;
-        internal static bool DebugOutput;
-
-
         private enum OutputFormat {
             Raw,
             Table,
@@ -40,28 +36,32 @@ namespace QueryHardwareSecurity {
 
         private static readonly Type CollectorsBaseClass = Type.GetType($"{CollectorsNamespace}.Collector");
 
+        internal static bool DebugOutput;
+        internal static bool VerboseOutput;
+
         public static async Task<int> Main(params string[] args) {
+            var validOutputs = Enum.GetNames(typeof(OutputFormat)).Select(format => format.ToLower()).ToArray();
+
             var validCollectors = Assembly.GetExecutingAssembly().GetTypes()
                                           .Where(type => type.IsSubclassOf(CollectorsBaseClass))
                                           .Select(collector => collector.Name)
                                           .ToArray();
-            var validOutputs = Enum.GetNames(typeof(OutputFormat)).Select(format => format.ToLower()).ToArray();
 
             var rootCommand = new RootCommand {
                 new Option<bool>(new[] {"-v", "--verbose"}, "Verbose output"),
                 new Option<bool>(new[] {"-d", "--debug"}, "Debug output (implies verbose)"),
                 new Option<bool>(new[] {"-nc", "--no-color"}, "No colored output"),
-                new Option<string[]>(new[] {"-c", "--collectors"}, "Collectors to run") {
-                    Name = "collectorsSelected", Argument = new Argument<string[]> {Arity = ArgumentArity.OneOrMore}
-                }.FromAmong(validCollectors),
                 new Option<string>(new[] {"-o", "--output"}, "Output format") {
                     Name = "outputFormatString",
                     Argument = new Argument<string>(() => "table") {Arity = ArgumentArity.ExactlyOne}
-                }.FromAmong(validOutputs)
+                }.FromAmong(validOutputs),
+                new Option<string[]>(new[] {"-c", "--collectors"}, "Collectors to run") {
+                    Name = "collectorsSelected", Argument = new Argument<string[]> {Arity = ArgumentArity.OneOrMore}
+                }.FromAmong(validCollectors)
             };
 
-            rootCommand.Handler = CommandHandler.Create<bool, bool, bool, string[], string>(
-                (verbose, debug, noColor, collectorsSelected, outputFormatString) => {
+            rootCommand.Handler = CommandHandler.Create<bool, bool, bool, string, string[]>(
+                (verbose, debug, noColor, outputFormatString, collectorsSelected) => {
                     VerboseOutput = verbose;
                     DebugOutput = debug;
                     if (DebugOutput) {

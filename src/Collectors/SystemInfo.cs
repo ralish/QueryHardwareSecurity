@@ -90,13 +90,14 @@ namespace QueryHardwareSecurity.Collectors {
         internal HypervisorPresent IsHypervisorPresent {
             get {
                 if (!_hypervisorPresentChecked) {
+                    WriteConsoleVerbose("Checking if hypervisor is present ...");
                     try {
                         var cimHypervisorPresent =
                             (bool)ComputerSystem.CimInstanceProperties["HypervisorPresent"].Value;
                         _hypervisorPresent = cimHypervisorPresent ? HypervisorPresent.True : HypervisorPresent.False;
                     } catch (NullReferenceException) {
                         // HypervisorPresent is only available from Windows 8 / Server 2012
-                        WriteConsoleError(
+                        WriteConsoleVerbose(
                             "Hypervisor presence unknown as HypervisorPresent WMI property is unavailable.");
                         _hypervisorPresent = HypervisorPresent.Unknown;
                     }
@@ -122,12 +123,12 @@ namespace QueryHardwareSecurity.Collectors {
                     try {
                         if (!GetFirmwareType(out _firmwareType)) {
                             var err = Marshal.GetLastWin32Error();
-                            Console.Error.WriteLine($"Failed to call GetFirmwareType() with error: {err}");
+                            WriteConsoleError($"Failure calling GetFirmwareType(): {err}");
                             Environment.Exit(-1);
                         }
                     } catch (EntryPointNotFoundException) {
                         // GetFirmwareType() is only available from Windows 8 / Server 2012
-                        WriteConsoleError("Unable to query firmware type as GetFirmwareType() API is unavailable.");
+                        WriteConsoleVerbose("Unable to query firmware type as GetFirmwareType() API is unavailable.");
                         _firmwareType = FirmwareType.Unknown;
                     }
 
@@ -208,12 +209,12 @@ namespace QueryHardwareSecurity.Collectors {
         internal bool IsProcessorX64 =>
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x64;
 
+        internal bool IsProcessorAmd =>
+            (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
+
         internal bool IsProcessorArm =>
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM ||
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM64;
-
-        internal bool IsProcessorAmd =>
-            (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
 
         internal bool IsProcessorIntel =>
             (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "GenuineIntel";
