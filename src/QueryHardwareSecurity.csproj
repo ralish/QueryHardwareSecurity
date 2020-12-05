@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net462;net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <AssemblyTitle>Query System Security</AssemblyTitle>
     <StartupObject>QueryHardwareSecurity.Program</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
