@@ -35,6 +35,7 @@ namespace QueryHardwareSecurity {
             $"{Assembly.GetExecutingAssembly().GetName().Name}.Collectors";
 
         private static readonly Type CollectorsBaseClass = Type.GetType($"{CollectorsNamespace}.Collector");
+        private static readonly string[] CollectorsSortExclusions = {"SystemInfo", "Miscellaneous"};
 
         internal static bool DebugOutput;
         internal static bool VerboseOutput;
@@ -78,11 +79,19 @@ namespace QueryHardwareSecurity {
                     var collectors = new List<Collector>();
                     collectorsSelected = collectorsSelected ?? validCollectors;
 
-                    // Apply a canonical ordering to collectors
-                    var collectorsToRun = collectorsSelected.Where(collector => collector != "SystemInfo")
-                                                            .OrderBy(collector => collector).ToList();
-                    if (collectorsToRun.Count != collectorsSelected.Length) {
+                    // Ensure order of execution is deterministic
+                    var collectorsToRun = collectorsSelected
+                                         .Where(collector => !CollectorsSortExclusions.Contains(collector))
+                                         .OrderBy(collector => collector).ToList();
+
+                    // SystemInfo collector should be first
+                    if (collectorsSelected.Contains("SystemInfo")) {
                         collectorsToRun.Insert(0, "SystemInfo");
+                    }
+
+                    // Miscellaneous collector should be last
+                    if (collectorsSelected.Contains("Miscellaneous")) {
+                        collectorsToRun.Add("Miscellaneous");
                     }
 
                     foreach (var collectorName in collectorsToRun) {

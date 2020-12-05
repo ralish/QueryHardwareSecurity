@@ -126,15 +126,6 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region NtQuerySystemInformation: DmaGuardPolicy
-
-        [Flags]
-        internal enum DmaGuardPolicyFlags {
-            DmaGuardPolicyEnabled   = 0x1
-        }
-
-        #endregion
-
         #region NtQuerySystemInformation: IsolatedUserMode
 
         internal struct IsolatedUserModeInformation {
