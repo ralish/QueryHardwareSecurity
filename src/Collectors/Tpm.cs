@@ -13,6 +13,10 @@ using static QueryHardwareSecurity.NativeMethods;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class Tpm : Collector {
+        [JsonProperty] internal uint ManufacturerId { get; private set; }
+        [JsonProperty] internal string ManufacturerName { get; private set; }
+        [JsonProperty] internal uint ManufacturerModel { get; private set; }
+
         [JsonProperty] internal string SpecificationVersion { get; private set; }
         [JsonProperty] internal uint SpecificationLevel { get; private set; }
         [JsonProperty] internal float SpecificationRevision { get; private set; }
@@ -22,9 +26,6 @@ namespace QueryHardwareSecurity.Collectors {
         [JsonProperty] internal uint PlatformSpecificationLevel { get; private set; }
         [JsonProperty] internal float PlatformSpecificationRevision { get; private set; }
         [JsonProperty] internal DateTime PlatformSpecificationDate { get; private set; }
-
-        [JsonProperty] internal uint ManufacturerId { get; private set; }
-        [JsonProperty] internal string ManufacturerName { get; private set; }
 
         [JsonProperty] internal Version FirmwareVersion { get; private set; }
         [JsonProperty] internal string PhysicalPresenceVersion { get; private set; }
@@ -112,6 +113,8 @@ namespace QueryHardwareSecurity.Collectors {
                     }
                     ManufacturerName = new string(tpmManufacturerName).Trim();
 
+                    ManufacturerModel = tpmProperties.tpmProperty[Pt.VendorTpmType - tpmArrayOffset].value;
+
                     #endregion
 
                     #region Firmware
@@ -166,6 +169,10 @@ namespace QueryHardwareSecurity.Collectors {
 
             WriteConsoleHeader(false);
 
+            WriteConsoleEntry("Manufacturer ID", ManufacturerId.ToString());
+            WriteConsoleEntry("Manufacturer Name", ManufacturerName);
+            WriteConsoleEntry("Manufacturer Model", ManufacturerModel.ToString());
+
             WriteConsoleEntry("Specification version", SpecificationVersion);
             WriteConsoleEntry("Specification level", SpecificationLevel.ToString());
             WriteConsoleEntry("Specification revision", SpecificationRevision.ToString());
@@ -175,9 +182,6 @@ namespace QueryHardwareSecurity.Collectors {
             WriteConsoleEntry("Platform specification level", PlatformSpecificationLevel.ToString());
             WriteConsoleEntry("Platform specification revision", PlatformSpecificationRevision.ToString());
             WriteConsoleEntry("Platform specification date", PlatformSpecificationDate.ToString("d"));
-
-            WriteConsoleEntry("Manufacturer ID", ManufacturerId.ToString());
-            WriteConsoleEntry("Manufacturer Name", ManufacturerName);
 
             WriteConsoleEntry("Firmware version", FirmwareVersion.ToString());
             WriteConsoleEntry("Physical presence version", PhysicalPresenceVersion);
