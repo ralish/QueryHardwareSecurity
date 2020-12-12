@@ -25,6 +25,18 @@ namespace QueryHardwareSecurity.Collectors {
             ParseFlags(Flags, _metadata);
         }
 
+        /*
+         * This information is only exposed via the NtQuerySystemInformation function in the native
+         * API. Microsoft has partially documented this specific information class, but many of the
+         * newer flags in the returned bitmask remain informally or completely undocumented.
+         *
+         * The meaning of undocumented flags was determined by reverse-engineering of the NT kernel.
+         * It's worth nothing all 32-bits of the returned bitmask have now been utilised, which may
+         * require the introduction of an additional information class if more flags are required.
+         *
+         * SYSTEM_SPECULATION_CONTROL_INFORMATION
+         * https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_speculation_control_information
+         */
         private void RetrieveFlags() {
             WriteConsoleVerbose("Retrieving SpeculationControl info ...");
 

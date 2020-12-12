@@ -31,6 +31,14 @@ namespace QueryHardwareSecurity.Collectors {
             ParseFlagsInternal();
         }
 
+        /*
+         * This information is only exposed via the NtQuerySystemInformation function in the native
+         * API. Microsoft has documented this specific information class, although at the time of
+         * writing there are 18 unused bits in the returned 32-bit bitmask.
+         *
+         * SYSTEM_KERNEL_VA_SHADOW_INFORMATION
+         * https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_kernel_va_shadow_information
+         */
         private void RetrieveFlags() {
             WriteConsoleVerbose("Retrieving KernelVaShadow info ...");
 

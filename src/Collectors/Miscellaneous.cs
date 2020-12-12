@@ -28,6 +28,14 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
 
+        /*
+         * There's no documented API to retrieve the enablement state of Kernel DMA Protection and
+         * the only documented method to check its status is the System Information (msinfo32.exe)
+         * utility. Reverse-engineering how it obtains this information shows it calls the native
+         * NtQuerySystemInformation API with an information class dedicated to exposing the Kernel
+         * DMA Protection enablement state. The returned data is literally a single bit reflecting
+         * the status of the security feature.
+         */
         private void RetrieveKernelDmaProtection() {
             WriteConsoleVerbose("Retrieving DmaGuardPolicy info ...");
 
