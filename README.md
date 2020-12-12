@@ -1,6 +1,7 @@
 QueryHardwareSecurity
 =====================
 
+[![azure devops](https://dev.azure.com/nexiom/QueryHardwareSecurity/_apis/build/status/QueryHardwareSecurity?branchName=stable)](https://dev.azure.com/nexiom/QueryHardwareSecurity/_build/latest?definitionId=1&branchName=stable)
 [![license](https://img.shields.io/github/license/ralish/QueryHardwareSecurity)](https://choosealicense.com/licenses/mit/)
 
 A work-in-progress utility to query Windows support for security features and mitigations with hardware dependencies.
