@@ -35,6 +35,10 @@ insert_final_newline = unset
 charset = utf-8-bom
 indent_style = tab
 
+# YAML
+[*.yml]
+indent_size = 2
+
 
 #######################################
 ### .NET Code Quality Analysis (CA) ###
