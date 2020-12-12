@@ -4,7 +4,7 @@
     <TargetFrameworks>net462;net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <AssemblyTitle>Query System Security</AssemblyTitle>
+    <AssemblyTitle>Query Hardware Security</AssemblyTitle>
     <StartupObject>QueryHardwareSecurity.Program</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Product>Query System Security</Product>
+    <Product>Query Hardware Security</Product>
     <Version>0.1.0</Version>
     <Copyright>© Samuel Leslie. All rights reserved.</Copyright>
   </PropertyGroup>
