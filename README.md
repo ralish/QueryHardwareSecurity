@@ -19,8 +19,10 @@ Requirements
 - Windows 7 or Server 2008 R2 (or newer)
 - Windows PowerShell 3.0 (or newer)  
   *Built-in since Windows 8 and Server 2012.*
-- .NET Framework 4.6.2 (or newer)  
-  *Built-in since Windows 10 1607 and Server 2016.*
+- Supported .NET runtime
+  - .NET Framework 4.6.2 (or newer)  
+    *Built-in since Windows 10 1607 and Server 2016.*
+  - .NET Core 3.1 (or newer)  
 
 Resources
 ---------
