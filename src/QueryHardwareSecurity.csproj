@@ -1,25 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Build configuration -->
     <TargetFrameworks>net462;net472;netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <AssemblyTitle>Query Hardware Security</AssemblyTitle>
     <StartupObject>QueryHardwareSecurity.Program</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <!-- .NET Code Quality Analysis -->
+    <!-- AssemblyInfo metadata -->
+    <AssemblyTitle>Query Hardware Security</AssemblyTitle>
+    <Version>0.1.0</Version>
+    <NeutralLanguage>en-AU</NeutralLanguage>
+    <Product>Query Hardware Security</Product>
+    <Description>Query Windows support for security features and mitigations with hardware dependencies</Description>
+    <Authors>Samuel Leslie</Authors>
+    <Copyright>© Samuel Leslie. All rights reserved.</Copyright>
+    <!-- NuGet package metadata -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ralish/QueryHardwareSecurity</PackageProjectUrl>
+    <PackageTags>windows security audit</PackageTags>
+    <RepositoryUrl>https://github.com/ralish/QueryHardwareSecurity</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>stable</RepositoryBranch>
+    <!-- .NET code quality -->
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <!-- .NET Code Style Analysis -->
+    <!-- .NET code style -->
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Product>Query Hardware Security</Product>
-    <Version>0.1.0</Version>
-    <Copyright>© Samuel Leslie. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
