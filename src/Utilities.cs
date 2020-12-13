@@ -133,5 +133,18 @@ namespace QueryHardwareSecurity {
         }
 
         #endregion
+
+        #region Platform
+
+        internal static void IsPlatformSupported() {
+#if NETCOREAPP
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                WriteConsoleError("Only Windows operating systems are currently supported.");
+                Environment.Exit(1);
+            }
+#endif
+        }
+
+        #endregion
     }
 }

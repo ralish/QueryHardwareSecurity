@@ -41,6 +41,8 @@ namespace QueryHardwareSecurity {
         internal static bool VerboseOutput;
 
         public static async Task<int> Main(params string[] args) {
+            IsPlatformSupported();
+
             var validOutputs = Enum.GetNames(typeof(OutputFormat)).Select(format => format.ToLower()).ToArray();
 
             var validCollectors = Assembly.GetExecutingAssembly().GetTypes()
