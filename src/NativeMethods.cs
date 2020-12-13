@@ -279,16 +279,16 @@ namespace QueryHardwareSecurity {
             }
         }
 
-        [DllImport("Tbs", ExactSpelling = true)]
+        [DllImport("tbs", ExactSpelling = true)]
         internal static extern TBS_RESULT Tbsi_Context_Create(TBS_CONTEXT_PARAMS pContextParams, out IntPtr phContext);
 
-        [DllImport("Tbs", ExactSpelling = true)]
+        [DllImport("tbs", ExactSpelling = true)]
         internal static extern TBS_RESULT Tbsi_Context_Create(TBS_CONTEXT_PARAMS2 pContextParams, out IntPtr phContext);
 
-        [DllImport("Tbs", ExactSpelling = true)]
+        [DllImport("tbs", ExactSpelling = true)]
         internal static extern TBS_RESULT Tbsi_GetDeviceInfo(uint Size, out IntPtr Info);
 
-        [DllImport("Tbs", ExactSpelling = true)]
+        [DllImport("tbs", ExactSpelling = true)]
         internal static extern TBS_RESULT Tbsi_Physical_Presence_Command(IntPtr hContext,
                                                                          [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]
                                                                          byte[] pabInput,
@@ -297,13 +297,13 @@ namespace QueryHardwareSecurity {
                                                                          [In, Out] byte[] pabOutput,
                                                                          ref uint pcbOutput);
 
-        [DllImport("Tbs", ExactSpelling = true)]
+        [DllImport("tbs", ExactSpelling = true)]
         internal static extern TBS_RESULT Tbsip_Cancel_Commands(IntPtr hContext);
 
-        [DllImport("Tbs", ExactSpelling = true)]
+        [DllImport("tbs", ExactSpelling = true)]
         internal static extern TBS_RESULT Tbsip_Context_Close(IntPtr hContext);
 
-        [DllImport("Tbs", ExactSpelling = true)]
+        [DllImport("tbs", ExactSpelling = true)]
         internal static extern TBS_RESULT Tbsip_Submit_Command(IntPtr hContext,
                                                                TBS_COMMAND_LOCALITY Locality,
                                                                TBS_COMMAND_PRIORITY Priority,
