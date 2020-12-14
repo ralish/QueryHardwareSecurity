@@ -1,8 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition=" '$(BuildDotNetTool)' == 'true' ">
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
   <PropertyGroup>
     <!-- Build configuration -->
-    <TargetFrameworks>net462;net472;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(TargetFrameworks)' == '' ">net462;net472;netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <StartupObject>QueryHardwareSecurity.Program</StartupObject>
