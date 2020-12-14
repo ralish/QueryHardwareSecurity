@@ -2,19 +2,47 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
+            "name": "Launch (.NET Framework 4.6.2)",
+            "type": "clr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/net462/QueryHardwareSecurity.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "externalTerminal"
+        },
+        {
+            "name": "Launch (.NET Framework 4.7.2)",
             "type": "clr",
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/bin/Debug/net472/QueryHardwareSecurity.exe",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "console": "externalTerminal",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "console": "externalTerminal"
+        },
+        {
+            "name": "Launch (.NET Core 3.1)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/QueryHardwareSecurity.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "externalTerminal"
         },
         {
             "name": "Attach (.NET Framework)",
             "type": "clr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        },
+        {
+            "name": "Attach (.NET Core)",
+            "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
         }
