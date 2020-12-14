@@ -8,8 +8,21 @@
             "args": [
                 "build",
                 "${workspaceFolder}/src/QueryHardwareSecurity.csproj",
+                "/consoleLoggerParameters:NoSummary",
+                "/property:GenerateFullPaths=true"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "pack",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "pack",
+                "${workspaceFolder}/src/QueryHardwareSecurity.csproj",
+                "/consoleLoggerParameters:NoSummary",
                 "/property:GenerateFullPaths=true",
-                "/consoleLoggerParameters:NoSummary"
+                "/property:BuildDotNetTool=true"
             ],
             "problemMatcher": "$msCompile"
         }
