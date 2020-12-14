@@ -10,7 +10,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "console": "externalTerminal"
+            "console": "internalConsole"
         },
         {
             "name": "Launch (.NET Framework 4.7.2)",
@@ -21,7 +21,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "console": "externalTerminal"
+            "console": "internalConsole"
         },
         {
             "name": "Launch (.NET Core 3.1)",
@@ -32,7 +32,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "console": "externalTerminal"
+            "console": "internalConsole"
         },
         {
             "name": "Attach (.NET Framework)",
