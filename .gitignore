@@ -1,19 +1,23 @@
 # Windows
 [Dd]esktop.ini
 ehthumbs.db
-Thumbs.db
+ehthumbs_vista.db
+[Tt]humbs.db
+
+# Backups
+*.bak
+
+# Logs
+*.log
+log/
+logs/
 
 # Temporary
 *~
-*.bak
 *.tmp
 *.temp
 tmp/
 temp/
-
-# Logs
-*.log
-logs/
 
 # Build
 bin/
