@@ -15,7 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <!-- AssemblyInfo metadata -->
     <AssemblyTitle>Query Hardware Security</AssemblyTitle>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <NeutralLanguage>en-AU</NeutralLanguage>
     <Product>Query Hardware Security</Product>
     <Description>Query Windows support for security features and mitigations with hardware dependencies</Description>
