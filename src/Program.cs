@@ -23,7 +23,7 @@ using static QueryHardwareSecurity.Utilities;
 
 
 namespace QueryHardwareSecurity {
-    internal class Program {
+    internal static class Program {
         private enum OutputFormat {
             Raw,
             Table,
