@@ -54,12 +54,13 @@ namespace QueryHardwareSecurity {
                 new Option<bool>(new[] {"-v", "--verbose"}, "Verbose output"),
                 new Option<bool>(new[] {"-d", "--debug"}, "Debug output (implies verbose)"),
                 new Option<bool>(new[] {"-nc", "--no-color"}, "No colored output"),
-                new Option<string>(new[] {"-o", "--output"}, "Output format") {
+                new Option<string>(new[] {"-o", "--output"}, () => "table", "Output format") {
                     Name = "outputFormatString",
-                    Argument = new Argument<string>(() => "table") {Arity = ArgumentArity.ExactlyOne}
+                    Arity = ArgumentArity.ExactlyOne
                 }.FromAmong(validOutputs),
                 new Option<string[]>(new[] {"-c", "--collectors"}, "Collectors to run") {
-                    Name = "collectorsSelected", Argument = new Argument<string[]> {Arity = ArgumentArity.OneOrMore}
+                    Name = "collectorsSelected",
+                    Arity = ArgumentArity.OneOrMore
                 }.FromAmong(validCollectors)
             };
 
