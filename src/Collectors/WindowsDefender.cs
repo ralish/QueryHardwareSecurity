@@ -46,7 +46,7 @@ namespace QueryHardwareSecurity.Collectors {
         };
         // @formatter:on
 
-        private static readonly List<string> NoneList = new List<string> {"None"};
+        private static readonly List<string> NoneList = new List<string> { "None" };
 
         [JsonProperty] internal string VbsStatus { get; private set; } = "Unavailable";
         [JsonProperty] internal List<string> VbsPropsRequired { get; private set; } = new List<string>();
@@ -86,14 +86,14 @@ namespace QueryHardwareSecurity.Collectors {
                 : $"Unknown security status: {vbsStatusRaw}";
 
             var vbsPropsRequiredRaw = (uint[])cimInstance.CimInstanceProperties["RequiredSecurityProperties"].Value;
-            foreach (var vbsProp in vbsPropsRequiredRaw.Except(new uint[] {0})) {
+            foreach (var vbsProp in vbsPropsRequiredRaw.Except(new uint[] { 0 })) {
                 VbsPropsRequired.Add(vbsProp < VbsProperties.Length
                                          ? VbsProperties[vbsProp]
                                          : $"Unknown security property: {vbsProp}");
             }
 
             var vbsPropsAvailableRaw = (uint[])cimInstance.CimInstanceProperties["AvailableSecurityProperties"].Value;
-            foreach (var vbsProp in vbsPropsAvailableRaw.Except(new uint[] {0})) {
+            foreach (var vbsProp in vbsPropsAvailableRaw.Except(new uint[] { 0 })) {
                 VbsPropsAvailable.Add(vbsProp < VbsProperties.Length
                                           ? VbsProperties[vbsProp]
                                           : $"Unknown security property: {vbsProp}");
@@ -107,14 +107,14 @@ namespace QueryHardwareSecurity.Collectors {
 
             var vbsServicesConfiguredRaw =
                 (uint[])cimInstance.CimInstanceProperties["SecurityServicesConfigured"].Value;
-            foreach (var vbsService in vbsServicesConfiguredRaw.Except(new uint[] {0})) {
+            foreach (var vbsService in vbsServicesConfiguredRaw.Except(new uint[] { 0 })) {
                 VbsServicesConfigured.Add(vbsService < VbsServices.Length
                                               ? VbsServices[vbsService]
                                               : $"Unknown security service: {vbsService}");
             }
 
             var vbsServicesRunningRaw = (uint[])cimInstance.CimInstanceProperties["SecurityServicesRunning"].Value;
-            foreach (var vbsService in vbsServicesRunningRaw.Except(new uint[] {0})) {
+            foreach (var vbsService in vbsServicesRunningRaw.Except(new uint[] { 0 })) {
                 VbsServicesRunning.Add(vbsService < VbsServices.Length
                                            ? VbsServices[vbsService]
                                            : $"Unknown security service: {vbsService}");

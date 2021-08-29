@@ -166,7 +166,7 @@ namespace QueryHardwareSecurity.Collectors {
             CheckTbsResult(Tbsi_Context_Create(tbsContextParams, out var tbsContext));
 
             WriteConsoleVerbose("Retrieving PPI version ...");
-            var ppiVersionCommand = new byte[] {0x01, 0x00, 0x00, 0x00};
+            var ppiVersionCommand = new byte[] { 0x01, 0x00, 0x00, 0x00 };
             var ppiVersionOutput = new byte[16];
             var ppiVersionLength = (uint)ppiVersionOutput.Length;
             CheckTbsResult(Tbsi_Physical_Presence_Command(tbsContext,
