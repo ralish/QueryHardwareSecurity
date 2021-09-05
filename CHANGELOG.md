@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.2.1
+------
+
+- Update `System.CommandLine` to v2.0.0-beta1.21308.1
+- Add .NET 5.0 build target
+- Remove .NET CLI tool package support
+- Miscellaneous code clean-up & tweaks
+
 v0.2.0
 ------
 
