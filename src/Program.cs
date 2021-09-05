@@ -80,7 +80,7 @@ namespace QueryHardwareSecurity {
                     Enum.TryParse(outputFormatString, true, out OutputFormat outputFormat);
 
                     var collectors = new List<Collector>();
-                    collectorsSelected = collectorsSelected ?? validCollectors;
+                    collectorsSelected = collectorsSelected.Length != 0 ? collectorsSelected : validCollectors;
 
                     // Ensure order of execution is deterministic
                     var collectorsToRun = collectorsSelected
