@@ -35,7 +35,7 @@ namespace QueryHardwareSecurity {
             $"{Assembly.GetExecutingAssembly().GetName().Name}.Collectors";
 
         private static readonly Type CollectorsBaseClass = Type.GetType($"{CollectorsNamespace}.Collector");
-        private static readonly string[] CollectorsSortExclusions = {"SystemInfo", "Miscellaneous"};
+        private static readonly string[] CollectorsSortExclusions = { "SystemInfo", "Miscellaneous" };
 
         internal static bool DebugOutput;
         internal static bool VerboseOutput;
@@ -51,16 +51,14 @@ namespace QueryHardwareSecurity {
                                           .ToArray();
 
             var rootCommand = new RootCommand {
-                new Option<bool>(new[] {"-v", "--verbose"}, "Verbose output"),
-                new Option<bool>(new[] {"-d", "--debug"}, "Debug output (implies verbose)"),
-                new Option<bool>(new[] {"-nc", "--no-color"}, "No colored output"),
-                new Option<string>(new[] {"-o", "--output"}, () => "table", "Output format") {
-                    Name = "outputFormatString",
-                    Arity = ArgumentArity.ExactlyOne
+                new Option<bool>(new[] { "-v", "--verbose" }, "Verbose output"),
+                new Option<bool>(new[] { "-d", "--debug" }, "Debug output (implies verbose)"),
+                new Option<bool>(new[] { "-nc", "--no-color" }, "No colored output"),
+                new Option<string>(new[] { "-o", "--output" }, () => "table", "Output format") {
+                    Name = "outputFormatString", Arity = ArgumentArity.ExactlyOne
                 }.FromAmong(validOutputs),
-                new Option<string[]>(new[] {"-c", "--collectors"}, "Collectors to run") {
-                    Name = "collectorsSelected",
-                    Arity = ArgumentArity.OneOrMore
+                new Option<string[]>(new[] { "-c", "--collectors" }, "Collectors to run") {
+                    Name = "collectorsSelected", Arity = ArgumentArity.OneOrMore
                 }.FromAmong(validCollectors)
             };
 

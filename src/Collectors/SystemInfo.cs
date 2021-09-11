@@ -15,7 +15,6 @@ namespace QueryHardwareSecurity.Collectors {
     internal class SystemInfo : Collector {
         // Computer system
         [JsonProperty] public string Hostname { get; private set; }
-        [JsonProperty] public string HvPresent { get; private set; }
 
         // Operating system
         [JsonProperty] public string OsName { get; private set; }
@@ -27,6 +26,9 @@ namespace QueryHardwareSecurity.Collectors {
 
         // Firmware
         [JsonProperty] public string FwType { get; private set; }
+
+        // Hypervisor
+        [JsonProperty] public string HvPresent { get; private set; }
 
         public SystemInfo() : base("System Info") {
             ConsoleWidthName = 40;
@@ -62,57 +64,19 @@ namespace QueryHardwareSecurity.Collectors {
             WriteConsoleEntry("Hypervisor present", HvPresent);
         }
 
-        #region Computer System
+        #region Computer system
 
         private CimInstance _computerSystem;
 
         public CimInstance ComputerSystem {
             get {
+                // ReSharper disable once InvertIf
                 if (_computerSystem == null) {
                     WriteConsoleVerbose("Retrieving computer system info ...");
                     _computerSystem = EnumerateCimInstances("Win32_ComputerSystem").First();
                 }
 
                 return _computerSystem;
-            }
-        }
-
-        private HypervisorPresent _hypervisorPresent;
-        private bool _hypervisorPresentChecked;
-
-
-        /*
-         * The underlying property in the WMI class is a boolean but it
-         * won't be present prior to Windows 8 / Server 2012. That's an
-         * unknown state, so we'll use an enum to represent that third
-         * possibility instead of having to deal with a nullable bool.
-         */
-        public enum HypervisorPresent {
-            Unknown,
-            False,
-            True
-        }
-
-
-        public HypervisorPresent IsHypervisorPresent {
-            get {
-                if (!_hypervisorPresentChecked) {
-                    WriteConsoleVerbose("Checking if hypervisor is present ...");
-                    try {
-                        var cimHypervisorPresent =
-                            (bool)ComputerSystem.CimInstanceProperties["HypervisorPresent"].Value;
-                        _hypervisorPresent = cimHypervisorPresent ? HypervisorPresent.True : HypervisorPresent.False;
-                    } catch (NullReferenceException) {
-                        // HypervisorPresent is only available from Windows 8 / Server 2012
-                        WriteConsoleVerbose(
-                            "Hypervisor presence unknown as HypervisorPresent WMI property is unavailable.");
-                        _hypervisorPresent = HypervisorPresent.Unknown;
-                    }
-
-                    _hypervisorPresentChecked = true;
-                }
-
-                return _hypervisorPresent;
             }
         }
 
@@ -125,6 +89,7 @@ namespace QueryHardwareSecurity.Collectors {
 
         public FirmwareType FirmwareType {
             get {
+                // ReSharper disable once InvertIf
                 if (!_firmwareTypeRetrieved) {
                     WriteConsoleVerbose("Retrieving firmware type ...");
                     try {
@@ -148,12 +113,57 @@ namespace QueryHardwareSecurity.Collectors {
 
         #endregion
 
-        #region Operating System
+        #region Hypervisor
+
+        private HypervisorPresent _hypervisorPresent;
+        private bool _hypervisorPresentChecked;
+
+
+        /*
+         * The underlying property in the WMI class is a boolean but it
+         * won't be present prior to Windows 8 / Server 2012. That's an
+         * unknown state, so we'll use an enum to represent that third
+         * possibility instead of having to deal with a nullable bool.
+         */
+        public enum HypervisorPresent {
+            Unknown,
+            False,
+            True
+        }
+
+
+        public HypervisorPresent IsHypervisorPresent {
+            get {
+                // ReSharper disable once InvertIf
+                if (!_hypervisorPresentChecked) {
+                    WriteConsoleVerbose("Checking if hypervisor is present ...");
+                    try {
+                        var cimHypervisorPresent =
+                            (bool)ComputerSystem.CimInstanceProperties["HypervisorPresent"].Value;
+                        _hypervisorPresent = cimHypervisorPresent ? HypervisorPresent.True : HypervisorPresent.False;
+                    } catch (NullReferenceException) {
+                        // HypervisorPresent is only available from Windows 8 / Server 2012
+                        WriteConsoleVerbose(
+                            "Hypervisor presence unknown as HypervisorPresent WMI property is unavailable.");
+                        _hypervisorPresent = HypervisorPresent.Unknown;
+                    }
+
+                    _hypervisorPresentChecked = true;
+                }
+
+                return _hypervisorPresent;
+            }
+        }
+
+        #endregion
+
+        #region Operating system
 
         private CimInstance _operatingSystem;
 
         public CimInstance OperatingSystem {
             get {
+                // ReSharper disable once InvertIf
                 if (_operatingSystem == null) {
                     WriteConsoleVerbose("Retrieving operating system info ...");
                     _operatingSystem = EnumerateCimInstances("Win32_OperatingSystem").First();
@@ -182,6 +192,7 @@ namespace QueryHardwareSecurity.Collectors {
 
         public CimInstance ProcessorInfo {
             get {
+                // ReSharper disable once InvertIf
                 if (_processorInfo == null) {
                     WriteConsoleVerbose("Retrieving processor info ...");
                     _processorInfo = EnumerateCimInstances("Win32_Processor").First();

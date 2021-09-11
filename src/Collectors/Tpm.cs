@@ -51,8 +51,10 @@ namespace QueryHardwareSecurity.Collectors {
                 tpmDevice.Connect();
 
                 using (var tpm = new Tpm2(tpmDevice)) {
+                    // ReSharper disable JoinDeclarationAndInitializer
                     uint tpmProperty;
                     TaggedTpmPropertyArray tpmProperties;
+                    // ReSharper enable JoinDeclarationAndInitializer
 
                     WriteConsoleDebug("Retrieving TPM capability: TPM_PROPERTIES (Property: PT_FIXED)");
                     tpm.GetCapability(Cap.TpmProperties, (uint)Pt.PtFixed, 1000, out var capPropertiesFixed);
@@ -65,7 +67,7 @@ namespace QueryHardwareSecurity.Collectors {
                     var tpmManufacturerBytes = BitConverter.GetBytes(ManufacturerId);
                     Array.Reverse(tpmManufacturerBytes); // Assumes little-endian
                     var tpmManufacturerName = new char[tpmManufacturerBytes.Length];
-                    for (int index = 0; index < tpmManufacturerName.Length; index++) {
+                    for (var index = 0; index < tpmManufacturerName.Length; index++) {
                         // Unprintable character or invalid 7-bit ASCII
                         if (tpmManufacturerBytes[index] < 32 || tpmManufacturerBytes[index] > 126) {
                             break;

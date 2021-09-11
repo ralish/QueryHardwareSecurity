@@ -29,10 +29,11 @@ namespace QueryHardwareSecurity {
         ///     "root/CIMV2".
         /// </param>
         /// <returns>The enumerated CIM instances as a list.</returns>
-        public static List<CimInstance> EnumerateCimInstances(string className, string @namespace = null) {
+        public static IEnumerable<CimInstance> EnumerateCimInstances(string className,
+                                                                     string @namespace = CimDefaultNamespace) {
             using (var dcomSessionOptions = new DComSessionOptions()) {
                 using (var cimSession = CimSession.Create("localhost", dcomSessionOptions)) {
-                    return cimSession.EnumerateInstances(@namespace ?? CimDefaultNamespace, className).ToList();
+                    return cimSession.EnumerateInstances(@namespace, className).ToList();
                 }
             }
         }
@@ -40,16 +41,16 @@ namespace QueryHardwareSecurity {
         /// <summary>
         ///     Retrieves a CIM instance with the provided instance ID.
         /// </summary>
-        /// <param name="instance">The instance ID for which to retrieve a CIM instance for.</param>
+        /// <param name="instanceId">The instance ID for which to retrieve a CIM instance for.</param>
         /// <param name="namespace">
         ///     The namespace under which the requested CIM instance should be retrieved. If not specified,
         ///     defaults to "root/CIMV2".
         /// </param>
         /// <returns>The requested CIM instance.</returns>
-        public static CimInstance GetCimInstance(CimInstance instance, string @namespace = null) {
+        public static CimInstance GetCimInstance(CimInstance instanceId, string @namespace = CimDefaultNamespace) {
             using (var dcomSessionOptions = new DComSessionOptions()) {
                 using (var cimSession = CimSession.Create("localhost", dcomSessionOptions)) {
-                    return cimSession.GetInstance(@namespace ?? CimDefaultNamespace, instance);
+                    return cimSession.GetInstance(@namespace, instanceId);
                 }
             }
         }
@@ -175,6 +176,7 @@ namespace QueryHardwareSecurity {
             var res = FormatMessage(flags, _hLibNtdll, (uint)status, 0, out var msgPtr, 0, IntPtr.Zero);
 
             if (res != 0) {
+                // ReSharper disable once PossibleNullReferenceException
                 msg = Marshal.PtrToStringUni(msgPtr).TrimEnd();
                 LocalFree(msgPtr);
             } else {

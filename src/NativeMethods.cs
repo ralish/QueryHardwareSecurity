@@ -1,7 +1,7 @@
 // @formatter:off
 // ReSharper disable InconsistentNaming
 
-#pragma warning disable CS0649  // Field is never assigned to
+#pragma warning disable CS0649 // Field is never assigned to
 
 using System;
 using System.Runtime.InteropServices;
