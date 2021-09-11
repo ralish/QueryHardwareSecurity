@@ -15,7 +15,8 @@ namespace QueryHardwareSecurity.Collectors {
         private static readonly List<string> FlagsIgnored =
             Enumerable.Range(1, 6).Select(n => $"InvalidPte{n}").ToList();
 
-        internal KernelVaShadowFlags Flags { get; private set; }
+        // ReSharper disable once MemberCanBePrivate.Global
+        public KernelVaShadowFlags Flags { get; private set; }
 
         private readonly dynamic _metadata;
 
@@ -74,11 +75,11 @@ namespace QueryHardwareSecurity.Collectors {
             flagData.value = flagValue;
         }
 
-        internal override string ConvertToJson() {
+        public override string ConvertToJson() {
             return JsonConvert.SerializeObject(_metadata);
         }
 
-        internal override void WriteConsole(ConsoleOutputStyle style) {
+        public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(true);
@@ -90,9 +91,10 @@ namespace QueryHardwareSecurity.Collectors {
 
         // @formatter:off
         // ReSharper disable InconsistentNaming
+        // ReSharper disable MemberCanBePrivate.Global
 
         [Flags]
-        internal enum KernelVaShadowFlags {
+        public enum KernelVaShadowFlags {
             KvaShadowEnabled                    = 0x1,                      // Checked by SpeculationControl module
             KvaShadowUserGlobal                 = 0x2,
             KvaShadowPcid                       = 0x4,                      // Checked by SpeculationControl module
@@ -111,9 +113,10 @@ namespace QueryHardwareSecurity.Collectors {
             InvalidPte6 = 0x2000
         }
 
-        private const int InvalidPteBitMask = 0xFC0;
-        private const int InvalidPteBitShift = 6;
+        public const int InvalidPteBitMask = 0xFC0;
+        public const int InvalidPteBitShift = 6;
 
+        // ReSharper enable MemberCanBePrivate.Global
         // ReSharper enable InconsistentNaming
         // @formatter:on
 

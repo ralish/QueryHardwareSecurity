@@ -16,11 +16,14 @@ namespace QueryHardwareSecurity.Collectors {
 
 
     internal abstract class Collector {
-        internal string Name { get; }
-        internal string ModuleName { get; }
+        // ReSharper disable once MemberCanBeProtected.Global
+        public string Name { get; }
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public string ModuleName { get; }
 
         // Console output
-        internal bool ConsoleColorOutput { get; set; } = true;
+        public bool ConsoleColorOutput { get; set; } = true;
         protected ConsoleOutputStyle ConsoleOutputStyle { get; set; } = ConsoleOutputStyle.Table;
         private string ConsolePrefix { get; }
 
@@ -30,7 +33,7 @@ namespace QueryHardwareSecurity.Collectors {
         protected int ConsoleWidthDescription { get; set; }
 
         // JSON output
-        internal string JsonName { get; }
+        public string JsonName { get; }
 
         protected Collector(string name) {
             Name = name;
@@ -44,13 +47,13 @@ namespace QueryHardwareSecurity.Collectors {
         ///     Serialize the collector results to JSON.
         /// </summary>
         /// <returns>The collector results as a serialized JSON string.</returns>
-        internal abstract string ConvertToJson();
+        public abstract string ConvertToJson();
 
         /// <summary>
         ///     Write the collector results to the console.
         /// </summary>
         /// <param name="style">The <see cref="ConsoleOutputStyle" /> to use for the output.</param>
-        internal abstract void WriteConsole(ConsoleOutputStyle style);
+        public abstract void WriteConsole(ConsoleOutputStyle style);
 
         #region Console helpers
 

@@ -12,28 +12,28 @@ using static QueryHardwareSecurity.NativeMethods;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class Tpm : Collector {
-        [JsonProperty] internal uint ManufacturerId { get; private set; }
-        [JsonProperty] internal string ManufacturerName { get; private set; }
-        [JsonProperty] internal uint ManufacturerModel { get; private set; }
+        [JsonProperty] public uint ManufacturerId { get; private set; }
+        [JsonProperty] public string ManufacturerName { get; private set; }
+        [JsonProperty] public uint ManufacturerModel { get; private set; }
 
-        [JsonProperty] internal string SpecificationVersion { get; private set; }
-        [JsonProperty] internal uint SpecificationLevel { get; private set; }
-        [JsonProperty] internal float SpecificationRevision { get; private set; }
-        [JsonProperty] internal DateTime SpecificationDate { get; private set; }
+        [JsonProperty] public string SpecificationVersion { get; private set; }
+        [JsonProperty] public uint SpecificationLevel { get; private set; }
+        [JsonProperty] public float SpecificationRevision { get; private set; }
+        [JsonProperty] public DateTime SpecificationDate { get; private set; }
 
-        [JsonProperty] internal string PlatformSpecificFamily { get; private set; }
-        [JsonProperty] internal uint PlatformSpecificationLevel { get; private set; }
-        [JsonProperty] internal float PlatformSpecificationRevision { get; private set; }
-        [JsonProperty] internal DateTime PlatformSpecificationDate { get; private set; }
+        [JsonProperty] public string PlatformSpecificFamily { get; private set; }
+        [JsonProperty] public uint PlatformSpecificationLevel { get; private set; }
+        [JsonProperty] public float PlatformSpecificationRevision { get; private set; }
+        [JsonProperty] public DateTime PlatformSpecificationDate { get; private set; }
 
-        [JsonProperty] internal Version FirmwareVersion { get; private set; }
-        [JsonProperty] internal string PhysicalPresenceVersion { get; private set; }
+        [JsonProperty] public Version FirmwareVersion { get; private set; }
+        [JsonProperty] public string PhysicalPresenceVersion { get; private set; }
 
-        [JsonProperty] internal string MemoryManagement { get; private set; }
-        [JsonProperty] internal string SupportedModes { get; private set; }
+        [JsonProperty] public string MemoryManagement { get; private set; }
+        [JsonProperty] public string SupportedModes { get; private set; }
 
-        [JsonProperty] internal string PermanentAttributes { get; private set; }
-        [JsonProperty] internal string StartupAttributes { get; private set; }
+        [JsonProperty] public string PermanentAttributes { get; private set; }
+        [JsonProperty] public string StartupAttributes { get; private set; }
 
         public Tpm() : base("Trusted Platform Module") {
             ConsoleWidthName = 40;
@@ -186,11 +186,11 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
-        internal override string ConvertToJson() {
+        public override string ConvertToJson() {
             return JsonConvert.SerializeObject(this);
         }
 
-        internal override void WriteConsole(ConsoleOutputStyle style) {
+        public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);

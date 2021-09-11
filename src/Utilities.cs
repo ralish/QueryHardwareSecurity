@@ -15,7 +15,7 @@ using static QueryHardwareSecurity.NativeMethods;
 
 
 namespace QueryHardwareSecurity {
-    internal class Utilities {
+    internal static class Utilities {
         #region CIM
 
         private const string CimDefaultNamespace = "root/CIMV2";
@@ -29,7 +29,7 @@ namespace QueryHardwareSecurity {
         ///     "root/CIMV2".
         /// </param>
         /// <returns>The enumerated CIM instances as a list.</returns>
-        internal static List<CimInstance> EnumerateCimInstances(string className, string @namespace = null) {
+        public static List<CimInstance> EnumerateCimInstances(string className, string @namespace = null) {
             using (var dcomSessionOptions = new DComSessionOptions()) {
                 using (var cimSession = CimSession.Create("localhost", dcomSessionOptions)) {
                     return cimSession.EnumerateInstances(@namespace ?? CimDefaultNamespace, className).ToList();
@@ -46,7 +46,7 @@ namespace QueryHardwareSecurity {
         ///     defaults to "root/CIMV2".
         /// </param>
         /// <returns>The requested CIM instance.</returns>
-        internal static CimInstance GetCimInstance(CimInstance instance, string @namespace = null) {
+        public static CimInstance GetCimInstance(CimInstance instance, string @namespace = null) {
             using (var dcomSessionOptions = new DComSessionOptions()) {
                 using (var cimSession = CimSession.Create("localhost", dcomSessionOptions)) {
                     return cimSession.GetInstance(@namespace ?? CimDefaultNamespace, instance);
@@ -63,7 +63,7 @@ namespace QueryHardwareSecurity {
         /// <summary>
         ///     Resets the console foreground colour to whichever colour was initially set.
         /// </summary>
-        internal static void ResetConsoleColor() {
+        public static void ResetConsoleColor() {
             Console.ForegroundColor = DefaultForegroundColor;
         }
 
@@ -72,7 +72,7 @@ namespace QueryHardwareSecurity {
         /// </summary>
         /// <param name="msg">The debug message to write to the console.</param>
         /// <remarks>Debug messages are only displayed when debug mode is enabled.</remarks>
-        internal static void WriteConsoleDebug(string msg) {
+        public static void WriteConsoleDebug(string msg) {
             if (Program.DebugOutput) {
                 Console.Error.WriteLine(msg);
             }
@@ -83,7 +83,7 @@ namespace QueryHardwareSecurity {
         /// </summary>
         /// <param name="msg">The error message to write to the console.</param>
         /// <remarks>Error messages are written to the standard error output stream.</remarks>
-        internal static void WriteConsoleError(string msg) {
+        public static void WriteConsoleError(string msg) {
             Console.Error.WriteLine(msg);
         }
 
@@ -92,7 +92,7 @@ namespace QueryHardwareSecurity {
         /// </summary>
         /// <param name="msg">The verbose message to write to the console.</param>
         /// <remarks>Verbose messages are only displayed when verbose mode is enabled. Debug mode implicitly enables verbose mode.</remarks>
-        internal static void WriteConsoleVerbose(string msg) {
+        public static void WriteConsoleVerbose(string msg) {
             if (Program.VerboseOutput) {
                 Console.Error.WriteLine(msg);
             }
@@ -109,7 +109,7 @@ namespace QueryHardwareSecurity {
         /// <param name="object">The ExpandoObject on which to retrieve or create the specified key.</param>
         /// <param name="key">The key to retrieve or create on the provided ExpandoObject.</param>
         /// <returns>The ExpandoObject for the requested key if it exists, otherwise the newly created ExpandoObject.</returns>
-        internal static ExpandoObject GetOrCreateDynamicObjectKey(dynamic @object, string key) {
+        public static ExpandoObject GetOrCreateDynamicObjectKey(dynamic @object, string key) {
             dynamic data;
 
             try {
@@ -132,7 +132,7 @@ namespace QueryHardwareSecurity {
         /// </summary>
         /// <param name="resourceName">The name of the embedded resource to load as a JSON object.</param>
         /// <returns>The requested embedded JSON resource deserialized as an ExpandoObject.</returns>
-        internal static ExpandoObject LoadJsonResource(string resourceName) {
+        public static ExpandoObject LoadJsonResource(string resourceName) {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{resourceName}.json")) {
                 if (stream == null) {
                     return new ExpandoObject();
@@ -156,7 +156,7 @@ namespace QueryHardwareSecurity {
         /// </summary>
         /// <param name="status">The NTSTATUS value to retrieve the symbolic name for.</param>
         /// <returns>The symbolic name for the provided NTSTATUS value.</returns>
-        internal static string GetSymbolicNtStatus(int status) {
+        public static string GetSymbolicNtStatus(int status) {
             if (_hLibNtdll == IntPtr.Zero) {
                 _hLibNtdll = LoadLibrary("ntdll.dll");
 
@@ -193,7 +193,7 @@ namespace QueryHardwareSecurity {
         ///     Checks if the platform is supported. If the platform is unsupported, immediately exits with a non-zero exit code.
         /// </summary>
         /// <remarks>Currently only Windows is supported.</remarks>
-        internal static void IsPlatformSupported() {
+        public static void IsPlatformSupported() {
 #if NETCOREAPP
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
                 WriteConsoleError("Only Windows operating systems are currently supported.");

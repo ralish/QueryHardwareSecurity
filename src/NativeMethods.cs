@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 
 namespace QueryHardwareSecurity {
-    internal class NativeMethods {
+    internal static class NativeMethods {
         #region FormatMessage
 
         [DllImport("kernel32", EntryPoint = "FormatMessageW", ExactSpelling = true, SetLastError = true)]

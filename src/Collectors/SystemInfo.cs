@@ -13,13 +13,20 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class SystemInfo : Collector {
-        [JsonProperty] internal string Hostname { get; private set; }
-        [JsonProperty] internal string OsName { get; private set; }
-        [JsonProperty] internal string OsVersion { get; private set; }
-        [JsonProperty] internal string CpuName { get; private set; }
-        [JsonProperty] internal string CpuModel { get; private set; }
-        [JsonProperty] internal string FwType { get; private set; }
-        [JsonProperty] internal string HvPresent { get; private set; }
+        // Computer system
+        [JsonProperty] public string Hostname { get; private set; }
+        [JsonProperty] public string HvPresent { get; private set; }
+
+        // Operating system
+        [JsonProperty] public string OsName { get; private set; }
+        [JsonProperty] public string OsVersion { get; private set; }
+
+        // Processor
+        [JsonProperty] public string CpuName { get; private set; }
+        [JsonProperty] public string CpuModel { get; private set; }
+
+        // Firmware
+        [JsonProperty] public string FwType { get; private set; }
 
         public SystemInfo() : base("System Info") {
             ConsoleWidthName = 40;
@@ -38,11 +45,11 @@ namespace QueryHardwareSecurity.Collectors {
             HvPresent = IsHypervisorPresent.ToString();
         }
 
-        internal override string ConvertToJson() {
+        public override string ConvertToJson() {
             return JsonConvert.SerializeObject(this);
         }
 
-        internal override void WriteConsole(ConsoleOutputStyle style) {
+        public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);
@@ -59,7 +66,7 @@ namespace QueryHardwareSecurity.Collectors {
 
         private CimInstance _computerSystem;
 
-        internal CimInstance ComputerSystem {
+        public CimInstance ComputerSystem {
             get {
                 if (_computerSystem == null) {
                     WriteConsoleVerbose("Retrieving computer system info ...");
@@ -70,6 +77,9 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
+        private HypervisorPresent _hypervisorPresent;
+        private bool _hypervisorPresentChecked;
+
 
         /*
          * The underlying property in the WMI class is a boolean but it
@@ -77,17 +87,14 @@ namespace QueryHardwareSecurity.Collectors {
          * unknown state, so we'll use an enum to represent that third
          * possibility instead of having to deal with a nullable bool.
          */
-        internal enum HypervisorPresent {
+        public enum HypervisorPresent {
             Unknown,
             False,
             True
         }
 
 
-        private HypervisorPresent _hypervisorPresent;
-        private bool _hypervisorPresentChecked;
-
-        internal HypervisorPresent IsHypervisorPresent {
+        public HypervisorPresent IsHypervisorPresent {
             get {
                 if (!_hypervisorPresentChecked) {
                     WriteConsoleVerbose("Checking if hypervisor is present ...");
@@ -116,7 +123,7 @@ namespace QueryHardwareSecurity.Collectors {
         private FirmwareType _firmwareType;
         private bool _firmwareTypeRetrieved;
 
-        internal FirmwareType FirmwareType {
+        public FirmwareType FirmwareType {
             get {
                 if (!_firmwareTypeRetrieved) {
                     WriteConsoleVerbose("Retrieving firmware type ...");
@@ -145,7 +152,7 @@ namespace QueryHardwareSecurity.Collectors {
 
         private CimInstance _operatingSystem;
 
-        internal CimInstance OperatingSystem {
+        public CimInstance OperatingSystem {
             get {
                 if (_operatingSystem == null) {
                     WriteConsoleVerbose("Retrieving operating system info ...");
@@ -164,7 +171,7 @@ namespace QueryHardwareSecurity.Collectors {
 
 
         // ReSharper disable InconsistentNaming
-        internal enum ProcessorArchitecture {
+        public enum ProcessorArchitecture {
             x86 = 0,
             ARM = 5,
             x64 = 9,
@@ -173,7 +180,7 @@ namespace QueryHardwareSecurity.Collectors {
         // ReSharper enable InconsistentNaming
 
 
-        internal CimInstance ProcessorInfo {
+        public CimInstance ProcessorInfo {
             get {
                 if (_processorInfo == null) {
                     WriteConsoleVerbose("Retrieving processor info ...");
@@ -184,7 +191,7 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
-        internal string ProcessorManufacturer {
+        public string ProcessorManufacturer {
             get {
                 if (IsProcessorIntel) {
                     return "Intel";
@@ -203,20 +210,20 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
-        internal bool IsProcessorX86 =>
+        public bool IsProcessorX86 =>
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x86;
 
-        internal bool IsProcessorX64 =>
+        public bool IsProcessorX64 =>
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x64;
 
-        internal bool IsProcessorAmd =>
+        public bool IsProcessorAmd =>
             (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
 
-        internal bool IsProcessorArm =>
+        public bool IsProcessorArm =>
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM ||
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM64;
 
-        internal bool IsProcessorIntel =>
+        public bool IsProcessorIntel =>
             (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "GenuineIntel";
 
         #endregion

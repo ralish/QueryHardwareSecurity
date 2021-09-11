@@ -13,13 +13,13 @@ namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class WindowsDefender : Collector {
         // @formatter:off
-        private static readonly string[] CiStatuses = {
+        public static readonly string[] CiStatuses = {
             "Disabled",
             "Audit mode",
             "Enforced"
         };
 
-        private static readonly string[] VbsProperties = {
+        public static readonly string[] VbsProperties = {
             "None",
             "Base Virtualisation Support",
             "Secure Boot",
@@ -31,7 +31,7 @@ namespace QueryHardwareSecurity.Collectors {
             "APIC Virtualisation (APICv/AVIC)"
         };
 
-        private static readonly string[] VbsServices = {
+        public static readonly string[] VbsServices = {
             "None",
             "Credential Guard",
             "Hypervisor-protected Code Integrity (HVCI)",
@@ -39,7 +39,7 @@ namespace QueryHardwareSecurity.Collectors {
             "SMM Firmware Measurement"
         };
 
-        private static readonly string[] VbsStatuses = {
+        public static readonly string[] VbsStatuses = {
             "Disabled",
             "Enabled (inactive)",
             "Enabled (running)"
@@ -48,15 +48,15 @@ namespace QueryHardwareSecurity.Collectors {
 
         private static readonly List<string> NoneList = new List<string> { "None" };
 
-        [JsonProperty] internal string VbsStatus { get; private set; } = "Unavailable";
-        [JsonProperty] internal List<string> VbsPropsRequired { get; private set; } = new List<string>();
-        [JsonProperty] internal List<string> VbsPropsAvailable { get; private set; } = new List<string>();
-        [JsonProperty] internal List<string> VbsPropsUnavailable { get; private set; } = new List<string>();
-        [JsonProperty] internal List<string> VbsServicesConfigured { get; private set; } = new List<string>();
-        [JsonProperty] internal List<string> VbsServicesRunning { get; private set; } = new List<string>();
-        [JsonProperty] internal List<string> VbsServicesNotConfigured { get; private set; } = new List<string>();
-        [JsonProperty] internal string KmciStatus { get; private set; } = "Unavailable";
-        [JsonProperty] internal string UmciStatus { get; private set; } = "Unavailable";
+        [JsonProperty] public string VbsStatus { get; private set; } = "Unavailable";
+        [JsonProperty] public List<string> VbsPropsRequired { get; private set; } = new List<string>();
+        [JsonProperty] public List<string> VbsPropsAvailable { get; private set; } = new List<string>();
+        [JsonProperty] public List<string> VbsPropsUnavailable { get; private set; } = new List<string>();
+        [JsonProperty] public List<string> VbsServicesConfigured { get; private set; } = new List<string>();
+        [JsonProperty] public List<string> VbsServicesRunning { get; private set; } = new List<string>();
+        [JsonProperty] public List<string> VbsServicesNotConfigured { get; private set; } = new List<string>();
+        [JsonProperty] public string KmciStatus { get; private set; } = "Unavailable";
+        [JsonProperty] public string UmciStatus { get; private set; } = "Unavailable";
 
         public WindowsDefender() : base("Windows Defender") {
             ConsoleWidthName = 40;
@@ -145,11 +145,11 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
-        internal override string ConvertToJson() {
+        public override string ConvertToJson() {
             return JsonConvert.SerializeObject(this);
         }
 
-        internal override void WriteConsole(ConsoleOutputStyle style) {
+        public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);

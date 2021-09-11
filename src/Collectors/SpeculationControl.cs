@@ -10,7 +10,8 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     internal class SpeculationControl : Collector {
-        internal SpeculationControlFlags Flags { get; private set; }
+        // ReSharper disable once MemberCanBePrivate.Global
+        public SpeculationControlFlags Flags { get; private set; }
 
         private readonly dynamic _metadata;
 
@@ -65,11 +66,11 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
-        internal override string ConvertToJson() {
+        public override string ConvertToJson() {
             return JsonConvert.SerializeObject(_metadata);
         }
 
-        internal override void WriteConsole(ConsoleOutputStyle style) {
+        public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(true);
@@ -80,9 +81,10 @@ namespace QueryHardwareSecurity.Collectors {
 
         // @formatter:off
         // ReSharper disable InconsistentNaming
+        // ReSharper disable MemberCanBePrivate.Global
 
         [Flags]
-        internal enum SpeculationControlFlags {
+        public enum SpeculationControlFlags {
             BpbEnabled                                  = 0x1,              // Checked by SpeculationControl module
             BpbDisabledSystemPolicy                     = 0x2,              // Checked by SpeculationControl module
             BpbDisabledNoHardwareSupport                = 0x4,              // Checked by SpeculationControl module
@@ -116,6 +118,7 @@ namespace QueryHardwareSecurity.Collectors {
             TaaHardwareImmune                           = 0x40000000
         }
 
+        // ReSharper enable MemberCanBePrivate.Global
         // ReSharper enable InconsistentNaming
         // @formatter:on
 

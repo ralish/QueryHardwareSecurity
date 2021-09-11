@@ -11,7 +11,8 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class Miscellaneous : Collector {
-        [JsonProperty] internal string KernelDmaProtection { get; private set; } = "Unsupported";
+        // ReSharper disable once MemberCanBePrivate.Global
+        [JsonProperty] public string KernelDmaProtection { get; private set; } = "Unsupported";
 
         public Miscellaneous() : base("Miscellaneous") {
             ConsoleWidthName = 40;
@@ -23,7 +24,8 @@ namespace QueryHardwareSecurity.Collectors {
         #region Kernel DMA Protection
 
         [Flags]
-        internal enum DmaGuardPolicyFlags : byte {
+        // ReSharper disable once MemberCanBePrivate.Global
+        public enum DmaGuardPolicyFlags : byte {
             DmaGuardPolicyEnabled = 0x1
         }
 
@@ -67,11 +69,11 @@ namespace QueryHardwareSecurity.Collectors {
 
         #endregion
 
-        internal override string ConvertToJson() {
+        public override string ConvertToJson() {
             return JsonConvert.SerializeObject(this);
         }
 
-        internal override void WriteConsole(ConsoleOutputStyle style) {
+        public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);
