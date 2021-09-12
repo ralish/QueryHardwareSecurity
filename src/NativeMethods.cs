@@ -89,14 +89,14 @@ namespace QueryHardwareSecurity {
             SystemSpeculationControlInformation       = 0xC9, // Dec: 201, returns 4 bytes
             SystemDmaGuardPolicyInformation           = 0xCA, // Dec: 202, returns 1 byte
             SystemSecureSpeculationControlInformation = 0xD5, // Dec: 213, returns 4 bytes
+            SystemShadowStackInformation              = 0xDD, // Dec: 221, returns 4 bytes
             // TODO
             SystemBootEnvironmentInformation          = 0x5A, // Dec: 90,  returns 32 bytes
             SystemHypervisorInformation               = 0x5B, // Dec: 91,  returns 16 bytes
             SystemCodeIntegrityInformation            = 0x67, // Dec: 103
             SystemHypervisorDetailInformation         = 0x9F, // Dec: 159, returns 112 bytes
             SystemIsolatedUserModeInformation         = 0xA5, // Dec: 165, returns 16 bytes
-            SystemSecurityModelInformation            = 0xD0, // Dec: 208
-            SystemShadowStackInformation              = 0xDD  // Dec: 221, returns 4 bytes
+            SystemSecurityModelInformation            = 0xD0  // Dec: 208
         }
 
         #endregion
