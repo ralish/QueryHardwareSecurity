@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 using Newtonsoft.Json;
@@ -12,8 +11,14 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     internal class KernelVaShadow : Collector {
-        private static readonly List<string> FlagsIgnored =
-            Enumerable.Range(1, 6).Select(n => $"InvalidPte{n}").ToList();
+        private static readonly List<string> FlagsIgnored = new List<string> {
+            "InvalidPte1",
+            "InvalidPte2",
+            "InvalidPte3",
+            "InvalidPte4",
+            "InvalidPte5",
+            "InvalidPte6"
+        };
 
         // ReSharper disable once MemberCanBePrivate.Global
         public KernelVaShadowFlags SystemInfo { get; private set; }
