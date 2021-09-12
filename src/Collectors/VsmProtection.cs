@@ -29,6 +29,8 @@ namespace QueryHardwareSecurity.Collectors {
             WriteConsoleVerbose($"Retrieving {Name} info ...");
 
             var sysInfoLength = Marshal.SizeOf(typeof(VsmProtectionInfo));
+            WriteConsoleDebug($"Size of {nameof(VsmProtectionInfo)} structure: {sysInfoLength} bytes");
+
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemVsmProtectionInformation,
                                                     out var sysInfo,
                                                     (uint)sysInfoLength,

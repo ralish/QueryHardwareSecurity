@@ -43,6 +43,8 @@ namespace QueryHardwareSecurity.Collectors {
             WriteConsoleVerbose($"Retrieving {Name} info ...");
 
             const int sysInfoLength = sizeof(KernelVaShadowFlags);
+            WriteConsoleDebug($"Size of {nameof(KernelVaShadowFlags)} bit field: {sysInfoLength} bytes");
+
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemKernelVaShadowInformation,
                                                     out var sysInfo,
                                                     sysInfoLength,

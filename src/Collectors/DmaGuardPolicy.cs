@@ -34,6 +34,8 @@ namespace QueryHardwareSecurity.Collectors {
             WriteConsoleVerbose("Retrieving DmaGuardPolicy info ...");
 
             var sysInfoLength = Marshal.SizeOf(typeof(DmaGuardPolicyInfo));
+            WriteConsoleDebug($"Size of {nameof(DmaGuardPolicy)} structure: {sysInfoLength} bytes");
+
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemDmaGuardPolicyInformation,
                                                     out var sysInfo,
                                                     (uint)sysInfoLength,

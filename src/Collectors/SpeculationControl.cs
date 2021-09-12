@@ -40,6 +40,8 @@ namespace QueryHardwareSecurity.Collectors {
             WriteConsoleVerbose($"Retrieving {Name} info ...");
 
             const int sysInfoLength = sizeof(SpeculationControlFlags);
+            WriteConsoleDebug($"Size of {nameof(SpeculationControlFlags)} bit field: {sysInfoLength} bytes");
+
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemSpeculationControlInformation,
                                                     out var sysInfo,
                                                     sysInfoLength,
