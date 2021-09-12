@@ -83,6 +83,7 @@ namespace QueryHardwareSecurity {
          */
         internal enum SYSTEM_INFORMATION_CLASS {
             // Implemented
+            SystemSecureBootInformation               = 0x91, // Dec: 145, returns 2 bytes
             SystemVsmProtectionInformation            = 0xA9, // Dec: 169, returns 4 bytes
             SystemKernelVaShadowInformation           = 0xC4, // Dec: 196, returns 4 bytes
             SystemSpeculationControlInformation       = 0xC9, // Dec: 201, returns 4 bytes
@@ -91,7 +92,6 @@ namespace QueryHardwareSecurity {
             SystemBootEnvironmentInformation          = 0x5A, // Dec: 90,  returns 32 bytes
             SystemHypervisorInformation               = 0x5B, // Dec: 91,  returns 16 bytes
             SystemCodeIntegrityInformation            = 0x67, // Dec: 103
-            SystemSecureBootInformation               = 0x91, // Dec: 145
             SystemHypervisorDetailInformation         = 0x9F, // Dec: 159, returns 112 bytes
             SystemIsolatedUserModeInformation         = 0xA5, // Dec: 165, returns 16 bytes
             SystemSecurityModelInformation            = 0xD0, // Dec: 208
@@ -159,16 +159,6 @@ namespace QueryHardwareSecurity {
             SpareFlag6              = 0x2000,
             SpareFlag7              = 0x4000,
             SpareFlag8              = 0x8000
-        }
-
-        #endregion
-
-        #region NtQuerySystemInformation: SecureBoot
-
-        [Flags]
-        internal enum SecureBootFlags {
-            SecureBootEnabled   = 0x1,
-            SecureBootCapable   = 0x2
         }
 
         #endregion
