@@ -26,44 +26,39 @@ namespace QueryHardwareSecurity.Collectors {
             ParseFlags(Flags, _metadata);
         }
 
-        /*
-         * This information is only exposed via the NtQuerySystemInformation function in the native
-         * API. Microsoft has partially documented this specific information class, but many of the
-         * newer flags in the returned bitmask remain informally or completely undocumented.
-         *
-         * The meaning of undocumented flags was determined by reverse-engineering of the NT kernel.
-         * It's worth nothing all 32-bits of the returned bitmask have now been utilised, which may
-         * require the introduction of an additional information class if more flags are required.
-         *
-         * SYSTEM_SPECULATION_CONTROL_INFORMATION
-         * https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_speculation_control_information
-         */
+        /// <summary>
+        ///     Retrieve Speculation Control information
+        /// </summary>
+        /// <remarks>
+        ///     This information is only exposed via the NtQuerySystemInformation function in the native API. Microsoft has
+        ///     partially documented this information class, however many of the newer flags in the 32-bit bit field remain
+        ///     informally or completely undocumented. The meaning of undocumented flags was determined by reverse-engineering of
+        ///     the NT kernel. Currently 31-bits in the 32-bit bit field are used, which may necessitate the addition of another
+        ///     information class if additional speculative execution vulnerability mitigations are introduced.
+        /// </remarks>
         private void RetrieveFlags() {
-            WriteConsoleVerbose("Retrieving SpeculationControl info ...");
+            WriteConsoleVerbose($"Retrieving {Name} info ...");
 
             const int sysInfoLength = sizeof(SpeculationControlFlags);
-            var sysInfo = Marshal.AllocHGlobal(sysInfoLength);
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemSpeculationControlInformation,
-                                                    sysInfo,
+                                                    out var sysInfo,
                                                     sysInfoLength,
                                                     IntPtr.Zero);
 
-            if (ntStatus == 0) {
-                Flags = (SpeculationControlFlags)Marshal.ReadInt32(sysInfo);
-            }
 
-            Marshal.FreeHGlobal(sysInfo);
-
-            if (ntStatus != 0) {
+            switch (ntStatus) {
+                case 0:
+                    Flags = sysInfo;
+                    return;
                 // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
-                if (ntStatus == -1073741821 || ntStatus == -1073741822) {
+                case -1073741821:
+                case -1073741822:
                     throw new NotImplementedException($"System support for querying {Name} information not present.");
-                }
-
-                WriteConsoleVerbose($"Error requesting {Name} information: {ntStatus}");
-                var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
-                throw new Win32Exception(symbolicNtStatus);
             }
+
+            WriteConsoleVerbose($"Error requesting {Name} information: {ntStatus}");
+            var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
+            throw new Win32Exception(symbolicNtStatus);
         }
 
         public override string ConvertToJson() {
@@ -81,7 +76,12 @@ namespace QueryHardwareSecurity.Collectors {
 
         // @formatter:off
         // ReSharper disable InconsistentNaming
-        // ReSharper disable MemberCanBePrivate.Global
+
+        [DllImport("ntdll", ExactSpelling = true)]
+        private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
+                                                           out SpeculationControlFlags systemInformation,
+                                                           uint systemInformationLength,
+                                                           IntPtr returnLength);
 
         [Flags]
         public enum SpeculationControlFlags {
@@ -118,7 +118,6 @@ namespace QueryHardwareSecurity.Collectors {
             TaaHardwareImmune                           = 0x40000000
         }
 
-        // ReSharper enable MemberCanBePrivate.Global
         // ReSharper enable InconsistentNaming
         // @formatter:on
 

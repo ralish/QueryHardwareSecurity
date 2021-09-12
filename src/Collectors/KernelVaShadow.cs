@@ -32,40 +32,35 @@ namespace QueryHardwareSecurity.Collectors {
             ParseFlagsInternal();
         }
 
-        /*
-         * This information is only exposed via the NtQuerySystemInformation function in the native
-         * API. Microsoft has documented this specific information class, although at the time of
-         * writing there are 18 unused bits in the returned 32-bit bitmask.
-         *
-         * SYSTEM_KERNEL_VA_SHADOW_INFORMATION
-         * https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_kernel_va_shadow_information
-         */
+        /// <summary>
+        ///     Retrieve Kernel VA Shadow information
+        /// </summary>
+        /// <remarks>
+        ///     This information is only exposed via the NtQuerySystemInformation function in the native API. Microsoft has
+        ///     documented this information class, although currently there are 18 unused bits in the 32-bit bit field.
+        /// </remarks>
         private void RetrieveFlags() {
-            WriteConsoleVerbose("Retrieving KernelVaShadow info ...");
+            WriteConsoleVerbose($"Retrieving {Name} info ...");
 
             const int sysInfoLength = sizeof(KernelVaShadowFlags);
-            var sysInfo = Marshal.AllocHGlobal(sysInfoLength);
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemKernelVaShadowInformation,
-                                                    sysInfo,
+                                                    out var sysInfo,
                                                     sysInfoLength,
                                                     IntPtr.Zero);
 
-            if (ntStatus == 0) {
-                Flags = (KernelVaShadowFlags)Marshal.ReadInt32(sysInfo);
-            }
-
-            Marshal.FreeHGlobal(sysInfo);
-
-            if (ntStatus != 0) {
+            switch (ntStatus) {
+                case 0:
+                    Flags = sysInfo;
+                    return;
                 // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
-                if (ntStatus == -1073741821 || ntStatus == -1073741822) {
+                case -1073741821:
+                case -1073741822:
                     throw new NotImplementedException($"System support for querying {Name} information not present.");
-                }
-
-                WriteConsoleVerbose($"Error requesting {Name} information: {ntStatus}");
-                var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
-                throw new Win32Exception(symbolicNtStatus);
             }
+
+            WriteConsoleVerbose($"Error requesting {Name} information: {ntStatus}");
+            var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
+            throw new Win32Exception(symbolicNtStatus);
         }
 
         private void ParseFlagsInternal() {
@@ -90,8 +85,13 @@ namespace QueryHardwareSecurity.Collectors {
         #region P/Invoke
 
         // @formatter:off
-        // ReSharper disable InconsistentNaming
         // ReSharper disable MemberCanBePrivate.Global
+
+        [DllImport("ntdll", ExactSpelling = true)]
+        private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
+                                                           out KernelVaShadowFlags systemInformation,
+                                                           uint systemInformationLength,
+                                                           IntPtr returnLength);
 
         [Flags]
         public enum KernelVaShadowFlags {
@@ -117,7 +117,6 @@ namespace QueryHardwareSecurity.Collectors {
         public const int InvalidPteBitShift = 6;
 
         // ReSharper enable MemberCanBePrivate.Global
-        // ReSharper enable InconsistentNaming
         // @formatter:on
 
         #endregion
