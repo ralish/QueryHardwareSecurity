@@ -82,14 +82,21 @@ namespace QueryHardwareSecurity {
          * https://www.geoffchappell.com/studies/windows/km/ntoskrnl/api/ex/sysinfo/query.htm
          */
         internal enum SYSTEM_INFORMATION_CLASS {
-            SystemCodeIntegrityInformation      = 103,
-            SystemSecureBootInformation         = 145,
-            SystemIsolatedUserModeInformation   = 165,
-            SystemVsmProtectionInformation      = 169,
-            SystemKernelVaShadowInformation     = 196,
-            SystemSpeculationControlInformation = 201,
-            SystemDmaGuardPolicyInformation     = 202,
-            SystemSecurityModelInformation      = 208
+            // Implemented
+            SystemVsmProtectionInformation            = 0xA9, // Dec: 169, returns 4 bytes
+            SystemKernelVaShadowInformation           = 0xC4, // Dec: 196, returns 4 bytes
+            SystemSpeculationControlInformation       = 0xC9, // Dec: 201, returns 4 bytes
+            SystemDmaGuardPolicyInformation           = 0xCA, // Dec: 202, returns 1 byte
+            // TODO
+            SystemBootEnvironmentInformation          = 0x5A, // Dec: 90,  returns 32 bytes
+            SystemHypervisorInformation               = 0x5B, // Dec: 91,  returns 16 bytes
+            SystemCodeIntegrityInformation            = 0x67, // Dec: 103
+            SystemSecureBootInformation               = 0x91, // Dec: 145
+            SystemHypervisorDetailInformation         = 0x9F, // Dec: 159, returns 112 bytes
+            SystemIsolatedUserModeInformation         = 0xA5, // Dec: 165, returns 16 bytes
+            SystemSecurityModelInformation            = 0xD0, // Dec: 208
+            SystemSecureSpeculationControlInformation = 0xD5, // Dec: 213, returns 4 bytes
+            SystemShadowStackInformation              = 0xDD  // Dec: 221, returns 4 bytes
         }
 
         #endregion
