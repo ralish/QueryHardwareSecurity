@@ -176,17 +176,6 @@ namespace QueryHardwareSecurity {
 
         #endregion
 
-        #region NtQuerySystemInformation: VsmProtection
-
-        [Flags]
-        internal enum VsmProtectionFlags {
-            DmaProtectionsAvailable = 0x1,
-            DmaProtectionsInUse     = 0x2,
-            HardwareMbecAvailable   = 0x4
-        }
-
-        #endregion
-
         #region TPM Base Services
 
         internal enum TBS_RESULT : uint {
