@@ -80,6 +80,9 @@ namespace QueryHardwareSecurity {
          *
          * ZwQuerySystemInformation
          * https://www.geoffchappell.com/studies/windows/km/ntoskrnl/api/ex/sysinfo/query.htm
+         *
+         * Process Hacker
+         * https://github.com/processhacker/processhacker/blob/master/phnt/include/ntexapi.h
          */
         internal enum SYSTEM_INFORMATION_CLASS {
             // Implemented
