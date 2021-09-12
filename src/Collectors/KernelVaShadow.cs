@@ -16,7 +16,7 @@ namespace QueryHardwareSecurity.Collectors {
             Enumerable.Range(1, 6).Select(n => $"InvalidPte{n}").ToList();
 
         // ReSharper disable once MemberCanBePrivate.Global
-        public KernelVaShadowFlags Flags { get; private set; }
+        public KernelVaShadowFlags SystemInfo { get; private set; }
 
         private readonly dynamic _metadata;
 
@@ -28,7 +28,7 @@ namespace QueryHardwareSecurity.Collectors {
             RetrieveFlags();
 
             _metadata = LoadMetadata();
-            ParseFlags(Flags, _metadata, FlagsIgnored);
+            ParseFlags(SystemInfo, _metadata, FlagsIgnored);
             ParseFlagsInternal();
         }
 
@@ -52,7 +52,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             switch (ntStatus) {
                 case 0:
-                    Flags = sysInfo;
+                    SystemInfo = sysInfo;
                     return;
                 // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
                 case -1073741821:
@@ -67,7 +67,7 @@ namespace QueryHardwareSecurity.Collectors {
 
         private void ParseFlagsInternal() {
             const string flagName = "InvalidPteBit";
-            var flagValue = (((int)Flags & InvalidPteBitMask) >> InvalidPteBitShift).ToString();
+            var flagValue = (((int)SystemInfo & InvalidPteBitMask) >> InvalidPteBitShift).ToString();
             var flagData = GetOrCreateDynamicObjectKey(_metadata, flagName);
             flagData.value = flagValue;
         }
@@ -80,7 +80,7 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(true);
-            WriteConsoleFlags(Flags, _metadata, FlagsIgnored);
+            WriteConsoleFlags(SystemInfo, _metadata, FlagsIgnored);
             WriteConsoleEntry("InvalidPteBit", _metadata);
         }
 

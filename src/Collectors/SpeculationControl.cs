@@ -11,7 +11,7 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     internal class SpeculationControl : Collector {
         // ReSharper disable once MemberCanBePrivate.Global
-        public SpeculationControlFlags Flags { get; private set; }
+        public SpeculationControlFlags SystemInfo { get; private set; }
 
         private readonly dynamic _metadata;
 
@@ -23,7 +23,7 @@ namespace QueryHardwareSecurity.Collectors {
             RetrieveFlags();
 
             _metadata = LoadMetadata();
-            ParseFlags(Flags, _metadata);
+            ParseFlags(SystemInfo, _metadata);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             switch (ntStatus) {
                 case 0:
-                    Flags = sysInfo;
+                    SystemInfo = sysInfo;
                     return;
                 // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
                 case -1073741821:
@@ -71,7 +71,7 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(true);
-            WriteConsoleFlags(Flags, _metadata);
+            WriteConsoleFlags(SystemInfo, _metadata);
         }
 
         #region P/Invoke

@@ -11,12 +11,12 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class VsmProtection : Collector {
-        [JsonProperty] public bool DmaProtectionsAvailable => _vsmProtectionInfo.DmaProtectionsAvailable;
-        [JsonProperty] public bool DmaProtectionsInUse => _vsmProtectionInfo.DmaProtectionsInUse;
-        [JsonProperty] public bool HardwareMbecAvailable => _vsmProtectionInfo.HardwareMbecAvailable;
-        [JsonProperty] public bool ApicVirtualizationAvailable => _vsmProtectionInfo.ApicVirtualizationAvailable;
+        [JsonProperty] public bool DmaProtectionsAvailable => SystemInfo.DmaProtectionsAvailable;
+        [JsonProperty] public bool DmaProtectionsInUse => SystemInfo.DmaProtectionsInUse;
+        [JsonProperty] public bool HardwareMbecAvailable => SystemInfo.HardwareMbecAvailable;
+        [JsonProperty] public bool ApicVirtualizationAvailable => SystemInfo.ApicVirtualizationAvailable;
 
-        private VsmProtectionInfo _vsmProtectionInfo;
+        public VsmProtectionInfo SystemInfo { get; private set; }
 
         public VsmProtection() : base("VSM Protection") {
             ConsoleWidthName = 40;
@@ -38,7 +38,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             switch (ntStatus) {
                 case 0:
-                    _vsmProtectionInfo = sysInfo;
+                    SystemInfo = sysInfo;
                     return;
                 // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
                 case -1073741821:
@@ -59,8 +59,8 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);
-            foreach (var field in _vsmProtectionInfo.GetType().GetFields()) {
-                WriteConsoleEntry(field.Name, (bool)field.GetValue(_vsmProtectionInfo));
+            foreach (var field in SystemInfo.GetType().GetFields()) {
+                WriteConsoleEntry(field.Name, (bool)field.GetValue(SystemInfo));
             }
         }
 

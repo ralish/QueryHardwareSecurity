@@ -11,7 +11,9 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class DmaGuardPolicy : Collector {
-        [JsonProperty] public string KernelDmaProtection { get; private set; } = "Unsupported";
+        [JsonProperty] public bool DmaGuardPolicyEnabled => SystemInfo.DmaGuardPolicyEnabled;
+
+        public DmaGuardPolicyInfo SystemInfo { get; private set; }
 
         public DmaGuardPolicy() : base("DMA Guard Policy") {
             ConsoleWidthName = 40;
@@ -31,7 +33,7 @@ namespace QueryHardwareSecurity.Collectors {
         ///     single boolean field showing if the feature is disabled or enabled.
         /// </remarks>
         private void RetrieveInfo() {
-            WriteConsoleVerbose("Retrieving DmaGuardPolicy info ...");
+            WriteConsoleVerbose($"Retrieving {Name} info ...");
 
             var sysInfoLength = Marshal.SizeOf(typeof(DmaGuardPolicyInfo));
             WriteConsoleDebug($"Size of {nameof(DmaGuardPolicy)} structure: {sysInfoLength} bytes");
@@ -44,7 +46,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             switch (ntStatus) {
                 case 0:
-                    KernelDmaProtection = sysInfo.DmaGuardPolicyEnabled ? "Enabled" : "Disabled";
+                    SystemInfo = sysInfo;
                     return;
                 // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
                 case -1073741821:
@@ -65,7 +67,9 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);
-            WriteConsoleEntry("Kernel DMA Protection", KernelDmaProtection);
+            foreach (var field in SystemInfo.GetType().GetFields()) {
+                WriteConsoleEntry(field.Name, (bool)field.GetValue(SystemInfo));
+            }
         }
 
         #region P/Invoke
