@@ -24,3 +24,27 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     maximumCpuCount: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'bin/$(buildConfiguration)/net462'
+    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net462'
+    publishLocation: 'pipeline'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'bin/$(buildConfiguration)/net472'
+    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net472'
+    publishLocation: 'pipeline'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'bin/$(buildConfiguration)/netcoreapp3.1'
+    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-netcoreapp3.1'
+    publishLocation: 'pipeline'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'bin/$(buildConfiguration)/net5.0'
+    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net5.0'
+    publishLocation: 'pipeline'
