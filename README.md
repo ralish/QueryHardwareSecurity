@@ -10,9 +10,6 @@ A work-in-progress utility to query Windows support for security features and mi
 
 - [Requirements](#requirements)
 - [Resources](#resources)
-  - [Microsoft](#microsoft)
-  - [CPU Vendors](#cpu-vendors)
-  - [Miscellaneous](#miscellaneous)
 - [Glossary](#glossary)
 
 Requirements
@@ -60,7 +57,7 @@ Glossary
   Direct Memory Access
 - **EIBRS**  
   Enhanced Indirect Branch Restricted Speculation
-- **HLE**
+- **HLE**  
   Hardware Lock Elision
 - **HVCI**  
   Hypervisor-protected code integrity
@@ -86,7 +83,7 @@ Glossary
   Platform Configuration Register
 - **PTE**  
   Page Table Entry
-- **RTM**
+- **RTM**  
   Restricted Transactional Memory
 - **SMEP**  
   Supervisor Mode Execution Protection
