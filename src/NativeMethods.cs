@@ -1,5 +1,6 @@
 // @formatter:off
 // ReSharper disable InconsistentNaming
+// ReSharper disable MemberCanBePrivate.Global
 
 #pragma warning disable CS0649 // Field is never assigned to
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -92,11 +93,13 @@ namespace QueryHardwareSecurity {
 
                     foreach (var collectorName in collectorsToRun) {
                         var collectorType = Type.GetType($"{CollectorsNamespace}.{collectorName}");
+                        Debug.Assert(collectorType != null, nameof(collectorType) + " != null");
+
                         try {
                             collectors.Add((Collector)Activator.CreateInstance(collectorType));
                         } catch (TargetInvocationException ex) {
                             WriteConsoleError(
-                                $"{collectorName} collector failed to initialize: {ex.InnerException.Message}");
+                                $"{collectorName} collector failed to initialize: {ex.InnerException?.Message}");
                         }
                     }
 
