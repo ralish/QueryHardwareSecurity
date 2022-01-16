@@ -48,3 +48,9 @@ steps:
     targetPath: 'bin/$(buildConfiguration)/net5.0'
     artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net5.0'
     publishLocation: 'pipeline'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'bin/$(buildConfiguration)/net6.0'
+    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net6.0'
+    publishLocation: 'pipeline'
