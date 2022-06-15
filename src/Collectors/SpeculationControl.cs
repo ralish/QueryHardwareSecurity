@@ -114,8 +114,8 @@ namespace QueryHardwareSecurity.Collectors {
             MdsHardwareProtected                        = 0x1000000,        // Checked by SpeculationControl module
             MbClearEnabled                              = 0x2000000,        // Checked by SpeculationControl module
             MbClearReported                             = 0x4000000,        // Checked by SpeculationControl module
-            TsxControlStatus1                           = 0x8000000,
-            TsxControlStatus2                           = 0x10000000,
+            TsxCtrlStatus1                              = 0x8000000,
+            TsxCtrlStatus2                              = 0x10000000,
             TsxCtrlReported                             = 0x20000000,
             TaaHardwareImmune                           = 0x40000000
         }

@@ -86,10 +86,10 @@
     "MbClearReported": {
         "description": "MDS mitigations OS support present"
     },
-    "TsxControlStatus1": {
+    "TsxCtrlStatus1": {
         "description": "TSX RTM feature disabled (XBEGIN instruction)"
     },
-    "TsxControlStatus2": {
+    "TsxCtrlStatus2": {
         "description": "TSX RTM & HLE feature enumeration disabled"
     },
     "TsxCtrlReported": {
