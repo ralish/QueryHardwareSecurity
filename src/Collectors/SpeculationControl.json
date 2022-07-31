@@ -97,5 +97,20 @@
     },
     "TaaHardwareImmune": {
         "description": "Processor unaffected by TAA vulnerability"
+    },
+    "SbdrHardwareProtected": {
+        "description": "Processor unaffected by SBDR vulnerability"
+    },
+    "FbsdpHardwareProtected": {
+        "description": "Processor unaffected by FBSDP vulnerability"
+    },
+    "PsdpHardwareProtected": {
+        "description": "Processor unaffected by PSDP vulnerability"
+    },
+    "FbClearEnabled": {
+        "description": "MMIO Stale Data mitigations enabled"
+    },
+    "FbClearReported": {
+        "description": "MMIO Stale Data mitigations OS support present"
     }
 }

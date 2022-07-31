@@ -47,7 +47,6 @@ namespace QueryHardwareSecurity.Collectors {
                                                     sysInfoLength,
                                                     IntPtr.Zero);
 
-
             switch (ntStatus) {
                 case 0:
                     SystemInfo = sysInfo;
@@ -86,7 +85,7 @@ namespace QueryHardwareSecurity.Collectors {
                                                            IntPtr returnLength);
 
         [Flags]
-        public enum SpeculationControlFlags {
+        public enum SpeculationControlFlags : ulong {
             BpbEnabled                                  = 0x1,              // Checked by SpeculationControl module
             BpbDisabledSystemPolicy                     = 0x2,              // Checked by SpeculationControl module
             BpbDisabledNoHardwareSupport                = 0x4,              // Checked by SpeculationControl module
@@ -101,8 +100,8 @@ namespace QueryHardwareSecurity.Collectors {
             SpeculativeStoreBypassDisabledKernel        = 0x800,
             SpeculativeStoreBypassDisableRequired       = 0x1000,           // Checked by SpeculationControl module
             BpbDisabledKernelToUser                     = 0x2000,
-            SpecCtrlRetpolineEnabled                    = 0x4000,           // Checked by SpeculationControl module (silent)
-            SpecCtrlImportOptimizationEnabled           = 0x8000,           // Checked by SpeculationControl module (silent)
+            SpecCtrlRetpolineEnabled                    = 0x4000,           // Checked by SpeculationControl module
+            SpecCtrlImportOptimizationEnabled           = 0x8000,           // Checked by SpeculationControl module
             EnhancedIbrs                                = 0x10000,
             HvL1tfStatusAvailable                       = 0x20000,
             HvL1tfProcessorNotAffected                  = 0x40000,
@@ -117,7 +116,13 @@ namespace QueryHardwareSecurity.Collectors {
             TsxCtrlStatus1                              = 0x8000000,
             TsxCtrlStatus2                              = 0x10000000,
             TsxCtrlReported                             = 0x20000000,
-            TaaHardwareImmune                           = 0x40000000
+            TaaHardwareImmune                           = 0x40000000,
+
+            SbdrHardwareProtected                       = 0x100000000,      // Checked by SpeculationControl module
+            FbsdpHardwareProtected                      = 0x200000000,      // Checked by SpeculationControl module
+            PsdpHardwareProtected                       = 0x400000000,      // Checked by SpeculationControl module
+            FbClearEnabled                              = 0x800000000,      // Checked by SpeculationControl module
+            FbClearReported                             = 0x1000000000      // Checked by SpeculationControl module
         }
 
         // ReSharper enable InconsistentNaming
