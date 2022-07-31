@@ -8,7 +8,15 @@ A work-in-progress utility to query Windows support for security features and mi
 
 - [Requirements](#requirements)
 - [Resources](#resources)
+  - [Microsoft](#microsoft)
+  - [CPU Vendors](#cpu-vendors)
+  - [Miscellaneous](#miscellaneous)
 - [Glossary](#glossary)
+  - [General](#general)
+  - [Firmware](#firmware)
+  - [Processor features](#processor-features)
+  - [Processor vulnerabilities](#processor-vulnerabilities)
+  - [Windows features](#windows-features)
 
 Requirements
 ------------
@@ -43,65 +51,121 @@ Resources
 Glossary
 --------
 
-- **APIC**  
-  Advanced Programmable Interrupt Controller
-- **AVIC**  
-  Advanced Virtual Interrupt Controller
-- **BIOS**  
-  Basic Input/Output System
-- **BTI**  
-  Branch Target Injection
+### General
+
 - **DMA**  
   Direct Memory Access
-- **EIBRS**  
-  Enhanced Indirect Branch Restricted Speculation
-- **HLE**  
-  Hardware Lock Elision
-- **HVCI**  
-  Hypervisor-protected code integrity
-- **IBRS**  
-  Indirect Branch Restricted Speculation
-- **INVPCID**  
-  Invalidate Process-Context Identifier
-- **KMCI**  
-  Kernel Mode Code Integrity
-- **L1TF**  
-  L1 (Level 1 Data Cache) Terminal Fault
-- **MBE**  
-  Mode-Based Execution Control
-- **MDS**  
-  Microarchitectural Data Sampling
-- **MOR**  
-  Memory Overwrite Request Control
-- **NX**  
-  No-execute
-- **PCID**  
-  Process-Context Identifiers
-- **PCR**  
-  Platform Configuration Register
+- **MMIO**  
+  Memory-mapped I/O
 - **PTE**  
   Page Table Entry
-- **RTM**  
-  Restricted Transactional Memory
-- **SMEP**  
-  Supervisor Mode Execution Protection
 - **SMM**  
   System Management Mode
-- **SSBD**  
-  Speculative Store Bypass Disable
-- **STIBP**  
-  Single Thread Indirect Branch Predictor
-- **TAA**  
-  TSX Asynchronous Abort
-- **TSX**  
-  Transactional Synchronization Extensions
-- **UEFI**  
-  Unified Extensible Firmware Interface
-- **UMCI**  
-  User Mode Code Integrity
+- **TPM**  
+  Trusted Platform Module
 - **VA**  
   Virtual Address
 - **VMM**  
   Virtual Machine Monitor
+
+### Firmware
+
+- **BIOS**  
+  Basic Input/Output System
+- **MOR**  
+  Memory Overwrite Request Control
+- **PCR**  
+  Platform Configuration Register
+- **UEFI**  
+  Unified Extensible Firmware Interface
+
+### Processor features
+
+- **APIC**  
+  Advanced Programmable Interrupt Controller
+- **AVIC**  
+  Advanced Virtual Interrupt Controller
+- **CET**  
+  Control-Flow Enforcement Technology
+- **IBRS**  
+  Indirect Branch Restricted Speculation
+  - **EIBRS**  
+    Enhanced IBRS
+- **INVPCID**  
+  Invalidate Process-Context Identifier
+- **MBE**  
+  Mode-Based Execution Control
+- **NX**  
+  No-execute
+- **PCID**  
+  Process-Context Identifiers
+- **SMEP**  
+  Supervisor Mode Execution Protection
+- **SSBD**  
+  Speculative Store Bypass Disable
+- **STIBP**  
+  Single Thread Indirect Branch Predictor
+- **TSX**  
+  Transactional Synchronization Extensions
+  - **HLE**  
+    Hardware Lock Elision
+  - **RTM**  
+    Restricted Transactional Memory
+
+### Processor vulnerabilities
+
+- **Spectre**
+  - **BCB**  
+    Bounds Check Bypass
+  - **BCBS**  
+    Bounds Check Bypass Store
+  - **BTI**  
+    Branch Target Injection
+  - **RDCL**  
+    Rogue Data Cache Load
+  - **RSRR**  
+    Rogue System Register Read
+  - **SSB**  
+    Speculative Store Bypass
+- **Foreshadow**
+  - **L1TF**  
+    L1 (Level 1 Data Cache) Terminal Fault
+- **MDS**  
+  Microarchitectural Data Sampling
+  - **L1DES**  
+    L1D Eviction Sampling
+  - **MDSUM**  
+    Microarchitectural Data Sampling Uncacheable Memory
+  - **MFBDS**  
+    Microarchitectural Fill Buffer Data Sampling
+  - **MLPDS**  
+    Microarchitectural Load Port Data Sampling
+  - **MSBDS**  
+    Microarchitectural Store Buffer Data Sampling
+  - **TAA**  
+    TSX Asynchronous Abort
+  - **VRS**  
+    Vector Register Sampling
+- **MMIO Stale Data**  
+  Memory-mapped I/O Stale Data
+  - **DRPW**  
+    Device Register Partial Write
+  - **SBDR**  
+    Shared Buffers Data Read
+  - **SBDS**  
+    Shared Buffers Data Sampling
+  - **SRBDS Update**  
+    Special Register Buffer Data Sampling Update
+
+### Windows features
+
+- **HVCI**  
+  Hypervisor-protected code integrity
+- **KMCI**  
+  Kernel Mode Code Integrity
+- **UMCI**  
+  User Mode Code Integrity
+- **VSM**  
+  Virtual Secure Mode
 - **WSMT**  
   Windows SMM Security Mitigations Table
