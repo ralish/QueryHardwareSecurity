@@ -17,16 +17,17 @@ A work-in-progress utility to query Windows support for security features and mi
   - [Processor features](#processor-features)
   - [Processor vulnerabilities](#processor-vulnerabilities)
   - [Windows features](#windows-features)
+- [License](#license)
 
 Requirements
 ------------
 
 - Windows 7 or Server 2008 R2 (or newer)
 - Windows PowerShell 3.0 (or newer)  
-  *Built-in since Windows 8 and Server 2012.*
+  *Built-in since Windows 8 and Server 2012*
 - Supported .NET runtime
   - .NET Framework 4.6.2 (or newer)  
-    *Built-in since Windows 10 1607 and Server 2016.*
+    *Built-in since Windows 10 1607 and Server 2016*
   - .NET Core 3.1 (or newer)  
 
 Resources
@@ -169,3 +170,8 @@ Glossary
   Virtual Secure Mode
 - **WSMT**  
   Windows SMM Security Mitigations Table
+
+License
+-------
+
+All content is licensed under the terms of [The MIT License](LICENSE).
