@@ -2,49 +2,49 @@ trigger:
   batch: true
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: windows-2022
 
 variables:
-  solution: 'QueryHardwareSecurity.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  solution: QueryHardwareSecurity.sln
+  buildPlatform: Any CPU
+  buildConfiguration: Release
 
 steps:
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
   inputs:
-    command: 'restore'
-    restoreSolution: '$(solution)'
-    feedsToUse: 'select'
+    command: restore
+    restoreSolution: $(solution)
+    feedsToUse: select
 
 - task: VSBuild@1
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    solution: $(solution)
+    platform: $(buildPlatform)
+    configuration: $(buildConfiguration)
     maximumCpuCount: true
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: 'bin/$(buildConfiguration)/net462'
-    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net462'
-    publishLocation: 'pipeline'
+    targetPath: bin/$(buildConfiguration)/net462
+    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net462
+    publishLocation: pipeline
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: 'bin/$(buildConfiguration)/net472'
-    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net472'
-    publishLocation: 'pipeline'
+    targetPath: bin/$(buildConfiguration)/net472
+    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net472
+    publishLocation: pipeline
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: 'bin/$(buildConfiguration)/netcoreapp3.1'
-    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-netcoreapp3.1'
-    publishLocation: 'pipeline'
+    targetPath: bin/$(buildConfiguration)/netcoreapp3.1
+    artifact: QueryHardwareSecurity-$(build.SourceVersion)-netcoreapp3.1
+    publishLocation: pipeline
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: 'bin/$(buildConfiguration)/net6.0'
-    artifact: 'QueryHardwareSecurity-$(build.SourceVersion)-net6.0'
-    publishLocation: 'pipeline'
+    targetPath: bin/$(buildConfiguration)/net6.0
+    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net6.0
+    publishLocation: pipeline
