@@ -9,7 +9,7 @@ A work-in-progress utility to query Windows support for security features and mi
 - [Requirements](#requirements)
 - [Resources](#resources)
   - [Microsoft](#microsoft)
-  - [CPU Vendors](#cpu-vendors)
+  - [CPU vendors](#cpu-vendors)
   - [Miscellaneous](#miscellaneous)
 - [Glossary](#glossary)
   - [General](#general)
@@ -40,7 +40,7 @@ Resources
 - [KB4073757: Protect your Windows devices against speculative execution side-channel attacks](https://support.microsoft.com/en-us/help/4073757)
 - [KB4457951: Windows guidance to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4457951)
 
-### CPU Vendors
+### CPU vendors
 
 - [AMD Product Security](https://www.amd.com/en/corporate/product-security)
 - [ARM Security Updates](https://developer.arm.com/support/arm-security-updates)
