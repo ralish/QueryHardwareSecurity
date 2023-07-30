@@ -12,7 +12,6 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class WindowsDefender : Collector {
-        // @formatter:off
         public static readonly string[] CiStatuses = {
             "Disabled",
             "Audit mode",
@@ -44,19 +43,35 @@ namespace QueryHardwareSecurity.Collectors {
             "Enabled (inactive)",
             "Enabled (running)"
         };
-        // @formatter:on
 
         private static readonly List<string> NoneList = new List<string> { "None" };
 
-        [JsonProperty] public string VbsStatus { get; private set; } = "Unavailable";
-        [JsonProperty] public List<string> VbsPropsRequired { get; private set; } = new List<string>();
-        [JsonProperty] public List<string> VbsPropsAvailable { get; private set; } = new List<string>();
-        [JsonProperty] public List<string> VbsPropsUnavailable { get; private set; } = new List<string>();
-        [JsonProperty] public List<string> VbsServicesConfigured { get; private set; } = new List<string>();
-        [JsonProperty] public List<string> VbsServicesRunning { get; private set; } = new List<string>();
-        [JsonProperty] public List<string> VbsServicesNotConfigured { get; private set; } = new List<string>();
-        [JsonProperty] public string KmciStatus { get; private set; } = "Unavailable";
-        [JsonProperty] public string UmciStatus { get; private set; } = "Unavailable";
+        [JsonProperty]
+        public string VbsStatus { get; private set; } = "Unavailable";
+
+        [JsonProperty]
+        public List<string> VbsPropsRequired { get; private set; } = new List<string>();
+
+        [JsonProperty]
+        public List<string> VbsPropsAvailable { get; private set; } = new List<string>();
+
+        [JsonProperty]
+        public List<string> VbsPropsUnavailable { get; private set; } = new List<string>();
+
+        [JsonProperty]
+        public List<string> VbsServicesConfigured { get; private set; } = new List<string>();
+
+        [JsonProperty]
+        public List<string> VbsServicesRunning { get; private set; } = new List<string>();
+
+        [JsonProperty]
+        public List<string> VbsServicesNotConfigured { get; private set; } = new List<string>();
+
+        [JsonProperty]
+        public string KmciStatus { get; private set; } = "Unavailable";
+
+        [JsonProperty]
+        public string UmciStatus { get; private set; } = "Unavailable";
 
         public WindowsDefender() : base("Windows Defender") {
             ConsoleWidthName = 40;
@@ -72,10 +87,9 @@ namespace QueryHardwareSecurity.Collectors {
             try {
                 cimInstance = EnumerateCimInstances("Win32_DeviceGuard", "root/Microsoft/Windows/DeviceGuard").First();
             } catch (CimException ex) {
-                if (ex.StatusCode == 3) { // InvalidNamespace
+                if (ex.StatusCode == 3) // InvalidNamespace
                     // Only available from Windows 10 / Server 2016 and subject to product edition
                     throw new NotImplementedException("DeviceGuard WMI namespace is unavailable.");
-                }
 
                 throw;
             }
@@ -99,11 +113,9 @@ namespace QueryHardwareSecurity.Collectors {
                                           : $"Unknown security property: {vbsProp}");
             }
 
-            for (uint vbsProp = 1; vbsProp < VbsProperties.Length; vbsProp++) {
-                if (!vbsPropsAvailableRaw.Contains(vbsProp)) {
+            for (uint vbsProp = 1; vbsProp < VbsProperties.Length; vbsProp++)
+                if (!vbsPropsAvailableRaw.Contains(vbsProp))
                     VbsPropsUnavailable.Add(VbsProperties[vbsProp]);
-                }
-            }
 
             var vbsServicesConfiguredRaw =
                 (uint[])cimInstance.CimInstanceProperties["SecurityServicesConfigured"].Value;
@@ -120,11 +132,9 @@ namespace QueryHardwareSecurity.Collectors {
                                            : $"Unknown security service: {vbsService}");
             }
 
-            for (uint vbsService = 1; vbsService < VbsServices.Length; vbsService++) {
-                if (!vbsServicesConfiguredRaw.Contains(vbsService)) {
+            for (uint vbsService = 1; vbsService < VbsServices.Length; vbsService++)
+                if (!vbsServicesConfiguredRaw.Contains(vbsService))
                     VbsServicesNotConfigured.Add(VbsServices[vbsService]);
-                }
-            }
 
             // Not present on earlier Windows 10 releases
             var kmciStatusProperty = cimInstance.CimInstanceProperties["CodeIntegrityPolicyEnforcementStatus"];

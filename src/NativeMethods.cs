@@ -1,4 +1,3 @@
-// @formatter:off
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -6,7 +5,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-
 
 namespace QueryHardwareSecurity {
     internal static class NativeMethods {
@@ -21,15 +19,19 @@ namespace QueryHardwareSecurity {
                                                   uint nSize,
                                                   IntPtr arguments);
 
+        // @formatter:int_align_fields true
+
         [Flags]
         internal enum FormatMessageFlags {
-            FORMAT_MESSAGE_ALLOCATE_BUFFER  = 0x100,
-            FORMAT_MESSAGE_IGNORE_INSERTS   = 0x200,
-            FORMAT_MESSAGE_FROM_STRING      = 0x400,
-            FORMAT_MESSAGE_FROM_HMODULE     = 0x800,
-            FORMAT_MESSAGE_FROM_SYSTEM      = 0x1000,
-            FORMAT_MESSAGE_ARGUMENT_ARRAY   = 0x2000
+            FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x100,
+            FORMAT_MESSAGE_IGNORE_INSERTS  = 0x200,
+            FORMAT_MESSAGE_FROM_STRING     = 0x400,
+            FORMAT_MESSAGE_FROM_HMODULE    = 0x800,
+            FORMAT_MESSAGE_FROM_SYSTEM     = 0x1000,
+            FORMAT_MESSAGE_ARGUMENT_ARRAY  = 0x2000
         }
+
+        // @formatter:int_align_fields false
 
         #endregion
 
@@ -38,12 +40,16 @@ namespace QueryHardwareSecurity {
         [DllImport("kernel32", ExactSpelling = true, SetLastError = true)]
         internal static extern bool GetFirmwareType(out FirmwareType firmwareType);
 
+        // @formatter:int_align_fields true
+
         internal enum FirmwareType {
             Unknown = 0,
             BIOS    = 1,
             UEFI    = 2,
             Max     = 3
         }
+
+        // @formatter:int_align_fields false
 
         #endregion
 
@@ -75,6 +81,8 @@ namespace QueryHardwareSecurity {
                                                             uint systemInformationLength,
                                                             out uint returnLength);
 
+        // @formatter:int_align_fields true
+
         /*
          * NtQuerySystemInformation function
          * https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
@@ -94,14 +102,17 @@ namespace QueryHardwareSecurity {
             SystemDmaGuardPolicyInformation           = 0xCA, // Dec: 202, returns 1 byte
             SystemSecureSpeculationControlInformation = 0xD5, // Dec: 213, returns 4 bytes
             SystemShadowStackInformation              = 0xDD, // Dec: 221, returns 4 bytes
+
             // TODO
-            SystemBootEnvironmentInformation          = 0x5A, // Dec: 90,  returns 32 bytes
-            SystemHypervisorInformation               = 0x5B, // Dec: 91,  returns 16 bytes
-            SystemCodeIntegrityInformation            = 0x67, // Dec: 103
-            SystemHypervisorDetailInformation         = 0x9F, // Dec: 159, returns 112 bytes
-            SystemIsolatedUserModeInformation         = 0xA5, // Dec: 165, returns 16 bytes
-            SystemSecurityModelInformation            = 0xD0  // Dec: 208
+            SystemBootEnvironmentInformation  = 0x5A, // Dec: 90,  returns 32 bytes
+            SystemHypervisorInformation       = 0x5B, // Dec: 91,  returns 16 bytes
+            SystemCodeIntegrityInformation    = 0x67, // Dec: 103
+            SystemHypervisorDetailInformation = 0x9F, // Dec: 159, returns 112 bytes
+            SystemIsolatedUserModeInformation = 0xA5, // Dec: 165, returns 16 bytes
+            SystemSecurityModelInformation    = 0xD0  // Dec: 208
         }
+
+        // @formatter:int_align_fields false
 
         #endregion
 
@@ -117,23 +128,27 @@ namespace QueryHardwareSecurity {
             }
         }
 
+        // @formatter:int_align_fields true
+
         [Flags]
         internal enum CodeIntegrityFlags {
-            CODEINTEGRITY_OPTION_ENABLED                        = 0x1,
-            CODEINTEGRITY_OPTION_TESTSIGN                       = 0x2,
-            CODEINTEGRITY_OPTION_UMCI_ENABLED                   = 0x4,
-            CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED         = 0x8,
-            CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED    = 0x10,
-            CODEINTEGRITY_OPTION_TEST_BUILD                     = 0x20,
-            CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD            = 0x40,
-            CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED              = 0x80,
-            CODEINTEGRITY_OPTION_FLIGHT_BUILD                   = 0x100,
-            CODEINTEGRITY_OPTION_FLIGHTING_ENABLED              = 0x200,
-            CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED              = 0x400,
-            CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED    = 0x800,
-            CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED   = 0x1000,
-            CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED               = 0x2000
+            CODEINTEGRITY_OPTION_ENABLED                      = 0x1,
+            CODEINTEGRITY_OPTION_TESTSIGN                     = 0x2,
+            CODEINTEGRITY_OPTION_UMCI_ENABLED                 = 0x4,
+            CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED       = 0x8,
+            CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED  = 0x10,
+            CODEINTEGRITY_OPTION_TEST_BUILD                   = 0x20,
+            CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD          = 0x40,
+            CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED            = 0x80,
+            CODEINTEGRITY_OPTION_FLIGHT_BUILD                 = 0x100,
+            CODEINTEGRITY_OPTION_FLIGHTING_ENABLED            = 0x200,
+            CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED            = 0x400,
+            CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED  = 0x800,
+            CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED = 0x1000,
+            CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED             = 0x2000
         }
+
+        // @formatter:int_align_fields false
 
         #endregion
 
@@ -145,35 +160,43 @@ namespace QueryHardwareSecurity {
             internal long Spare1;
         }
 
+        // @formatter:int_align_fields true
+
         [Flags]
         internal enum IsolatedUserModeFlags {
-            SecureKernelRunning     = 0x1,
-            HvciEnabled             = 0x2,
-            HvciStrictMode          = 0x4,
-            DebugEnabled            = 0x8,
-            FirmwarePageProtection  = 0x10,
-            EncryptionKeyAvailable  = 0x20,
-            SpareFlag1              = 0x40,
-            SpareFlag2              = 0x80,
-            TrustletRunning         = 0x100,
-            HvciDisableAllowed      = 0x200,
-            SpareFlag3              = 0x400,
-            SpareFlag4              = 0x800,
-            SpareFlag5              = 0x1000,
-            SpareFlag6              = 0x2000,
-            SpareFlag7              = 0x4000,
-            SpareFlag8              = 0x8000
+            SecureKernelRunning    = 0x1,
+            HvciEnabled            = 0x2,
+            HvciStrictMode         = 0x4,
+            DebugEnabled           = 0x8,
+            FirmwarePageProtection = 0x10,
+            EncryptionKeyAvailable = 0x20,
+            SpareFlag1             = 0x40,
+            SpareFlag2             = 0x80,
+            TrustletRunning        = 0x100,
+            HvciDisableAllowed     = 0x200,
+            SpareFlag3             = 0x400,
+            SpareFlag4             = 0x800,
+            SpareFlag5             = 0x1000,
+            SpareFlag6             = 0x2000,
+            SpareFlag7             = 0x4000,
+            SpareFlag8             = 0x8000
         }
+
+        // @formatter:int_align_fields false
 
         #endregion
 
         #region NtQuerySystemInformation: SecurityModel
+
+        // @formatter:int_align_fields true
 
         [Flags]
         internal enum SecurityModelFlags {
             SModeAdminlessEnabled               = 0x1,
             AllowDeviceOwnerProtectionDowngrade = 0x2
         }
+
+        // @formatter:int_align_fields false
 
         #endregion
     }

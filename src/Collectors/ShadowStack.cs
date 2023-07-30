@@ -81,7 +81,6 @@ namespace QueryHardwareSecurity.Collectors {
 
         #region P/Invoke
 
-        // @formatter:off
         // ReSharper disable MemberCanBePrivate.Global
 
         [DllImport("ntdll", ExactSpelling = true)]
@@ -90,31 +89,33 @@ namespace QueryHardwareSecurity.Collectors {
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
 
+        // @formatter:int_align_fields true
+
         [Flags]
         public enum ShadowStackFlags {
-            CetCapable                  = 0x1,
-            UserCetAllowed              = 0x2,
-            KernelCetEnabled            = 0x100,
-            KernelCetAuditModeEnabled   = 0x200,
+            CetCapable                = 0x1,
+            UserCetAllowed            = 0x2,
+            KernelCetEnabled          = 0x100,
+            KernelCetAuditModeEnabled = 0x200,
 
-            ReservedForUserCet1         = 0x4,
-            ReservedForUserCet2         = 0x8,
-            ReservedForUserCet3         = 0x10,
-            ReservedForUserCet4         = 0x20,
-            ReservedForUserCet5         = 0x40,
-            ReservedForUserCet6         = 0x80,
+            ReservedForUserCet1 = 0x4,
+            ReservedForUserCet2 = 0x8,
+            ReservedForUserCet3 = 0x10,
+            ReservedForUserCet4 = 0x20,
+            ReservedForUserCet5 = 0x40,
+            ReservedForUserCet6 = 0x80,
 
-            ReservedForKernelCet1       = 0x400,
-            ReservedForKernelCet2       = 0x800,
-            ReservedForKernelCet3       = 0x1000,
-            ReservedForKernelCet4       = 0x2000,
-            ReservedForKernelCet5       = 0x4000,
-            ReservedForKernelCet6       = 0x8000
-
+            ReservedForKernelCet1 = 0x400,
+            ReservedForKernelCet2 = 0x800,
+            ReservedForKernelCet3 = 0x1000,
+            ReservedForKernelCet4 = 0x2000,
+            ReservedForKernelCet5 = 0x4000,
+            ReservedForKernelCet6 = 0x8000
         }
 
+        // @formatter:int_align_fields false
+
         // ReSharper enable MemberCanBePrivate.Global
-        // @formatter:on
 
         #endregion
     }

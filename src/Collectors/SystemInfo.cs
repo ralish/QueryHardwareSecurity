@@ -14,21 +14,30 @@ namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class SystemInfo : Collector {
         // Computer system
-        [JsonProperty] public string Hostname { get; private set; }
+        [JsonProperty]
+        public string Hostname { get; private set; }
 
         // Operating system
-        [JsonProperty] public string OsName { get; private set; }
-        [JsonProperty] public string OsVersion { get; private set; }
+        [JsonProperty]
+        public string OsName { get; private set; }
+
+        [JsonProperty]
+        public string OsVersion { get; private set; }
 
         // Processor
-        [JsonProperty] public string CpuName { get; private set; }
-        [JsonProperty] public string CpuModel { get; private set; }
+        [JsonProperty]
+        public string CpuName { get; private set; }
+
+        [JsonProperty]
+        public string CpuModel { get; private set; }
 
         // Firmware
-        [JsonProperty] public string FwType { get; private set; }
+        [JsonProperty]
+        public string FwType { get; private set; }
 
         // Hypervisor
-        [JsonProperty] public string HvPresent { get; private set; }
+        [JsonProperty]
+        public string HvPresent { get; private set; }
 
         public SystemInfo() : base("System Info") {
             ConsoleWidthName = 40;
@@ -118,7 +127,6 @@ namespace QueryHardwareSecurity.Collectors {
         private HypervisorPresent _hypervisorPresent;
         private bool _hypervisorPresentChecked;
 
-
         /*
          * The underlying property in the WMI class is a boolean but it
          * won't be present prior to Windows 8 / Server 2012. That's an
@@ -130,7 +138,6 @@ namespace QueryHardwareSecurity.Collectors {
             False,
             True
         }
-
 
         public HypervisorPresent IsHypervisorPresent {
             get {
@@ -179,16 +186,18 @@ namespace QueryHardwareSecurity.Collectors {
 
         private CimInstance _processorInfo;
 
+        // @formatter:int_align_fields true
 
         // ReSharper disable InconsistentNaming
         public enum ProcessorArchitecture {
-            x86 = 0,
-            ARM = 5,
-            x64 = 9,
+            x86   = 0,
+            ARM   = 5,
+            x64   = 9,
             ARM64 = 12
         }
         // ReSharper enable InconsistentNaming
 
+        // @formatter:int_align_fields false
 
         public CimInstance ProcessorInfo {
             get {
@@ -204,17 +213,9 @@ namespace QueryHardwareSecurity.Collectors {
 
         public string ProcessorManufacturer {
             get {
-                if (IsProcessorIntel) {
-                    return "Intel";
-                }
-
-                if (IsProcessorAmd) {
-                    return "AMD";
-                }
-
-                if (IsProcessorArm) {
-                    return "ARM";
-                }
+                if (IsProcessorIntel) return "Intel";
+                if (IsProcessorAmd) return "AMD";
+                if (IsProcessorArm) return "ARM";
 
                 throw new ArgumentOutOfRangeException(
                     $"Unknown processor manufacturer: {(string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value}");

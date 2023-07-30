@@ -75,7 +75,6 @@ namespace QueryHardwareSecurity.Collectors {
 
         #region P/Invoke
 
-        // @formatter:off
         // ReSharper disable InconsistentNaming
 
         [DllImport("ntdll", ExactSpelling = true)]
@@ -84,49 +83,52 @@ namespace QueryHardwareSecurity.Collectors {
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
 
+        // @formatter:int_align_fields true
+
         [Flags]
         public enum SpeculationControlFlags : ulong {
-            BpbEnabled                                  = 0x1,              // Checked by SpeculationControl module
-            BpbDisabledSystemPolicy                     = 0x2,              // Checked by SpeculationControl module
-            BpbDisabledNoHardwareSupport                = 0x4,              // Checked by SpeculationControl module
-            SpecCtrlEnumerated                          = 0x8,              // Checked by SpeculationControl module
-            SpecCmdEnumerated                           = 0x10,             // Checked by SpeculationControl module
-            IbrsPresent                                 = 0x20,
-            StibpPresent                                = 0x40,
-            SmepPresent                                 = 0x80,
-            SpeculativeStoreBypassDisableAvailable      = 0x100,            // Checked by SpeculationControl module
-            SpeculativeStoreBypassDisableSupported      = 0x200,            // Checked by SpeculationControl module
-            SpeculativeStoreBypassDisabledSystemWide    = 0x400,            // Checked by SpeculationControl module
-            SpeculativeStoreBypassDisabledKernel        = 0x800,
-            SpeculativeStoreBypassDisableRequired       = 0x1000,           // Checked by SpeculationControl module
-            BpbDisabledKernelToUser                     = 0x2000,
-            SpecCtrlRetpolineEnabled                    = 0x4000,           // Checked by SpeculationControl module
-            SpecCtrlImportOptimizationEnabled           = 0x8000,           // Checked by SpeculationControl module
-            EnhancedIbrs                                = 0x10000,
-            HvL1tfStatusAvailable                       = 0x20000,
-            HvL1tfProcessorNotAffected                  = 0x40000,
-            HvL1tfMigitationEnabled                     = 0x80000,
-            HvL1tfMigitationNotEnabled_Hardware         = 0x100000,
-            HvL1tfMigitationNotEnabled_LoadOption       = 0x200000,
-            HvL1tfMigitationNotEnabled_CoreScheduler    = 0x400000,
-            EnhancedIbrsReported                        = 0x800000,
-            MdsHardwareProtected                        = 0x1000000,        // Checked by SpeculationControl module
-            MbClearEnabled                              = 0x2000000,        // Checked by SpeculationControl module
-            MbClearReported                             = 0x4000000,        // Checked by SpeculationControl module
-            TsxCtrlStatus1                              = 0x8000000,
-            TsxCtrlStatus2                              = 0x10000000,
-            TsxCtrlReported                             = 0x20000000,
-            TaaHardwareImmune                           = 0x40000000,
+            BpbEnabled                               = 0x1,  // Checked by SpeculationControl module
+            BpbDisabledSystemPolicy                  = 0x2,  // Checked by SpeculationControl module
+            BpbDisabledNoHardwareSupport             = 0x4,  // Checked by SpeculationControl module
+            SpecCtrlEnumerated                       = 0x8,  // Checked by SpeculationControl module
+            SpecCmdEnumerated                        = 0x10, // Checked by SpeculationControl module
+            IbrsPresent                              = 0x20,
+            StibpPresent                             = 0x40,
+            SmepPresent                              = 0x80,
+            SpeculativeStoreBypassDisableAvailable   = 0x100, // Checked by SpeculationControl module
+            SpeculativeStoreBypassDisableSupported   = 0x200, // Checked by SpeculationControl module
+            SpeculativeStoreBypassDisabledSystemWide = 0x400, // Checked by SpeculationControl module
+            SpeculativeStoreBypassDisabledKernel     = 0x800,
+            SpeculativeStoreBypassDisableRequired    = 0x1000, // Checked by SpeculationControl module
+            BpbDisabledKernelToUser                  = 0x2000,
+            SpecCtrlRetpolineEnabled                 = 0x4000, // Checked by SpeculationControl module
+            SpecCtrlImportOptimizationEnabled        = 0x8000, // Checked by SpeculationControl module
+            EnhancedIbrs                             = 0x10000,
+            HvL1tfStatusAvailable                    = 0x20000,
+            HvL1tfProcessorNotAffected               = 0x40000,
+            HvL1tfMigitationEnabled                  = 0x80000,
+            HvL1tfMigitationNotEnabled_Hardware      = 0x100000,
+            HvL1tfMigitationNotEnabled_LoadOption    = 0x200000,
+            HvL1tfMigitationNotEnabled_CoreScheduler = 0x400000,
+            EnhancedIbrsReported                     = 0x800000,
+            MdsHardwareProtected                     = 0x1000000, // Checked by SpeculationControl module
+            MbClearEnabled                           = 0x2000000, // Checked by SpeculationControl module
+            MbClearReported                          = 0x4000000, // Checked by SpeculationControl module
+            TsxCtrlStatus1                           = 0x8000000,
+            TsxCtrlStatus2                           = 0x10000000,
+            TsxCtrlReported                          = 0x20000000,
+            TaaHardwareImmune                        = 0x40000000,
 
-            SbdrHardwareProtected                       = 0x100000000,      // Checked by SpeculationControl module
-            FbsdpHardwareProtected                      = 0x200000000,      // Checked by SpeculationControl module
-            PsdpHardwareProtected                       = 0x400000000,      // Checked by SpeculationControl module
-            FbClearEnabled                              = 0x800000000,      // Checked by SpeculationControl module
-            FbClearReported                             = 0x1000000000      // Checked by SpeculationControl module
+            SbdrHardwareProtected  = 0x100000000, // Checked by SpeculationControl module
+            FbsdpHardwareProtected = 0x200000000, // Checked by SpeculationControl module
+            PsdpHardwareProtected  = 0x400000000, // Checked by SpeculationControl module
+            FbClearEnabled         = 0x800000000, // Checked by SpeculationControl module
+            FbClearReported        = 0x1000000000 // Checked by SpeculationControl module
         }
 
+        // @formatter:int_align_fields false
+
         // ReSharper enable InconsistentNaming
-        // @formatter:on
 
         #endregion
     }

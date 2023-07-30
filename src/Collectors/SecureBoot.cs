@@ -11,8 +11,11 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class SecureBoot : Collector {
-        [JsonProperty] public bool SecureBootEnabled => SystemInfo.SecureBootEnabled;
-        [JsonProperty] public bool SecureBootCapable => SystemInfo.SecureBootCapable;
+        [JsonProperty]
+        public bool SecureBootEnabled => SystemInfo.SecureBootEnabled;
+
+        [JsonProperty]
+        public bool SecureBootCapable => SystemInfo.SecureBootCapable;
 
         public SecureBootInfo SystemInfo { get; private set; }
 
@@ -58,15 +61,12 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);
-            foreach (var field in SystemInfo.GetType().GetFields()) {
-                WriteConsoleEntry(field.Name, (bool)field.GetValue(SystemInfo));
-            }
+            foreach (var field in SystemInfo.GetType().GetFields()) WriteConsoleEntry(field.Name, (bool)field.GetValue(SystemInfo));
         }
 
         #region P/Invoke
 
 #pragma warning disable CS0649 // Field is never assigned to
-        // @formatter:off
 
         [DllImport("ntdll", ExactSpelling = true)]
         private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
@@ -82,7 +82,6 @@ namespace QueryHardwareSecurity.Collectors {
             public bool SecureBootCapable;
         }
 
-        // @formatter:on
 #pragma warning restore CS0649 // Field is never assigned to
 
         #endregion

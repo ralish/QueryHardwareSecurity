@@ -91,7 +91,6 @@ namespace QueryHardwareSecurity.Collectors {
 
         #region P/Invoke
 
-        // @formatter:off
         // ReSharper disable MemberCanBePrivate.Global
 
         [DllImport("ntdll", ExactSpelling = true)]
@@ -100,16 +99,18 @@ namespace QueryHardwareSecurity.Collectors {
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
 
+        // @formatter:int_align_fields true
+
         [Flags]
         public enum KernelVaShadowFlags {
-            KvaShadowEnabled                    = 0x1,                      // Checked by SpeculationControl module
-            KvaShadowUserGlobal                 = 0x2,
-            KvaShadowPcid                       = 0x4,                      // Checked by SpeculationControl module
-            KvaShadowInvpcid                    = 0x8,                      // Checked by SpeculationControl module
-            KvaShadowRequired                   = 0x10,                     // Checked by SpeculationControl module
-            KvaShadowRequiredAvailable          = 0x20,                     // Checked by SpeculationControl module
-            L1DataCacheFlushSupported           = 0x40,                     // Checked by SpeculationControl module
-            L1TerminalFaultMitigationPresent    = 0x80,                     // Checked by SpeculationControl module
+            KvaShadowEnabled                 = 0x1, // Checked by SpeculationControl module
+            KvaShadowUserGlobal              = 0x2,
+            KvaShadowPcid                    = 0x4,  // Checked by SpeculationControl module
+            KvaShadowInvpcid                 = 0x8,  // Checked by SpeculationControl module
+            KvaShadowRequired                = 0x10, // Checked by SpeculationControl module
+            KvaShadowRequiredAvailable       = 0x20, // Checked by SpeculationControl module
+            L1DataCacheFlushSupported        = 0x40, // Checked by SpeculationControl module
+            L1TerminalFaultMitigationPresent = 0x80, // Checked by SpeculationControl module
 
             // Handled separately in ParseFlagsInternal()
             InvalidPte1 = 0x100,
@@ -120,11 +121,12 @@ namespace QueryHardwareSecurity.Collectors {
             InvalidPte6 = 0x2000
         }
 
+        // @formatter:int_align_fields false
+
         public const int InvalidPteBitMask = 0xFC0;
         public const int InvalidPteBitShift = 6;
 
         // ReSharper enable MemberCanBePrivate.Global
-        // @formatter:on
 
         #endregion
     }

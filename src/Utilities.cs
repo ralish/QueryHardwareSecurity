@@ -74,9 +74,7 @@ namespace QueryHardwareSecurity {
         /// <param name="msg">The debug message to write to the console.</param>
         /// <remarks>Debug messages are only displayed when debug mode is enabled.</remarks>
         public static void WriteConsoleDebug(string msg) {
-            if (Program.DebugOutput) {
-                Console.Error.WriteLine(msg);
-            }
+            if (Program.DebugOutput) Console.Error.WriteLine(msg);
         }
 
         /// <summary>
@@ -94,9 +92,7 @@ namespace QueryHardwareSecurity {
         /// <param name="msg">The verbose message to write to the console.</param>
         /// <remarks>Verbose messages are only displayed when verbose mode is enabled. Debug mode implicitly enables verbose mode.</remarks>
         public static void WriteConsoleVerbose(string msg) {
-            if (Program.VerboseOutput) {
-                Console.Error.WriteLine(msg);
-            }
+            if (Program.VerboseOutput) Console.Error.WriteLine(msg);
         }
 
         #endregion
@@ -135,9 +131,7 @@ namespace QueryHardwareSecurity {
         /// <returns>The requested embedded JSON resource deserialized as an ExpandoObject.</returns>
         public static ExpandoObject LoadJsonResource(string resourceName) {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{resourceName}.json")) {
-                if (stream == null) {
-                    return new ExpandoObject();
-                }
+                if (stream == null) return new ExpandoObject();
 
                 using (var reader = new StreamReader(stream)) {
                     var resource = reader.ReadToEnd();

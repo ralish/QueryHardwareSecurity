@@ -7,32 +7,59 @@ using Newtonsoft.Json;
 
 using Tpm2Lib;
 
-
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class Tpm : Collector {
-        [JsonProperty] public uint ManufacturerId { get; private set; }
-        [JsonProperty] public string ManufacturerName { get; private set; }
-        [JsonProperty] public uint ManufacturerModel { get; private set; }
+        [JsonProperty]
+        public uint ManufacturerId { get; private set; }
 
-        [JsonProperty] public string SpecificationVersion { get; private set; }
-        [JsonProperty] public uint SpecificationLevel { get; private set; }
-        [JsonProperty] public float SpecificationRevision { get; private set; }
-        [JsonProperty] public DateTime SpecificationDate { get; private set; }
+        [JsonProperty]
+        public string ManufacturerName { get; private set; }
 
-        [JsonProperty] public string PlatformSpecificFamily { get; private set; }
-        [JsonProperty] public uint PlatformSpecificationLevel { get; private set; }
-        [JsonProperty] public float PlatformSpecificationRevision { get; private set; }
-        [JsonProperty] public DateTime PlatformSpecificationDate { get; private set; }
+        [JsonProperty]
+        public uint ManufacturerModel { get; private set; }
 
-        [JsonProperty] public Version FirmwareVersion { get; private set; }
-        [JsonProperty] public string PhysicalPresenceVersion { get; private set; }
+        [JsonProperty]
+        public string SpecificationVersion { get; private set; }
 
-        [JsonProperty] public string MemoryManagement { get; private set; }
-        [JsonProperty] public string SupportedModes { get; private set; }
+        [JsonProperty]
+        public uint SpecificationLevel { get; private set; }
 
-        [JsonProperty] public string PermanentAttributes { get; private set; }
-        [JsonProperty] public string StartupAttributes { get; private set; }
+        [JsonProperty]
+        public float SpecificationRevision { get; private set; }
+
+        [JsonProperty]
+        public DateTime SpecificationDate { get; private set; }
+
+        [JsonProperty]
+        public string PlatformSpecificFamily { get; private set; }
+
+        [JsonProperty]
+        public uint PlatformSpecificationLevel { get; private set; }
+
+        [JsonProperty]
+        public float PlatformSpecificationRevision { get; private set; }
+
+        [JsonProperty]
+        public DateTime PlatformSpecificationDate { get; private set; }
+
+        [JsonProperty]
+        public Version FirmwareVersion { get; private set; }
+
+        [JsonProperty]
+        public string PhysicalPresenceVersion { get; private set; }
+
+        [JsonProperty]
+        public string MemoryManagement { get; private set; }
+
+        [JsonProperty]
+        public string SupportedModes { get; private set; }
+
+        [JsonProperty]
+        public string PermanentAttributes { get; private set; }
+
+        [JsonProperty]
+        public string StartupAttributes { get; private set; }
 
         public Tpm() : base("Trusted Platform Module") {
             ConsoleWidthName = 40;
@@ -68,12 +95,11 @@ namespace QueryHardwareSecurity.Collectors {
                     var tpmManufacturerName = new char[tpmManufacturerBytes.Length];
                     for (var index = 0; index < tpmManufacturerName.Length; index++) {
                         // Unprintable character or invalid 7-bit ASCII
-                        if (tpmManufacturerBytes[index] < 32 || tpmManufacturerBytes[index] > 126) {
-                            break;
-                        }
+                        if (tpmManufacturerBytes[index] < 32 || tpmManufacturerBytes[index] > 126) break;
 
                         tpmManufacturerName[index] = Convert.ToChar(tpmManufacturerBytes[index]);
                     }
+
                     ManufacturerName = new string(tpmManufacturerName).Trim();
 
                     ManufacturerModel = tpmProperties.tpmProperty[Pt.VendorTpmType - Pt.PtFixed].value;
@@ -182,9 +208,7 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         private static void CheckTbsResult(TBS_RESULT tbsResult) {
-            if (tbsResult != TBS_RESULT.TBS_SUCCESS) {
-                throw new Win32Exception($"TBS API returned: {tbsResult}");
-            }
+            if (tbsResult != TBS_RESULT.TBS_SUCCESS) throw new Win32Exception($"TBS API returned: {tbsResult}");
         }
 
         public override string ConvertToJson() {
@@ -223,73 +247,76 @@ namespace QueryHardwareSecurity.Collectors {
         #region P/Invoke
 
 #pragma warning disable CS0649 // Field is never assigned to
-        // @formatter:off
         // ReSharper disable InconsistentNaming
         // ReSharper disable MemberCanBePrivate.Global
 
+        // @formatter:int_align_fields true
+
         internal enum TBS_RESULT : uint {
-            TBS_SUCCESS                     = 0x0,
-            TBS_E_INTERNAL_ERROR            = 0x80284001,
-            TBS_E_BAD_PARAMETER             = 0x80284002,
-            TBS_E_INVALID_OUTPUT_POINTER    = 0x80284003,
-            TBS_E_INVALID_CONTEXT           = 0x80284004,
-            TBS_E_INSUFFICIENT_BUFFER       = 0x80284005,
-            TBS_E_IOERROR                   = 0x80284006,
-            TBS_E_INVALID_CONTEXT_PARAM     = 0x80284007,
-            TBS_E_SERVICE_NOT_RUNNING       = 0x80284008,
-            TBS_E_TOO_MANY_TBS_CONTEXTS     = 0x80284009,
-            TBS_E_TOO_MANY_RESOURCES        = 0x8028400A,
-            TBS_E_SERVICE_START_PENDING     = 0x8028400B,
-            TBS_E_PPI_NOT_SUPPORTED         = 0x8028400C,
-            TBS_E_COMMAND_CANCELED          = 0x8028400D,
-            TBS_E_BUFFER_TOO_LARGE          = 0x8028400E,
-            TBS_E_TPM_NOT_FOUND             = 0x8028400F,
-            TBS_E_SERVICE_DISABLED          = 0x80284010,
-            TBS_E_NO_EVENT_LOG              = 0x80284011,
-            TBS_E_ACCESS_DENIED             = 0x80284012,
-            TBS_E_PROVISIONING_NOT_ALLOWED  = 0x80284013,
-            TBS_E_PPI_FUNCTION_UNSUPPORTED  = 0x80284014,
-            TBS_E_OWNERAUTH_NOT_FOUND       = 0x80284015,
-            TBS_E_PROVISIONING_INCOMPLETE   = 0x80284016
+            TBS_SUCCESS                    = 0x0,
+            TBS_E_INTERNAL_ERROR           = 0x80284001,
+            TBS_E_BAD_PARAMETER            = 0x80284002,
+            TBS_E_INVALID_OUTPUT_POINTER   = 0x80284003,
+            TBS_E_INVALID_CONTEXT          = 0x80284004,
+            TBS_E_INSUFFICIENT_BUFFER      = 0x80284005,
+            TBS_E_IOERROR                  = 0x80284006,
+            TBS_E_INVALID_CONTEXT_PARAM    = 0x80284007,
+            TBS_E_SERVICE_NOT_RUNNING      = 0x80284008,
+            TBS_E_TOO_MANY_TBS_CONTEXTS    = 0x80284009,
+            TBS_E_TOO_MANY_RESOURCES       = 0x8028400A,
+            TBS_E_SERVICE_START_PENDING    = 0x8028400B,
+            TBS_E_PPI_NOT_SUPPORTED        = 0x8028400C,
+            TBS_E_COMMAND_CANCELED         = 0x8028400D,
+            TBS_E_BUFFER_TOO_LARGE         = 0x8028400E,
+            TBS_E_TPM_NOT_FOUND            = 0x8028400F,
+            TBS_E_SERVICE_DISABLED         = 0x80284010,
+            TBS_E_NO_EVENT_LOG             = 0x80284011,
+            TBS_E_ACCESS_DENIED            = 0x80284012,
+            TBS_E_PROVISIONING_NOT_ALLOWED = 0x80284013,
+            TBS_E_PPI_FUNCTION_UNSUPPORTED = 0x80284014,
+            TBS_E_OWNERAUTH_NOT_FOUND      = 0x80284015,
+            TBS_E_PROVISIONING_INCOMPLETE  = 0x80284016
         }
 
-        internal enum TBS_COMMAND_LOCALITY: uint {
-            Zero            = 0,
-            One             = 1,
-            Two             = 2,
-            Three           = 3,
-            Four            = 4
+        internal enum TBS_COMMAND_LOCALITY : uint {
+            Zero  = 0,
+            One   = 1,
+            Two   = 2,
+            Three = 3,
+            Four  = 4
         }
 
         internal enum TBS_COMMAND_PRIORITY : uint {
-            Low             = 100,
-            Normal          = 200,
-            High            = 300,
-            System          = 400,
-            Max             = 0x80000000
+            Low    = 100,
+            Normal = 200,
+            High   = 300,
+            System = 400,
+            Max    = 0x80000000
         }
 
         [Flags]
         internal enum TBS_CONTEXT_PARAMS2_FLAGS : uint {
-            requestRaw      = 0x1,
-            includeTpm12    = 0x2,
-            includeTpm20    = 0x4
+            requestRaw   = 0x1,
+            includeTpm12 = 0x2,
+            includeTpm20 = 0x4
         }
 
         internal enum TPM_IFTYPE : uint {
-            Unknown         = 0,
-            OnePointTwo     = 1,
-            Trustzone       = 2,
-            Hardware        = 3,
-            Emulator        = 4,
-            Spb             = 5
+            Unknown     = 0,
+            OnePointTwo = 1,
+            Trustzone   = 2,
+            Hardware    = 3,
+            Emulator    = 4,
+            Spb         = 5
         }
 
         internal enum TPM_VERSION : uint {
-            Unknown         = 0,
-            OnePointTwo     = 1,
-            TwoPointZero    = 2
+            Unknown      = 0,
+            OnePointTwo  = 1,
+            TwoPointZero = 2
         }
+
+        // @formatter:int_align_fields false
 
         internal struct TPM_DEVICE_INFO {
             internal uint structVersion;
@@ -332,7 +359,7 @@ namespace QueryHardwareSecurity.Collectors {
                                                                          byte[] pabInput,
                                                                          uint cbInput,
                                                                          [System.Runtime.InteropServices.MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)]
-                                                                         [In, Out] byte[] pabOutput,
+                                                                         [In][Out] byte[] pabOutput,
                                                                          ref uint pcbOutput);
 
         [DllImport("tbs", ExactSpelling = true)]
@@ -348,13 +375,12 @@ namespace QueryHardwareSecurity.Collectors {
                                                                [System.Runtime.InteropServices.MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)]
                                                                byte[] pabCommand,
                                                                uint cbCommand,
-                                                               [System.Runtime.InteropServices.MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 6)]
-                                                               [In, Out] byte[] pabResult,
+                                                               [System.Runtime.InteropServices.MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 6)] [In] [Out]
+                                                               byte[] pabResult,
                                                                ref uint pcbResult);
 
         // ReSharper enable MemberCanBePrivate.Global
         // ReSharper enable InconsistentNaming
-        // @formatter:on
 #pragma warning restore CS0649 // Field is never assigned to
 
         #endregion

@@ -66,7 +66,6 @@ namespace QueryHardwareSecurity.Collectors {
 
         #region P/Invoke
 
-        // @formatter:off
         // ReSharper disable InconsistentNaming
 
         [DllImport("ntdll", ExactSpelling = true)]
@@ -74,6 +73,8 @@ namespace QueryHardwareSecurity.Collectors {
                                                            out SecureSpeculationControlFlags systemInformation,
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
+
+        // @formatter:int_align_fields true
 
         [Flags]
         public enum SecureSpeculationControlFlags {
@@ -90,11 +91,12 @@ namespace QueryHardwareSecurity.Collectors {
             SsbdSupported       = 0x400,
             SsbdRequired        = 0x800,
             BpbKernelToUser     = 0x1000,
-            BpbUserToKernel     = 0x2000,
+            BpbUserToKernel     = 0x2000
         }
 
+        // @formatter:int_align_fields false
+
         // ReSharper enable InconsistentNaming
-        // @formatter:on
 
         #endregion
     }

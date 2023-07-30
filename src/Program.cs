@@ -73,14 +73,10 @@ namespace QueryHardwareSecurity {
             rootCommand.SetHandler((verbose, debug, noColor, outputFormatString, collectorsSelected) => {
                 VerboseOutput = verbose;
                 DebugOutput = debug;
-                if (DebugOutput) {
-                    VerboseOutput = true;
-                }
+                if (DebugOutput) VerboseOutput = true;
 
                 var colorOutput = !noColor;
-                if (colorOutput) {
-                    ResetConsoleColor();
-                }
+                if (colorOutput) ResetConsoleColor();
 
                 Enum.TryParse(outputFormatString, true, out OutputFormat outputFormat);
 
@@ -89,13 +85,11 @@ namespace QueryHardwareSecurity {
 
                 // Ensure order of execution is deterministic
                 var collectorsToRun = collectorsSelected
-                                     .Where(collector => !CollectorsSortExclusions.Contains(collector))
-                                     .OrderBy(collector => collector).ToList();
+                                      .Where(collector => !CollectorsSortExclusions.Contains(collector))
+                                      .OrderBy(collector => collector).ToList();
 
                 // SystemInfo collector should be first
-                if (collectorsSelected.Contains("SystemInfo")) {
-                    collectorsToRun.Insert(0, "SystemInfo");
-                }
+                if (collectorsSelected.Contains("SystemInfo")) collectorsToRun.Insert(0, "SystemInfo");
 
                 foreach (var collectorName in collectorsToRun) {
                     var collectorType = Type.GetType($"{CollectorsNamespace}.{collectorName}");
@@ -130,18 +124,14 @@ namespace QueryHardwareSecurity {
                 Enum.TryParse(outputFormatString, true, out ConsoleOutputStyle consoleOutputStyle);
 
                 foreach (var collector in collectors) {
-                    if (!consoleFirstOutput && outputFormat == OutputFormat.Raw) {
-                        Console.WriteLine();
-                    }
+                    if (!consoleFirstOutput && outputFormat == OutputFormat.Raw) Console.WriteLine();
 
                     collector.ConsoleColorOutput = colorOutput;
                     collector.WriteConsole(consoleOutputStyle);
                     consoleFirstOutput = false;
                 }
 
-                if (outputFormat == OutputFormat.Table) {
-                    Console.WriteLine(new string('-', 119));
-                }
+                if (outputFormat == OutputFormat.Table) Console.WriteLine(new string('-', 119));
             }, optVerbose, optDebug, optNoColor, optOutput, optCollectors);
 
 #if DEBUG

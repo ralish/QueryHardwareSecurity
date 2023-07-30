@@ -73,10 +73,7 @@ namespace QueryHardwareSecurity.Collectors {
             }
 
             Console.Write($"| {name.PadRight(ConsoleWidthName)} | {value.PadRight(ConsoleWidthValue)} |");
-            if (description != null) {
-                Console.Write($" {description.PadRight(ConsoleWidthDescription)} |");
-            }
-
+            if (description != null) Console.Write($" {description.PadRight(ConsoleWidthDescription)} |");
             Console.WriteLine();
         }
 
@@ -95,9 +92,7 @@ namespace QueryHardwareSecurity.Collectors {
             }
 
             Console.WriteLine($"| {name.PadRight(ConsoleWidthName)} | {values.First().PadRight(ConsoleWidthValue)} |");
-            foreach (var value in values.Skip(1)) {
-                Console.WriteLine($"| {new string(' ', ConsoleWidthName)} | {value.PadRight(ConsoleWidthValue)} |");
-            }
+            foreach (var value in values.Skip(1)) Console.WriteLine($"| {new string(' ', ConsoleWidthName)} | {value.PadRight(ConsoleWidthValue)} |");
         }
 
         /// <summary>
@@ -121,9 +116,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             if (ConsoleOutputStyle == ConsoleOutputStyle.Table) {
                 Console.Write(" |");
-                if (description != null) {
-                    Console.Write($" {description.PadRight(ConsoleWidthDescription)} |");
-                }
+                if (description != null) Console.Write($" {description.PadRight(ConsoleWidthDescription)} |");
             }
 
             Console.WriteLine();
@@ -170,10 +163,7 @@ namespace QueryHardwareSecurity.Collectors {
         protected void WriteConsoleFlags(Enum flags, dynamic metadata, List<string> ignored = null) {
             foreach (Enum flag in Enum.GetValues(flags.GetType())) {
                 var flagName = flag.ToString();
-
-                if (ignored != null && ignored.Contains(flagName)) {
-                    continue;
-                }
+                if (ignored != null && ignored.Contains(flagName)) continue;
 
                 if (ConsoleOutputStyle == ConsoleOutputStyle.Raw) {
                     Console.WriteLine($"{flagName.PadRight(ConsoleWidthName)} : {flags.HasFlag(flag)}");
@@ -214,10 +204,9 @@ namespace QueryHardwareSecurity.Collectors {
                 return;
             }
 
-            var tableDivider = new string('-', ConsoleWidthName + ConsoleWidthValue + 7); // Separators & spacing
-            if (withDescription) {
-                tableDivider += new string('-', ConsoleWidthDescription + 3); // Separators & spacing
-            }
+            // Separators & spacing
+            var tableDivider = new string('-', ConsoleWidthName + ConsoleWidthValue + 7);
+            if (withDescription) tableDivider += new string('-', ConsoleWidthDescription + 3);
 
             var extraSpace = (tableDivider.Length - Name.Length) % 2 == 1;
             var titlePadding = new string(' ', (tableDivider.Length - (Name.Length + 2)) / 2);
@@ -225,11 +214,7 @@ namespace QueryHardwareSecurity.Collectors {
             Console.WriteLine(tableDivider);
             Console.Write($"|{titlePadding}");
             WriteConsoleTitle();
-
-            if (extraSpace) {
-                Console.Write(" ");
-            }
-
+            if (extraSpace) Console.Write(" ");
             Console.WriteLine($"{titlePadding}|");
             Console.WriteLine(tableDivider);
         }
@@ -252,10 +237,7 @@ namespace QueryHardwareSecurity.Collectors {
             }
 
             Console.Write($"{value.ToString().PadRight(ConsoleWidthValue)}");
-
-            if (ConsoleColorOutput) {
-                ResetConsoleColor();
-            }
+            if (ConsoleColorOutput) ResetConsoleColor();
         }
 
         /// <summary>
@@ -263,15 +245,9 @@ namespace QueryHardwareSecurity.Collectors {
         /// </summary>
         /// <remarks>No newline is written. If <see cref="ConsoleColorOutput" /> is enabled the title will be written in colour.</remarks>
         private void WriteConsoleTitle() {
-            if (ConsoleColorOutput) {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-            }
-
+            if (ConsoleColorOutput) Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Write(Name);
-
-            if (ConsoleColorOutput) {
-                ResetConsoleColor();
-            }
+            if (ConsoleColorOutput) ResetConsoleColor();
         }
 
         #endregion
@@ -289,10 +265,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             foreach (Enum flag in Enum.GetValues(flags.GetType())) {
                 var flagName = flag.ToString();
-
-                if (ignored != null && ignored.Contains(flagName)) {
-                    continue;
-                }
+                if (ignored != null && ignored.Contains(flagName)) continue;
 
                 var flagData = GetOrCreateDynamicObjectKey(metadata, flagName);
                 flagData.value = flags.HasFlag(flag);

@@ -11,7 +11,8 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal class DmaGuardPolicy : Collector {
-        [JsonProperty] public bool DmaGuardPolicyEnabled => SystemInfo.DmaGuardPolicyEnabled;
+        [JsonProperty]
+        public bool DmaGuardPolicyEnabled => SystemInfo.DmaGuardPolicyEnabled;
 
         public DmaGuardPolicyInfo SystemInfo { get; private set; }
 
@@ -67,15 +68,13 @@ namespace QueryHardwareSecurity.Collectors {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(false);
-            foreach (var field in SystemInfo.GetType().GetFields()) {
-                WriteConsoleEntry(field.Name, (bool)field.GetValue(SystemInfo));
-            }
+            foreach (var field in SystemInfo.GetType().GetFields()) WriteConsoleEntry(field.Name, (bool)field.GetValue(SystemInfo));
         }
 
         #region P/Invoke
 
 #pragma warning disable CS0649 // Field is never assigned to
-        // @formatter:off
+        // @formatter:int_align_fields true
 
         [DllImport("ntdll", ExactSpelling = true)]
         private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
@@ -88,7 +87,7 @@ namespace QueryHardwareSecurity.Collectors {
             public bool DmaGuardPolicyEnabled;
         }
 
-        // @formatter:on
+        // @formatter:int_align_fields false
 #pragma warning restore CS0649 // Field is never assigned to
 
         #endregion
