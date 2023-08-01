@@ -119,7 +119,7 @@ namespace QueryHardwareSecurity {
         #region NtQuerySystemInformation: CodeIntegrity
 
         [StructLayout(LayoutKind.Sequential)]
-        internal class CodeIntegrityInformation {
+        internal sealed class CodeIntegrityInformation {
             internal uint Length;
             internal CodeIntegrityFlags CodeIntegrityOptions;
 

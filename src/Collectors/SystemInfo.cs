@@ -12,7 +12,7 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
-    internal class SystemInfo : Collector {
+    internal sealed class SystemInfo : Collector {
         // Computer system
         [JsonProperty]
         public string Hostname { get; private set; }

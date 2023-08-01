@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.CommandLine;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -43,7 +44,9 @@ namespace QueryHardwareSecurity {
         public static async Task<int> Main(params string[] args) {
             IsPlatformSupported();
 
-            var validOutputs = Enum.GetNames(typeof(OutputFormat)).Select(format => format.ToLower()).ToArray();
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            var validOutputs = Enum.GetNames(typeof(OutputFormat)).Select(format => format.ToLower(CultureInfo.InvariantCulture)).ToArray();
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
             var validCollectors = Assembly.GetExecutingAssembly().GetTypes()
                                           .Where(type => type.IsSubclassOf(CollectorsBaseClass))

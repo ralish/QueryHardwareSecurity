@@ -10,7 +10,7 @@ using static QueryHardwareSecurity.Utilities;
 
 
 namespace QueryHardwareSecurity.Collectors {
-    internal class ShadowStack : Collector {
+    internal sealed class ShadowStack : Collector {
         private static readonly List<string> FlagsIgnored = new List<string> {
             "ReservedForKernelCet1",
             "ReservedForKernelCet2",

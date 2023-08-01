@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 
 using Microsoft.CSharp.RuntimeBinder;
@@ -39,7 +40,7 @@ namespace QueryHardwareSecurity.Collectors {
             Name = name;
             ModuleName = GetType().Name;
             ConsolePrefix = $"[{ModuleName}]";
-            JsonName = char.ToLower(ModuleName[0]) + ModuleName.Substring(1);
+            JsonName = char.ToLower(ModuleName[0], CultureInfo.InvariantCulture) + ModuleName.Substring(1);
             WriteConsoleVerbose("Initializing collector ...");
         }
 

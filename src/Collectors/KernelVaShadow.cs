@@ -10,7 +10,7 @@ using static QueryHardwareSecurity.Utilities;
 
 
 namespace QueryHardwareSecurity.Collectors {
-    internal class KernelVaShadow : Collector {
+    internal sealed class KernelVaShadow : Collector {
         private static readonly List<string> FlagsIgnored = new List<string> {
             "InvalidPte1",
             "InvalidPte2",

@@ -9,7 +9,7 @@ using static QueryHardwareSecurity.Utilities;
 
 
 namespace QueryHardwareSecurity.Collectors {
-    internal class SpeculationControl : Collector {
+    internal sealed class SpeculationControl : Collector {
         // ReSharper disable once MemberCanBePrivate.Global
         public SpeculationControlFlags SystemInfo { get; private set; }
 

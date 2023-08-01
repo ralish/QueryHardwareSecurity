@@ -10,7 +10,7 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
-    internal class VsmProtection : Collector {
+    internal sealed class VsmProtection : Collector {
         [JsonProperty]
         public bool DmaProtectionsAvailable => SystemInfo.DmaProtectionsAvailable;
 

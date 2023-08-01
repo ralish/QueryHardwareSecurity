@@ -10,7 +10,7 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
-    internal class DmaGuardPolicy : Collector {
+    internal sealed class DmaGuardPolicy : Collector {
         [JsonProperty]
         public bool DmaGuardPolicyEnabled => SystemInfo.DmaGuardPolicyEnabled;
 

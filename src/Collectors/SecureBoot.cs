@@ -10,7 +10,7 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
-    internal class SecureBoot : Collector {
+    internal sealed class SecureBoot : Collector {
         [JsonProperty]
         public bool SecureBootEnabled => SystemInfo.SecureBootEnabled;
 

@@ -9,7 +9,7 @@ using Tpm2Lib;
 
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
-    internal class Tpm : Collector {
+    internal sealed class Tpm : Collector {
         [JsonProperty]
         public uint ManufacturerId { get; private set; }
 
@@ -326,7 +326,7 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal class TBS_CONTEXT_PARAMS {
+        internal sealed class TBS_CONTEXT_PARAMS {
             internal uint version;
 
             public TBS_CONTEXT_PARAMS() {
@@ -335,7 +335,7 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal class TBS_CONTEXT_PARAMS2 {
+        internal sealed class TBS_CONTEXT_PARAMS2 {
             internal uint version;
             internal TBS_CONTEXT_PARAMS2_FLAGS flags;
 
@@ -359,7 +359,9 @@ namespace QueryHardwareSecurity.Collectors {
                                                                          byte[] pabInput,
                                                                          uint cbInput,
                                                                          [System.Runtime.InteropServices.MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)]
-                                                                         [In][Out] byte[] pabOutput,
+                                                                         [In]
+                                                                         [Out]
+                                                                         byte[] pabOutput,
                                                                          ref uint pcbOutput);
 
         [DllImport("tbs", ExactSpelling = true)]

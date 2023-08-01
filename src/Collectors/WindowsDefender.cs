@@ -11,7 +11,7 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
-    internal class WindowsDefender : Collector {
+    internal sealed class WindowsDefender : Collector {
         public static readonly string[] CiStatuses = {
             "Disabled",
             "Audit mode",
