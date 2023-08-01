@@ -24,17 +24,6 @@
             "console": "internalConsole"
         },
         {
-            "name": "Launch (.NET Core 3.1)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/QueryHardwareSecurity.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
-            "console": "internalConsole"
-        },
-        {
             "name": "Launch (.NET 6.0)",
             "type": "coreclr",
             "request": "launch",

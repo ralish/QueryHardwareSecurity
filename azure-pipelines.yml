@@ -57,18 +57,6 @@ steps:
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: bin/Release/netcoreapp3.1
-    artifact: QueryHardwareSecurity-$(build.SourceVersion)-netcoreapp3.1
-    publishLocation: pipeline
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: bin/Debug/netcoreapp3.1
-    artifact: QueryHardwareSecurity-$(build.SourceVersion)-netcoreapp3.1-dbg
-    publishLocation: pipeline
-
-- task: PublishPipelineArtifact@1
-  inputs:
     targetPath: bin/Release/net6.0
     artifact: QueryHardwareSecurity-$(build.SourceVersion)-net6.0
     publishLocation: pipeline
