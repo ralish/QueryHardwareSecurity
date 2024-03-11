@@ -66,3 +66,15 @@ steps:
     targetPath: bin/Debug/net6.0
     artifact: QueryHardwareSecurity-$(build.SourceVersion)-net6.0-dbg
     publishLocation: pipeline
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: bin/Release/net8.0
+    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net8.0
+    publishLocation: pipeline
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: bin/Debug/net8.0
+    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net8.0-dbg
+    publishLocation: pipeline
