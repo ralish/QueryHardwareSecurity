@@ -53,6 +53,7 @@ namespace QueryHardwareSecurity {
                                           .Select(collector => collector.Name)
                                           .ToArray();
 
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
             var optVerbose = new Option<bool>(new[] { "-v", "--verbose" }, "Verbose output");
             var optDebug = new Option<bool>(new[] { "-d", "--debug" }, "Debug output (implies verbose)");
             var optNoColor = new Option<bool>(new[] { "-nc", "--no-color" }, "No colored output");
@@ -64,6 +65,7 @@ namespace QueryHardwareSecurity {
             var optCollectors = new Option<string[]>(new[] { "-c", "--collectors" }, "Collectors to run") {
                 Name = "collectorsSelected", Arity = ArgumentArity.OneOrMore
             }.FromAmong(validCollectors);
+#pragma warning restore CA1861 // Avoid constant arrays as arguments
 
             var rootCommand = new RootCommand {
                 optVerbose,
