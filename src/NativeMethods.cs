@@ -85,7 +85,7 @@ namespace QueryHardwareSecurity {
 
         /*
          * NtQuerySystemInformation function
-         * https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
+         * https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
          *
          * ZwQuerySystemInformation
          * https://www.geoffchappell.com/studies/windows/km/ntoskrnl/api/ex/sysinfo/query.htm
