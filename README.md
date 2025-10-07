@@ -28,7 +28,6 @@ Requirements
 - Supported .NET runtimes
   - .NET Framework 4.6.2 (or newer)  
     *Built-in since Windows 10 1607 and Server 2016*
-  - .NET 6.0  
   - .NET 8.0  
 
 Resources
