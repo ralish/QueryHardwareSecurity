@@ -24,17 +24,6 @@
             "console": "internalConsole"
         },
         {
-            "name": "Launch (.NET 6.0)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/QueryHardwareSecurity.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
-            "console": "internalConsole"
-        },
-        {
             "name": "Launch (.NET 8.0)",
             "type": "coreclr",
             "request": "launch",
