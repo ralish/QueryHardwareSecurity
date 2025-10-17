@@ -23,7 +23,7 @@ using static QueryHardwareSecurity.Utilities;
 
 
 namespace QueryHardwareSecurity {
-    internal static class Program {
+    public static class Program {
         private static readonly string CollectorsNamespace = $"{Assembly.GetExecutingAssembly().GetName().Name}.Collectors";
 
         private static readonly Type CollectorsBaseClass = Type.GetType($"{CollectorsNamespace}.Collector");

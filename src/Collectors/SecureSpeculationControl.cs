@@ -10,41 +10,31 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     internal sealed class SecureSpeculationControl : Collector {
-        // ReSharper disable once MemberCanBePrivate.Global
-        public SecureSpeculationControlFlags SystemInfo { get; private set; }
-
-        private readonly dynamic _metadata;
+        private SecureSpeculationControlInfo _secureSpecCtrlInfo;
 
         public SecureSpeculationControl() : base("Secure Speculation Control") {
             ConsoleWidthName = 40;
             ConsoleWidthValue = 5;
             ConsoleWidthDescription = 64;
 
-            RetrieveFlags();
-
-            _metadata = LoadMetadata();
-            ParseFlags(SystemInfo, _metadata);
+            RetrieveInfo();
         }
 
-        private void RetrieveFlags() {
+        private void RetrieveInfo() {
             WriteConsoleVerbose($"Retrieving {Name} info ...");
 
-            const int sysInfoLength = sizeof(SecureSpeculationControlFlags);
-            WriteConsoleDebug($"Size of {nameof(SecureSpeculationControlFlags)} bit field: {sysInfoLength} bytes");
+            var secureSpecCtrlInfoLength = Marshal.SizeOf(typeof(SecureSpeculationControlInfo));
+            WriteConsoleDebug($"Size of {nameof(SecureSpeculationControlInfo)} structure: {secureSpecCtrlInfoLength} bytes");
 
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemSecureSpeculationControlInformation,
-                                                    out var sysInfo,
-                                                    sysInfoLength,
+                                                    out _secureSpecCtrlInfo,
+                                                    (uint)secureSpecCtrlInfoLength,
                                                     IntPtr.Zero);
 
-
             switch (ntStatus) {
-                case 0:
-                    SystemInfo = sysInfo;
-                    return;
-                // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
-                case -1073741821:
-                case -1073741822:
+                case 0: return;
+                case -1073741821: // STATUS_INVALID_INFO_CLASS
+                case -1073741822: // STATUS_NOT_IMPLEMENTED
                     throw new NotImplementedException($"System support for querying {Name} information not present.");
             }
 
@@ -54,49 +44,83 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         public override string ConvertToJson() {
-            return JsonConvert.SerializeObject(_metadata);
+            return JsonConvert.SerializeObject(_secureSpecCtrlInfo);
         }
 
         public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(true);
-            WriteConsoleFlags(SystemInfo, _metadata);
+            foreach (var property in _secureSpecCtrlInfo.GetType().GetProperties()) {
+                WriteConsoleEntry(property.Name, (bool)property.GetValue(_secureSpecCtrlInfo));
+            }
         }
 
         #region P/Invoke
 
-        // ReSharper disable InconsistentNaming
-
         [DllImport("ntdll", ExactSpelling = true)]
         private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
-                                                           out SecureSpeculationControlFlags systemInformation,
+                                                           out SecureSpeculationControlInfo systemInformation,
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
 
-        // @formatter:int_align_fields true
+        private struct SecureSpeculationControlInfo {
+            private uint _RawBits;
 
-        [Flags]
-        public enum SecureSpeculationControlFlags {
-            KvaShadowSupported  = 0x1,
-            KvaShadowEnabled    = 0x2,
-            KvaShadowUserGlobal = 0x4,
-            KvaShadowPcid       = 0x8,
-            MbClearEnabled      = 0x10,
-            L1TFMitigated       = 0x20,
-            BpbEnabled          = 0x40,
-            IbrsPresent         = 0x80,
-            EnhancedIbrs        = 0x100,
-            StibpPresent        = 0x200,
-            SsbdSupported       = 0x400,
-            SsbdRequired        = 0x800,
-            BpbKernelToUser     = 0x1000,
-            BpbUserToKernel     = 0x2000
+            [JsonProperty(Order = 1)]
+            public bool KvaShadowSupported => (_RawBits & 0x1) == 1; // Bit 0
+
+            [JsonProperty(Order = 2)]
+            public bool KvaShadowEnabled => ((_RawBits >> 1) & 0x1) == 1; // Bit 1
+
+            [JsonProperty(Order = 3)]
+            public bool KvaShadowUserGlobal => ((_RawBits >> 2) & 0x1) == 1; // Bit 2
+
+            [JsonProperty(Order = 4)]
+            public bool KvaShadowPcid => ((_RawBits >> 3) & 0x1) == 1; // Bit 3
+
+            [JsonProperty(Order = 5)]
+            public bool MbClearEnabled => ((_RawBits >> 4) & 0x1) == 1; // Bit 4
+
+            [JsonProperty(Order = 6)]
+            public bool L1TFMitigated => ((_RawBits >> 5) & 0x1) == 1; // Bit 5
+
+            [JsonProperty(Order = 7)]
+            public bool BpbEnabled => ((_RawBits >> 6) & 0x1) == 1; // Bit 6
+
+            [JsonProperty(Order = 8)]
+            public bool IbrsPresent => ((_RawBits >> 7) & 0x1) == 1; // Bit 7
+
+            [JsonProperty(Order = 9)]
+            public bool EnhancedIbrs => ((_RawBits >> 8) & 0x1) == 1; // Bit 8
+
+            [JsonProperty(Order = 10)]
+            public bool StibpPresent => ((_RawBits >> 9) & 0x1) == 1; // Bit 9
+
+            [JsonProperty(Order = 11)]
+            public bool SsbdSupported => ((_RawBits >> 10) & 0x1) == 1; // Bit 10
+
+            [JsonProperty(Order = 12)]
+            public bool SsbdRequired => ((_RawBits >> 11) & 0x1) == 1; // Bit 11
+
+            [JsonProperty(Order = 13)]
+            public bool BpbKernelToUser => ((_RawBits >> 12) & 0x1) == 1; // Bit 12
+
+            [JsonProperty(Order = 14)]
+            public bool BpbUserToKernel => ((_RawBits >> 13) & 0x1) == 1; // Bit 13
+
+            [JsonProperty(Order = 15)]
+            public bool ReturnSpeculate => ((_RawBits >> 14) & 0x1) == 1; // Bit 14
+
+            [JsonProperty(Order = 16)]
+            public bool BranchConfusionSafe => ((_RawBits >> 15) & 0x1) == 1; // Bit 15
+
+            [JsonProperty(Order = 17)]
+            public bool SsbsEnabledAlways => ((_RawBits >> 16) & 0x1) == 1; // Bit 16
+
+            [JsonProperty(Order = 18)]
+            public bool SsbsEnabledKernel => ((_RawBits >> 17) & 0x1) == 1; // Bit 17
         }
-
-        // @formatter:int_align_fields false
-
-        // ReSharper enable InconsistentNaming
 
         #endregion
     }

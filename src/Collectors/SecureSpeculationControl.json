@@ -1,0 +1,57 @@
+{
+    "KvaShadowSupported": {
+        "description": "OS supports Kernel VA Shadowing"
+    },
+    "KvaShadowEnabled": {
+        "description": "Kernel VA Shadowing enabled"
+    },
+    "KvaShadowUserGlobal": {
+        "description": "KVA Shadowing enabled for global user pages"
+    },
+    "KvaShadowPcid": {
+        "description": "KVA Shadowing using processor PCID support"
+    },
+    "MbClearEnabled": {
+        "description": "MDS vulnerability mitigations enabled"
+    },
+    "L1TFMitigated": {
+        "description": "OS supports L1TF vulnerability mitigation"
+    },
+    "BpbEnabled": {
+        "description": "BTI mitigations supported and enabled"
+    },
+    "IbrsPresent": {
+        "description": "Processor supports IBRS"
+    },
+    "EnhancedIbrs": {
+        "description": "Processor supports EIBRS"
+    },
+    "StibpPresent": {
+        "description": "Processor supports STIBP"
+    },
+    "SsbdSupported": {
+        "description": "Processor supports SSBD"
+    },
+    "SsbdRequired": {
+        "description": "Processor is vulnerable to SSB (Spectre-NG V4)",
+        "invert": true
+    },
+    "BpbKernelToUser": {
+        "description": "BTI mitigations enabled for kernel to user-mode transitions"
+    },
+    "BpbUserToKernel": {
+        "description": "BTI mitigations enabled for user-mode to kernel transitions"
+    },
+    "ReturnSpeculate": {
+        "description": "[TODO]"
+    },
+    "BranchConfusionSafe": {
+        "description": "[TODO]"
+    },
+    "SsbsEnabledAlways": {
+        "description": "[TODO]"
+    },
+    "SsbsEnabledKernel": {
+        "description": "[TODO]"
+    }
+}

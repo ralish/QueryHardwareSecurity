@@ -1,0 +1,8 @@
+{
+    "SecureBootEnabled": {
+        "description": "Secure Boot enabled"
+    },
+    "SecureBootCapable": {
+        "description": "Secure Boot supported by system"
+    }
+}

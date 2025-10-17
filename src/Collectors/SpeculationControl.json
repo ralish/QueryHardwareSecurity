@@ -7,7 +7,7 @@
         "invert": true
     },
     "BpbDisabledNoHardwareSupport": {
-        "description": "BTI mitigations disabled by absence of hardware support",
+        "description": "BTI mitigations disabled due to missing hardware support",
         "invert": true
     },
     "SpecCtrlEnumerated": {
@@ -17,32 +17,34 @@
         "description": "Processor supports IA32_PRED_CMD (Prediction Command) MSR"
     },
     "IbrsPresent": {
-        "description": "IBRS processor feature enabled"
+        "description": "Processor supports IBRS"
     },
     "StibpPresent": {
-        "description": "STIBP processor feature enabled"
+        "description": "Processor supports STIBP"
     },
     "SmepPresent": {
-        "description": "SMEP processor feature enabled"
+        "description": "Processor supports SMEP"
     },
     "SpeculativeStoreBypassDisableAvailable": {
-        "description": "SSBD OS support present"
+        "description": "OS supports SSBD"
     },
     "SpeculativeStoreBypassDisableSupported": {
-        "description": "SSBD hardware support present"
+        "description": "Processor supports SSBD"
     },
     "SpeculativeStoreBypassDisabledSystemWide": {
-        "description": "SSBD enabled for all transitions"
+        "description": "SSBD disabled system-wide",
+        "invert": true
     },
     "SpeculativeStoreBypassDisabledKernel": {
-        "description": "SSBD enabled for kernel-mode transitions"
+        "description": "[TODO] SSBD disabled for kernel-mode transitions",
+        "invert": true
     },
     "SpeculativeStoreBypassDisableRequired": {
-        "description": "SSBD required for vulnerability mitigation",
+        "description": "Processor is vulnerable to SSB (Spectre-NG V4)",
         "invert": true
     },
     "BpbDisabledKernelToUser": {
-        "description": "BTI mitigations disabled for kernel to user transitions",
+        "description": "BTI mitigations disabled for kernel to user-mode transitions",
         "invert": true
     },
     "SpecCtrlRetpolineEnabled": {
@@ -52,19 +54,19 @@
         "description": "Retpoline mitigation import address table optimisation enabled"
     },
     "EnhancedIbrs": {
-        "description": "Enhanced IBRS processor feature present"
+        "description": "Processor supports EIBRS"
     },
     "HvL1tfStatusAvailable": {
-        "description": "L1TF VMM mitigation OS support present"
+        "description": "OS supports L1TF VMM vulnerability mitigation"
     },
     "HvL1tfProcessorNotAffected": {
         "description": "Processor unaffected by L1TF VMM vulnerability"
     },
     "HvL1tfMigitationEnabled": {
-        "description": "L1TF VMM mitigation enabled"
+        "description": "L1TF VMM vulnerability mitigation enabled"
     },
     "HvL1tfMigitationNotEnabled_Hardware": {
-        "description": "L1TF VMM mitigation disabled by absence of hardware support",
+        "description": "L1TF VMM mitigation disabled due to missing hardware support",
         "invert": true
     },
     "HvL1tfMigitationNotEnabled_LoadOption": {
@@ -72,45 +74,92 @@
         "invert": true
     },
     "HvL1tfMigitationNotEnabled_CoreScheduler": {
-        "description": "L1TF VMM mitigation not required due to usage of Core scheduler"
+        "description": "L1TF VMM mitigation not required due to use of Core scheduler"
     },
     "EnhancedIbrsReported": {
-        "description": "Enhanced IBRS processor feature OS support present"
+        "description": "OS supports EIBRS"
     },
     "MdsHardwareProtected": {
         "description": "Processor unaffected by MDS vulnerabilities"
     },
     "MbClearEnabled": {
-        "description": "MDS mitigations enabled"
+        "description": "MDS vulnerability mitigations enabled"
     },
     "MbClearReported": {
-        "description": "MDS mitigations OS support present"
+        "description": "OS supports MDS vulnerability mitigations"
     },
+    // TODO
     "TsxCtrlStatus1": {
         "description": "TSX RTM feature disabled (XBEGIN instruction)"
     },
+    // TODO
     "TsxCtrlStatus2": {
         "description": "TSX RTM & HLE feature enumeration disabled"
     },
     "TsxCtrlReported": {
-        "description": "TAA mitigation OS support present"
+        "description": "OS supports TAA vulnerability mitigation"
     },
     "TaaHardwareImmune": {
         "description": "Processor unaffected by TAA vulnerability"
     },
-    "SbdrHardwareProtected": {
+    "SbdrSsdpHardwareProtected": {
         "description": "Processor unaffected by SBDR vulnerability"
     },
     "FbsdpHardwareProtected": {
-        "description": "Processor unaffected by FBSDP vulnerability"
+        "description": "Processor unaffected by FBSDP vulnerability [TODO Dynalist]"
     },
     "PsdpHardwareProtected": {
-        "description": "Processor unaffected by PSDP vulnerability"
+        "description": "Processor unaffected by PSDP vulnerability [TODO Dynalist]"
     },
     "FbClearEnabled": {
-        "description": "MMIO Stale Data mitigations enabled"
+        "description": "MMIO Stale Data vulnerability mitigations enabled"
     },
     "FbClearReported": {
-        "description": "MMIO Stale Data mitigations OS support present"
+        "description": "OS supports MMIO Stale Data vulnerability mitigations"
+    },
+    "BhbEnabled": {
+        "description": "BHB mitigation supported and enabled"
+    },
+    "BhbDisabledSystemPolicy": {
+        "description": "BHB mitigation disabled by system policy"
+    },
+    "BhbDisabledNoHardwareSupport": {
+        "description": "BHB mitigation disabled due to missing hardware support"
+    },
+    "BranchConfusionStatus": {
+        "description": "TODO"
+    },
+    "BranchConfusionReported": {
+        "description": "TODO"
+    },
+    "RdclHardwareProtectedReported": {
+        "description": "TODO"
+    },
+    "RdclHardwareProtected": {
+        "description": "Processor unaffected by RDCL vulnerability"
+    },
+    "GdsReported": {
+        "description": "TODO"
+    },
+    "GdsStatus": {
+        "description": "TODO"
+    },
+    "SrsoReported": {
+        "description": "TODO"
+    },
+    "SrsoStatus": {
+        "description": "TODO"
+    },
+    "DivideByZeroReported": {
+        "description": "TODO"
+    },
+    "DivideByZeroStatus": {
+        "description": "TODO"
+    },
+    "RfdsReported": {
+        "description": "TODO"
+    },
+    "RfdsStatus": {
+        "description": "TODO"
     }
 }

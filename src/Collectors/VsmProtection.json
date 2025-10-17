@@ -1,0 +1,14 @@
+{
+    "DmaProtectionsAvailable": {
+        "description": "TODO"
+    },
+    "DmaProtectionsInUse": {
+        "description": "Kernel DMA Protection enabled"
+    },
+    "HardwareMbecAvailable": {
+        "description": "Processor supports MBEC"
+    },
+    "ApicVirtualizationAvailable": {
+        "description": "Processor supports APIC virtualisation"
+    }
+}

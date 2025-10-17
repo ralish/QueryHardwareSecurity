@@ -104,12 +104,9 @@ namespace QueryHardwareSecurity {
             SystemShadowStackInformation              = 0xDD, // Dec: 221, returns 4 bytes
 
             // TODO
-            SystemBootEnvironmentInformation  = 0x5A, // Dec: 90,  returns 32 bytes
-            SystemHypervisorInformation       = 0x5B, // Dec: 91,  returns 16 bytes
             SystemCodeIntegrityInformation    = 0x67, // Dec: 103
-            SystemHypervisorDetailInformation = 0x9F, // Dec: 159, returns 112 bytes
             SystemIsolatedUserModeInformation = 0xA5, // Dec: 165, returns 16 bytes
-            SystemSecurityModelInformation    = 0xD0  // Dec: 208
+            // pointerauth
         }
 
         // @formatter:int_align_fields false

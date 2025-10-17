@@ -9,25 +9,13 @@ using static QueryHardwareSecurity.Utilities;
 
 
 namespace QueryHardwareSecurity.Collectors {
-    [JsonObject(MemberSerialization.OptIn)]
     internal sealed class VsmProtection : Collector {
-        [JsonProperty]
-        public bool DmaProtectionsAvailable => SystemInfo.DmaProtectionsAvailable;
-
-        [JsonProperty]
-        public bool DmaProtectionsInUse => SystemInfo.DmaProtectionsInUse;
-
-        [JsonProperty]
-        public bool HardwareMbecAvailable => SystemInfo.HardwareMbecAvailable;
-
-        [JsonProperty]
-        public bool ApicVirtualizationAvailable => SystemInfo.ApicVirtualizationAvailable;
-
-        public VsmProtectionInfo SystemInfo { get; private set; }
+        private VsmProtectionInfo _vsmProtectionInfo;
 
         public VsmProtection() : base("VSM Protection") {
             ConsoleWidthName = 40;
-            ConsoleWidthValue = 72;
+            ConsoleWidthValue = 5;
+            ConsoleWidthDescription = 64;
 
             RetrieveInfo();
         }
@@ -35,21 +23,18 @@ namespace QueryHardwareSecurity.Collectors {
         private void RetrieveInfo() {
             WriteConsoleVerbose($"Retrieving {Name} info ...");
 
-            var sysInfoLength = Marshal.SizeOf(typeof(VsmProtectionInfo));
-            WriteConsoleDebug($"Size of {nameof(VsmProtectionInfo)} structure: {sysInfoLength} bytes");
+            var vsmProtectionInfoLength = Marshal.SizeOf(typeof(VsmProtectionInfo));
+            WriteConsoleDebug($"Size of {nameof(VsmProtectionInfo)} structure: {vsmProtectionInfoLength} bytes");
 
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemVsmProtectionInformation,
-                                                    out var sysInfo,
-                                                    (uint)sysInfoLength,
+                                                    out _vsmProtectionInfo,
+                                                    (uint)vsmProtectionInfoLength,
                                                     IntPtr.Zero);
 
             switch (ntStatus) {
-                case 0:
-                    SystemInfo = sysInfo;
-                    return;
-                // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
-                case -1073741821:
-                case -1073741822:
+                case 0: return;
+                case -1073741821: // STATUS_INVALID_INFO_CLASS
+                case -1073741822: // STATUS_NOT_IMPLEMENTED
                     throw new NotImplementedException($"System support for querying {Name} information not present.");
             }
 
@@ -59,19 +44,19 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         public override string ConvertToJson() {
-            return JsonConvert.SerializeObject(this);
+            return JsonConvert.SerializeObject(_vsmProtectionInfo);
         }
 
         public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
-            WriteConsoleHeader(false);
-            foreach (var field in SystemInfo.GetType().GetFields()) WriteConsoleEntry(field.Name, (bool)field.GetValue(SystemInfo));
+            WriteConsoleHeader(true);
+            foreach (var field in _vsmProtectionInfo.GetType().GetFields()) {
+                WriteConsoleEntry(field.Name, (bool)field.GetValue(_vsmProtectionInfo));
+            }
         }
 
         #region P/Invoke
-
-#pragma warning disable CS0649 // Field is never assigned to
 
         [DllImport("ntdll", ExactSpelling = true)]
         private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
@@ -79,16 +64,22 @@ namespace QueryHardwareSecurity.Collectors {
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
 
-        public struct VsmProtectionInfo {
+#pragma warning disable CS0649 // Field is never assigned to
+
+        private struct VsmProtectionInfo {
+            [JsonProperty(Order = 1)]
             [MarshalAs(UnmanagedType.U1)]
             public bool DmaProtectionsAvailable;
 
+            [JsonProperty(Order = 2)]
             [MarshalAs(UnmanagedType.U1)]
             public bool DmaProtectionsInUse;
 
+            [JsonProperty(Order = 3)]
             [MarshalAs(UnmanagedType.U1)]
             public bool HardwareMbecAvailable;
 
+            [JsonProperty(Order = 4)]
             [MarshalAs(UnmanagedType.U1)]
             public bool ApicVirtualizationAvailable;
         }

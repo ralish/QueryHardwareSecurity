@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
@@ -11,57 +10,36 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     internal sealed class KernelVaShadow : Collector {
-        private static readonly List<string> FlagsIgnored = new List<string> {
-            "InvalidPte1",
-            "InvalidPte2",
-            "InvalidPte3",
-            "InvalidPte4",
-            "InvalidPte5",
-            "InvalidPte6"
-        };
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public KernelVaShadowFlags SystemInfo { get; private set; }
-
-        private readonly dynamic _metadata;
+        private KernelVaShadowInfo _kernelVaShadowInfo;
 
         public KernelVaShadow() : base("Kernel VA Shadowing") {
             ConsoleWidthName = 40;
             ConsoleWidthValue = 5;
             ConsoleWidthDescription = 64;
 
-            RetrieveFlags();
-
-            _metadata = LoadMetadata();
-            ParseFlags(SystemInfo, _metadata, FlagsIgnored);
-            ParseFlagsInternal();
+            RetrieveInfo();
         }
 
-        /// <summary>
-        ///     Retrieve Kernel VA Shadow information
-        /// </summary>
+        /// <summary>Retrieve Kernel Virtual Address (KVA) Shadow information</summary>
         /// <remarks>
         ///     This information is only exposed via the NtQuerySystemInformation function in the native API. Microsoft has
         ///     documented this information class, although currently there are 18 unused bits in the 32-bit bit field.
         /// </remarks>
-        private void RetrieveFlags() {
+        private void RetrieveInfo() {
             WriteConsoleVerbose($"Retrieving {Name} info ...");
 
-            const int sysInfoLength = sizeof(KernelVaShadowFlags);
-            WriteConsoleDebug($"Size of {nameof(KernelVaShadowFlags)} bit field: {sysInfoLength} bytes");
+            var kernelVaShadowInfoLength = Marshal.SizeOf(typeof(KernelVaShadowInfo));
+            WriteConsoleDebug($"Size of {nameof(KernelVaShadowInfo)} structure: {kernelVaShadowInfoLength} bytes");
 
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemKernelVaShadowInformation,
-                                                    out var sysInfo,
-                                                    sysInfoLength,
+                                                    out _kernelVaShadowInfo,
+                                                    (uint)kernelVaShadowInfoLength,
                                                     IntPtr.Zero);
 
             switch (ntStatus) {
-                case 0:
-                    SystemInfo = sysInfo;
-                    return;
-                // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
-                case -1073741821:
-                case -1073741822:
+                case 0: return;
+                case -1073741821: // STATUS_INVALID_INFO_CLASS
+                case -1073741822: // STATUS_NOT_IMPLEMENTED
                     throw new NotImplementedException($"System support for querying {Name} information not present.");
             }
 
@@ -70,63 +48,61 @@ namespace QueryHardwareSecurity.Collectors {
             throw new Win32Exception(symbolicNtStatus);
         }
 
-        private void ParseFlagsInternal() {
-            const string flagName = "InvalidPteBit";
-            var flagValue = (((int)SystemInfo & InvalidPteBitMask) >> InvalidPteBitShift).ToString();
-            var flagData = GetOrCreateDynamicObjectKey(_metadata, flagName);
-            flagData.value = flagValue;
-        }
-
         public override string ConvertToJson() {
-            return JsonConvert.SerializeObject(_metadata);
+            return JsonConvert.SerializeObject(_kernelVaShadowInfo);
         }
 
         public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(true);
-            WriteConsoleFlags(SystemInfo, _metadata, FlagsIgnored);
-            WriteConsoleEntry("InvalidPteBit", _metadata);
+            foreach (var property in _kernelVaShadowInfo.GetType().GetProperties()) {
+                if (property.PropertyType == typeof(bool)) {
+                    WriteConsoleEntry(property.Name, (bool)property.GetValue(_kernelVaShadowInfo));
+                } else if (property.PropertyType == typeof(byte)) {
+                    WriteConsoleEntry(property.Name, ((byte)property.GetValue(_kernelVaShadowInfo)).ToString());
+                }
+            }
         }
 
         #region P/Invoke
 
-        // ReSharper disable MemberCanBePrivate.Global
-
         [DllImport("ntdll", ExactSpelling = true)]
         private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
-                                                           out KernelVaShadowFlags systemInformation,
+                                                           out KernelVaShadowInfo systemInformation,
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
 
-        // @formatter:int_align_fields true
+        private struct KernelVaShadowInfo {
+            private uint _RawBits;
 
-        [Flags]
-        public enum KernelVaShadowFlags {
-            KvaShadowEnabled                 = 0x1, // Checked by SpeculationControl module
-            KvaShadowUserGlobal              = 0x2,
-            KvaShadowPcid                    = 0x4,  // Checked by SpeculationControl module
-            KvaShadowInvpcid                 = 0x8,  // Checked by SpeculationControl module
-            KvaShadowRequired                = 0x10, // Checked by SpeculationControl module
-            KvaShadowRequiredAvailable       = 0x20, // Checked by SpeculationControl module
-            L1DataCacheFlushSupported        = 0x40, // Checked by SpeculationControl module
-            L1TerminalFaultMitigationPresent = 0x80, // Checked by SpeculationControl module
+            [JsonProperty(Order = 1)]
+            public bool KvaShadowEnabled => (_RawBits & 0x1) == 1; // Bit 0
 
-            // Handled separately in ParseFlagsInternal()
-            InvalidPte1 = 0x100,
-            InvalidPte2 = 0x200,
-            InvalidPte3 = 0x400,
-            InvalidPte4 = 0x800,
-            InvalidPte5 = 0x1000,
-            InvalidPte6 = 0x2000
+            [JsonProperty(Order = 2)]
+            public bool KvaShadowUserGlobal => ((_RawBits >> 1) & 0x1) == 1; // Bit 1
+
+            [JsonProperty(Order = 3)]
+            public bool KvaShadowPcid => ((_RawBits >> 2) & 0x1) == 1; // Bit 2
+
+            [JsonProperty(Order = 4)]
+            public bool KvaShadowInvpcid => ((_RawBits >> 3) & 0x1) == 1; // Bit 3
+
+            [JsonProperty(Order = 5)]
+            public bool KvaShadowRequired => ((_RawBits >> 4) & 0x1) == 1; // Bit 4
+
+            [JsonProperty(Order = 6)]
+            public bool KvaShadowRequiredAvailable => ((_RawBits >> 5) & 0x1) == 1; // Bit 5
+
+            [JsonProperty(Order = 7)]
+            public byte InvalidPteBit => (byte)((_RawBits >> 6) & 0x3F); // Bit 6-11
+
+            [JsonProperty(Order = 8)]
+            public bool L1DataCacheFlushSupported => ((_RawBits >> 12) & 0x1) == 1; // Bit 12
+
+            [JsonProperty(Order = 9)]
+            public bool L1TerminalFaultMitigationPresent => ((_RawBits >> 13) & 0x1) == 1; // Bit 13
         }
-
-        // @formatter:int_align_fields false
-
-        public const int InvalidPteBitMask = 0xFC0;
-        public const int InvalidPteBitShift = 6;
-
-        // ReSharper enable MemberCanBePrivate.Global
 
         #endregion
     }

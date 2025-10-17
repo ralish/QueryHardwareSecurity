@@ -13,38 +13,31 @@ using static QueryHardwareSecurity.Utilities;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal sealed class SystemInfo : Collector {
-        // Computer system
-        [JsonProperty]
-        public string Hostname { get; private set; }
-
-        // Operating system
-        [JsonProperty]
-        public string OsName { get; private set; }
-
-        [JsonProperty]
-        public string OsVersion { get; private set; }
-
-        // Processor
-        [JsonProperty]
-        public string CpuName { get; private set; }
-
-        [JsonProperty]
-        public string CpuModel { get; private set; }
-
-        // Firmware
-        [JsonProperty]
-        public string FwType { get; private set; }
-
-        // Hypervisor
-        [JsonProperty]
-        public string HvPresent { get; private set; }
-
         public SystemInfo() : base("System Info") {
             ConsoleWidthName = 40;
             ConsoleWidthValue = 72;
 
             RetrieveInfo();
         }
+
+        // Computer system
+        [JsonProperty] public string Hostname { get; private set; }
+
+        // Operating system
+        [JsonProperty] public string OsName { get; private set; }
+
+        [JsonProperty] public string OsVersion { get; private set; }
+
+        // Processor
+        [JsonProperty] public string CpuName { get; private set; }
+
+        [JsonProperty] public string CpuModel { get; private set; }
+
+        // Firmware
+        [JsonProperty] public string FwType { get; private set; }
+
+        // Hypervisor
+        [JsonProperty] public string HvPresent { get; private set; }
 
         private void RetrieveInfo() {
             Hostname = Environment.MachineName;
@@ -150,8 +143,7 @@ namespace QueryHardwareSecurity.Collectors {
                         _hypervisorPresent = cimHypervisorPresent ? HypervisorPresent.True : HypervisorPresent.False;
                     } catch (NullReferenceException) {
                         // HypervisorPresent is only available from Windows 8 / Server 2012
-                        WriteConsoleVerbose(
-                            "Hypervisor presence unknown as HypervisorPresent WMI property is unavailable.");
+                        WriteConsoleVerbose("Hypervisor presence unknown as HypervisorPresent WMI property is unavailable.");
                         _hypervisorPresent = HypervisorPresent.Unknown;
                     }
 
@@ -217,26 +209,21 @@ namespace QueryHardwareSecurity.Collectors {
                 if (IsProcessorAmd) return "AMD";
                 if (IsProcessorArm) return "ARM";
 
-                throw new ArgumentOutOfRangeException(
-                    $"Unknown processor manufacturer: {(string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value}");
+                throw new ArgumentOutOfRangeException($"Unknown processor manufacturer: {(string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value}");
             }
         }
 
-        public bool IsProcessorX86 =>
-            (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x86;
+        public bool IsProcessorX86 => (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x86;
 
-        public bool IsProcessorX64 =>
-            (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x64;
+        public bool IsProcessorX64 => (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x64;
 
-        public bool IsProcessorAmd =>
-            (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
+        public bool IsProcessorAmd => (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
 
         public bool IsProcessorArm =>
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM ||
             (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM64;
 
-        public bool IsProcessorIntel =>
-            (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "GenuineIntel";
+        public bool IsProcessorIntel => (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "GenuineIntel";
 
         #endregion
     }

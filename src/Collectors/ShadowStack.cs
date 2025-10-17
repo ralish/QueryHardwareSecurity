@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
@@ -11,55 +10,31 @@ using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
     internal sealed class ShadowStack : Collector {
-        private static readonly List<string> FlagsIgnored = new List<string> {
-            "ReservedForKernelCet1",
-            "ReservedForKernelCet2",
-            "ReservedForKernelCet3",
-            "ReservedForKernelCet4",
-            "ReservedForKernelCet5",
-            "ReservedForKernelCet6",
-            "ReservedForUserCet1",
-            "ReservedForUserCet2",
-            "ReservedForUserCet3",
-            "ReservedForUserCet4",
-            "ReservedForUserCet5",
-            "ReservedForUserCet6"
-        };
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public ShadowStackFlags SystemInfo { get; private set; }
-
-        private readonly dynamic _metadata;
+        private ShadowStackInfo _shadowStackInfo;
 
         public ShadowStack() : base("Shadow Stack") {
             ConsoleWidthName = 40;
             ConsoleWidthValue = 5;
             ConsoleWidthDescription = 64;
 
-            RetrieveFlags();
-
-            _metadata = LoadMetadata();
-            ParseFlags(SystemInfo, _metadata, FlagsIgnored);
+            RetrieveInfo();
         }
 
-        private void RetrieveFlags() {
+        private void RetrieveInfo() {
             WriteConsoleVerbose($"Retrieving {Name} info ...");
 
-            const int sysInfoLength = sizeof(ShadowStackFlags);
-            WriteConsoleDebug($"Size of {nameof(ShadowStackFlags)} bit field: {sysInfoLength} bytes");
+            var shadowStackInfoLength = Marshal.SizeOf(typeof(ShadowStackInfo));
+            WriteConsoleDebug($"Size of {nameof(ShadowStackInfo)} structure: {shadowStackInfoLength} bytes");
 
             var ntStatus = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemShadowStackInformation,
-                                                    out var sysInfo,
-                                                    sysInfoLength,
+                                                    out _shadowStackInfo,
+                                                    (uint)shadowStackInfoLength,
                                                     IntPtr.Zero);
 
             switch (ntStatus) {
-                case 0:
-                    SystemInfo = sysInfo;
-                    return;
-                // STATUS_INVALID_INFO_CLASS || STATUS_NOT_IMPLEMENTED
-                case -1073741821:
-                case -1073741822:
+                case 0: return;
+                case -1073741821: // STATUS_INVALID_INFO_CLASS
+                case -1073741822: // STATUS_NOT_IMPLEMENTED
                     throw new NotImplementedException($"System support for querying {Name} information not present.");
             }
 
@@ -69,53 +44,49 @@ namespace QueryHardwareSecurity.Collectors {
         }
 
         public override string ConvertToJson() {
-            return JsonConvert.SerializeObject(_metadata);
+            return JsonConvert.SerializeObject(_shadowStackInfo);
         }
 
         public override void WriteConsole(ConsoleOutputStyle style) {
             ConsoleOutputStyle = style;
 
             WriteConsoleHeader(true);
-            WriteConsoleFlags(SystemInfo, _metadata, FlagsIgnored);
+            foreach (var property in _shadowStackInfo.GetType().GetProperties()) {
+                if (property.PropertyType == typeof(bool)) {
+                    WriteConsoleEntry(property.Name, (bool)property.GetValue(_shadowStackInfo));
+                } else if (property.PropertyType == typeof(byte)) {
+                    WriteConsoleEntry(property.Name, ((byte)property.GetValue(_shadowStackInfo)).ToString());
+                }
+            }
         }
 
         #region P/Invoke
 
-        // ReSharper disable MemberCanBePrivate.Global
-
         [DllImport("ntdll", ExactSpelling = true)]
         private static extern int NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass,
-                                                           out ShadowStackFlags systemInformation,
+                                                           out ShadowStackInfo systemInformation,
                                                            uint systemInformationLength,
                                                            IntPtr returnLength);
 
-        // @formatter:int_align_fields true
+        private struct ShadowStackInfo {
+            private uint _RawBits;
 
-        [Flags]
-        public enum ShadowStackFlags {
-            CetCapable                = 0x1,
-            UserCetAllowed            = 0x2,
-            KernelCetEnabled          = 0x100,
-            KernelCetAuditModeEnabled = 0x200,
+            [JsonProperty(Order = 1)]
+            public bool CetCapable => (_RawBits & 0x1) == 1; // Bit 0
 
-            ReservedForUserCet1 = 0x4,
-            ReservedForUserCet2 = 0x8,
-            ReservedForUserCet3 = 0x10,
-            ReservedForUserCet4 = 0x20,
-            ReservedForUserCet5 = 0x40,
-            ReservedForUserCet6 = 0x80,
+            [JsonProperty(Order = 2)]
+            public bool UserCetAllowed => ((_RawBits >> 1) & 0x1) == 1; // Bit 1
 
-            ReservedForKernelCet1 = 0x400,
-            ReservedForKernelCet2 = 0x800,
-            ReservedForKernelCet3 = 0x1000,
-            ReservedForKernelCet4 = 0x2000,
-            ReservedForKernelCet5 = 0x4000,
-            ReservedForKernelCet6 = 0x8000
+            private byte ReservedForUserCet => (byte)((_RawBits >> 2) & 0x3F); // Bit 2-7
+
+            [JsonProperty(Order = 3)]
+            public bool KernelCetEnabled => ((_RawBits >> 7) & 0x1) == 1; // Bit 8
+
+            [JsonProperty(Order = 4)]
+            public bool KernelCetAuditModeEnabled => ((_RawBits >> 8) & 0x1) == 1; // Bit 9
+
+            private byte ReservedForKernelCet => (byte)((_RawBits >> 9) & 0x3F); // Bit 10-15
         }
-
-        // @formatter:int_align_fields false
-
-        // ReSharper enable MemberCanBePrivate.Global
 
         #endregion
     }

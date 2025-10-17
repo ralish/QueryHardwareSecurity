@@ -33,14 +33,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Collectors\DmaGuardPolicy.json" />
     <None Remove="Collectors\KernelVaShadow.json" />
+    <None Remove="Collectors\SecureBoot.json" />
+    <None Remove="Collectors\SecureSpeculationControl.json" />
+    <None Remove="Collectors\ShadowStack.json" />
     <None Remove="Collectors\SpeculationControl.json" />
+    <None Remove="Collectors\VsmProtection.json" />
     <None Remove="Metadata\Vulnerabilities.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Collectors\DmaGuardPolicy.json" />
     <EmbeddedResource Include="Collectors\KernelVaShadow.json" />
+    <EmbeddedResource Include="Collectors\SecureBoot.json" />
+    <EmbeddedResource Include="Collectors\SecureSpeculationControl.json" />
+    <EmbeddedResource Include="Collectors\ShadowStack.json" />
     <EmbeddedResource Include="Collectors\SpeculationControl.json" />
+    <EmbeddedResource Include="Collectors\VsmProtection.json" />
     <EmbeddedResource Include="Metadata\Vulnerabilities.json">
       <LogicalName>Vulnerabilities.json</LogicalName>
     </EmbeddedResource>
@@ -48,6 +58,10 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Link="README.md" />
   </ItemGroup>
 
   <ItemGroup>

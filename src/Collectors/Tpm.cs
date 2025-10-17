@@ -10,57 +10,6 @@ using Tpm2Lib;
 namespace QueryHardwareSecurity.Collectors {
     [JsonObject(MemberSerialization.OptIn)]
     internal sealed class Tpm : Collector {
-        [JsonProperty]
-        public uint ManufacturerId { get; private set; }
-
-        [JsonProperty]
-        public string ManufacturerName { get; private set; }
-
-        [JsonProperty]
-        public uint ManufacturerModel { get; private set; }
-
-        [JsonProperty]
-        public string SpecificationVersion { get; private set; }
-
-        [JsonProperty]
-        public uint SpecificationLevel { get; private set; }
-
-        [JsonProperty]
-        public float SpecificationRevision { get; private set; }
-
-        [JsonProperty]
-        public DateTime SpecificationDate { get; private set; }
-
-        [JsonProperty]
-        public string PlatformSpecificFamily { get; private set; }
-
-        [JsonProperty]
-        public uint PlatformSpecificationLevel { get; private set; }
-
-        [JsonProperty]
-        public float PlatformSpecificationRevision { get; private set; }
-
-        [JsonProperty]
-        public DateTime PlatformSpecificationDate { get; private set; }
-
-        [JsonProperty]
-        public Version FirmwareVersion { get; private set; }
-
-        [JsonProperty]
-        public string PhysicalPresenceVersion { get; private set; }
-
-        [JsonProperty]
-        public string MemoryManagement { get; private set; }
-
-        [JsonProperty]
-        public string SupportedModes { get; private set; }
-
-        [JsonProperty]
-        public string PermanentAttributes { get; private set; }
-
-        [JsonProperty]
-        public string StartupAttributes { get; private set; }
-
         public Tpm() : base("Trusted Platform Module") {
             ConsoleWidthName = 40;
             ConsoleWidthValue = 72;
@@ -68,6 +17,40 @@ namespace QueryHardwareSecurity.Collectors {
             RetrieveTpmProperties();
             RetrievePpiInfo();
         }
+
+        [JsonProperty] public uint ManufacturerId { get; private set; }
+
+        [JsonProperty] public string ManufacturerName { get; private set; }
+
+        [JsonProperty] public uint ManufacturerModel { get; private set; }
+
+        [JsonProperty] public string SpecificationVersion { get; private set; }
+
+        [JsonProperty] public uint SpecificationLevel { get; private set; }
+
+        [JsonProperty] public float SpecificationRevision { get; private set; }
+
+        [JsonProperty] public DateTime SpecificationDate { get; private set; }
+
+        [JsonProperty] public string PlatformSpecificFamily { get; private set; }
+
+        [JsonProperty] public uint PlatformSpecificationLevel { get; private set; }
+
+        [JsonProperty] public float PlatformSpecificationRevision { get; private set; }
+
+        [JsonProperty] public DateTime PlatformSpecificationDate { get; private set; }
+
+        [JsonProperty] public Version FirmwareVersion { get; private set; }
+
+        [JsonProperty] public string PhysicalPresenceVersion { get; private set; }
+
+        [JsonProperty] public string MemoryManagement { get; private set; }
+
+        [JsonProperty] public string SupportedModes { get; private set; }
+
+        [JsonProperty] public string PermanentAttributes { get; private set; }
+
+        [JsonProperty] public string StartupAttributes { get; private set; }
 
         private void RetrieveTpmProperties() {
             WriteConsoleVerbose("Retrieving TPM properties ...");
@@ -187,9 +170,7 @@ namespace QueryHardwareSecurity.Collectors {
 
         private void RetrievePpiInfo() {
             WriteConsoleDebug("Creating TBS context ...");
-            var tbsContextParams = new TBS_CONTEXT_PARAMS2 {
-                flags = TBS_CONTEXT_PARAMS2_FLAGS.includeTpm12 | TBS_CONTEXT_PARAMS2_FLAGS.includeTpm20
-            };
+            var tbsContextParams = new TBS_CONTEXT_PARAMS2 { flags = TBS_CONTEXT_PARAMS2_FLAGS.includeTpm12 | TBS_CONTEXT_PARAMS2_FLAGS.includeTpm20 };
             CheckTbsResult(Tbsi_Context_Create(tbsContextParams, out var tbsContext));
 
             WriteConsoleVerbose("Retrieving PPI version ...");

@@ -92,19 +92,21 @@ Glossary
 - **IBRS**  
   Indirect Branch Restricted Speculation
   - **EIBRS**  
-    Enhanced IBRS
-- **INVPCID**  
-  Invalidate Process-Context Identifier
-- **MBE**  
+    Enhanced Indirect Branch Restricted Speculation
+- **MBEC**  
   Mode-Based Execution Control
 - **NX**  
   No-execute
 - **PCID**  
   Process-Context Identifiers
+  - **INVPCID**  
+    Invalidate Process-Context Identifier
 - **SMEP**  
   Supervisor Mode Execution Protection
-- **SSBD**  
-  Speculative Store Bypass Disable
+- **SSB**  
+  Speculative Store Bypass
+  - **SSBD**  
+    Speculative Store Bypass Disable
 - **STIBP**  
   Single Thread Indirect Branch Predictor
 - **TSX**  
