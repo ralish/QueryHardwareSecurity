@@ -5,7 +5,7 @@ pool:
   vmImage: windows-latest
 
 variables:
-  solution: QueryHardwareSecurity.sln
+  solution: QueryHardwareSecurity.slnx
   buildPlatform: Any CPU
 
 steps:
