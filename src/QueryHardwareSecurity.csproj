@@ -3,6 +3,8 @@
   <PropertyGroup>
     <!-- Build configuration -->
     <TargetFrameworks Condition=" '$(TargetFrameworks)' == '' ">net462;net472;net8.0</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>annotations</Nullable>
     <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <StartupObject>QueryHardwareSecurity.Program</StartupObject>
@@ -33,17 +35,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Collectors\KernelVaShadow.json" />
-    <None Remove="Collectors\SpeculationControl.json" />
-    <None Remove="Metadata\Vulnerabilities.json" />
+    <None Include="..\README.md" Link="README.md" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Collectors\KernelVaShadow.json" />
-    <EmbeddedResource Include="Collectors\SpeculationControl.json" />
-    <EmbeddedResource Include="Metadata\Vulnerabilities.json">
-      <LogicalName>Vulnerabilities.json</LogicalName>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Collectors\*.json" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">

@@ -6,45 +6,34 @@ using Microsoft.Management.Infrastructure;
 
 using Newtonsoft.Json;
 
-using static QueryHardwareSecurity.NativeMethods;
 using static QueryHardwareSecurity.Utilities;
 
-
 namespace QueryHardwareSecurity.Collectors {
-    [JsonObject(MemberSerialization.OptIn)]
     internal sealed class SystemInfo : Collector {
-        // Computer system
+        public SystemInfo() : base("System Info", TableStyle.Basic) {
+            RetrieveInfo();
+        }
+
         [JsonProperty]
         public string Hostname { get; private set; }
 
-        // Operating system
         [JsonProperty]
         public string OsName { get; private set; }
 
         [JsonProperty]
         public string OsVersion { get; private set; }
 
-        // Processor
         [JsonProperty]
         public string CpuName { get; private set; }
 
         [JsonProperty]
         public string CpuModel { get; private set; }
 
-        // Firmware
         [JsonProperty]
         public string FwType { get; private set; }
 
-        // Hypervisor
         [JsonProperty]
         public string HvPresent { get; private set; }
-
-        public SystemInfo() : base("System Info") {
-            ConsoleWidthName = 40;
-            ConsoleWidthValue = 72;
-
-            RetrieveInfo();
-        }
 
         private void RetrieveInfo() {
             Hostname = Environment.MachineName;
@@ -56,35 +45,33 @@ namespace QueryHardwareSecurity.Collectors {
             HvPresent = IsHypervisorPresent.ToString();
         }
 
-        public override string ConvertToJson() {
+        internal override string ConvertToJson() {
             return JsonConvert.SerializeObject(this);
         }
 
-        public override void WriteConsole(ConsoleOutputStyle style) {
-            ConsoleOutputStyle = style;
+        internal override void WriteOutput(OutputFormat format, bool color) {
+            SetOutputSettings(format, color);
+            WriteOutputHeader();
 
-            WriteConsoleHeader(false);
-            WriteConsoleEntry("Hostname", Hostname);
-            WriteConsoleEntry("OS name", OsName);
-            WriteConsoleEntry("OS version", OsVersion);
-            WriteConsoleEntry("Processor name", CpuName);
-            WriteConsoleEntry("Processor model", CpuModel);
-            WriteConsoleEntry("Firmware type", FwType);
-            WriteConsoleEntry("Hypervisor present", HvPresent);
+            WriteOutputEntry("Hostname", Hostname);
+            WriteOutputEntry("OS name", OsName);
+            WriteOutputEntry("OS version", OsVersion);
+            WriteOutputEntry("Processor name", CpuName);
+            WriteOutputEntry("Processor model", CpuModel);
+            WriteOutputEntry("Firmware type", FwType);
+            WriteOutputEntry("Hypervisor present", HvPresent);
         }
 
         #region Computer system
 
-        private CimInstance _computerSystem;
+        private CimInstance? _computerSystem;
 
-        public CimInstance ComputerSystem {
+        private CimInstance ComputerSystem {
             get {
-                // ReSharper disable once InvertIf
-                if (_computerSystem == null) {
-                    WriteConsoleVerbose("Retrieving computer system info ...");
-                    _computerSystem = EnumerateCimInstances("Win32_ComputerSystem").First();
-                }
+                if (_computerSystem != null) return _computerSystem;
 
+                WriteVerbose("Retrieving computer system info ...");
+                _computerSystem = EnumerateCimInstances("Win32_ComputerSystem").First();
                 return _computerSystem;
             }
         }
@@ -93,30 +80,27 @@ namespace QueryHardwareSecurity.Collectors {
 
         #region Firmware
 
-        private FirmwareType _firmwareType;
-        private bool _firmwareTypeRetrieved;
+        private FirmwareTypes? _firmwareType;
 
-        public FirmwareType FirmwareType {
+        private FirmwareTypes FirmwareType {
             get {
-                // ReSharper disable once InvertIf
-                if (!_firmwareTypeRetrieved) {
-                    WriteConsoleVerbose("Retrieving firmware type ...");
-                    try {
-                        if (!GetFirmwareType(out _firmwareType)) {
-                            var err = Marshal.GetLastWin32Error();
-                            WriteConsoleError($"Failure calling GetFirmwareType(): {err}");
-                            Environment.Exit(-1);
-                        }
-                    } catch (EntryPointNotFoundException) {
-                        // GetFirmwareType() is only available from Windows 8 / Server 2012
-                        WriteConsoleVerbose("Unable to query firmware type as GetFirmwareType() API is unavailable.");
-                        _firmwareType = FirmwareType.Unknown;
-                    }
+                if (_firmwareType != null) return _firmwareType.Value;
 
-                    _firmwareTypeRetrieved = true;
+                WriteVerbose("Retrieving firmware type ...");
+                try {
+                    if (!GetFirmwareType(out var firmwareType)) {
+                        var err = Marshal.GetLastWin32Error();
+                        WriteError($"Failure calling GetFirmwareType: {err}");
+                        Environment.Exit(-1);
+                    }
+                    _firmwareType = firmwareType;
+                } catch (EntryPointNotFoundException) {
+                    // GetFirmwareType is only available from Windows 8 / Server 2012
+                    WriteVerbose("Unable to query firmware type as GetFirmwareType API is unavailable.");
+                    _firmwareType = FirmwareTypes.Unknown;
                 }
 
-                return _firmwareType;
+                return _firmwareType.Value;
             }
         }
 
@@ -124,58 +108,44 @@ namespace QueryHardwareSecurity.Collectors {
 
         #region Hypervisor
 
-        private HypervisorPresent _hypervisorPresent;
-        private bool _hypervisorPresentChecked;
+        private HypervisorPresent? _hypervisorPresent;
 
-        /*
-         * The underlying property in the WMI class is a boolean but it
-         * won't be present prior to Windows 8 / Server 2012. That's an
-         * unknown state, so we'll use an enum to represent that third
-         * possibility instead of having to deal with a nullable bool.
-         */
-        public enum HypervisorPresent {
+        private HypervisorPresent IsHypervisorPresent {
+            get {
+                if (_hypervisorPresent != null) return _hypervisorPresent.Value;
+
+                WriteVerbose("Checking if hypervisor is present ...");
+                try {
+                    var cimHypervisorPresent = (bool)ComputerSystem.CimInstanceProperties["HypervisorPresent"].Value;
+                    _hypervisorPresent = cimHypervisorPresent ? HypervisorPresent.True : HypervisorPresent.False;
+                } catch (NullReferenceException) {
+                    // HypervisorPresent is only available from Windows 8 / Server 2012
+                    WriteVerbose("Hypervisor presence unknown as HypervisorPresent WMI property is unavailable.");
+                    _hypervisorPresent = HypervisorPresent.Unknown;
+                }
+
+                return _hypervisorPresent.Value;
+            }
+        }
+
+        private enum HypervisorPresent {
             Unknown,
             False,
             True
-        }
-
-        public HypervisorPresent IsHypervisorPresent {
-            get {
-                // ReSharper disable once InvertIf
-                if (!_hypervisorPresentChecked) {
-                    WriteConsoleVerbose("Checking if hypervisor is present ...");
-                    try {
-                        var cimHypervisorPresent =
-                            (bool)ComputerSystem.CimInstanceProperties["HypervisorPresent"].Value;
-                        _hypervisorPresent = cimHypervisorPresent ? HypervisorPresent.True : HypervisorPresent.False;
-                    } catch (NullReferenceException) {
-                        // HypervisorPresent is only available from Windows 8 / Server 2012
-                        WriteConsoleVerbose(
-                            "Hypervisor presence unknown as HypervisorPresent WMI property is unavailable.");
-                        _hypervisorPresent = HypervisorPresent.Unknown;
-                    }
-
-                    _hypervisorPresentChecked = true;
-                }
-
-                return _hypervisorPresent;
-            }
         }
 
         #endregion
 
         #region Operating system
 
-        private CimInstance _operatingSystem;
+        private CimInstance? _operatingSystem;
 
-        public CimInstance OperatingSystem {
+        private CimInstance OperatingSystem {
             get {
-                // ReSharper disable once InvertIf
-                if (_operatingSystem == null) {
-                    WriteConsoleVerbose("Retrieving operating system info ...");
-                    _operatingSystem = EnumerateCimInstances("Win32_OperatingSystem").First();
-                }
+                if (_operatingSystem != null) return _operatingSystem;
 
+                WriteVerbose("Retrieving operating system info ...");
+                _operatingSystem = EnumerateCimInstances("Win32_OperatingSystem").First();
                 return _operatingSystem;
             }
         }
@@ -184,59 +154,71 @@ namespace QueryHardwareSecurity.Collectors {
 
         #region Processor
 
-        private CimInstance _processorInfo;
+        private static CimInstance? _processorInfo;
+
+        internal static CimInstance ProcessorInfo {
+            get {
+                if (_processorInfo != null) return _processorInfo;
+
+                _processorInfo = EnumerateCimInstances("Win32_Processor").First();
+                return _processorInfo;
+            }
+        }
+
+        internal static string ProcessorManufacturer {
+            get {
+                if (IsProcessorIntel) return "Intel";
+                if (IsProcessorAmd) return "AMD";
+                // ReSharper disable once ConvertIfStatementToReturnStatement
+                if (IsProcessorArm) return "ARM";
+
+                throw new ArgumentOutOfRangeException($"Unknown processor manufacturer: {(string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value}");
+            }
+        }
+
+        internal static bool IsProcessorX86 => (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x86;
+
+        internal static bool IsProcessorX64 => (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x64;
+
+        internal static bool IsProcessorAmd => (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
+
+        internal static bool IsProcessorArm =>
+            (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM ||
+            (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM64;
+
+        internal static bool IsProcessorIntel => (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "GenuineIntel";
+
+        // ReSharper disable InconsistentNaming
 
         // @formatter:int_align_fields true
 
-        // ReSharper disable InconsistentNaming
-        public enum ProcessorArchitecture {
+        private enum ProcessorArchitecture : ushort {
             x86   = 0,
             ARM   = 5,
             x64   = 9,
             ARM64 = 12
         }
-        // ReSharper enable InconsistentNaming
-
         // @formatter:int_align_fields false
 
-        public CimInstance ProcessorInfo {
-            get {
-                // ReSharper disable once InvertIf
-                if (_processorInfo == null) {
-                    WriteConsoleVerbose("Retrieving processor info ...");
-                    _processorInfo = EnumerateCimInstances("Win32_Processor").First();
-                }
+        // ReSharper enable InconsistentNaming
 
-                return _processorInfo;
-            }
+        #endregion
+
+        #region P/Invoke
+
+        [DllImport("kernel32", ExactSpelling = true, SetLastError = true)]
+        private static extern bool GetFirmwareType(out FirmwareTypes firmwareType);
+
+
+        // @formatter:int_align_fields true
+
+        private enum FirmwareTypes {
+            Unknown = 0,
+            BIOS    = 1,
+            UEFI    = 2
         }
 
-        public string ProcessorManufacturer {
-            get {
-                if (IsProcessorIntel) return "Intel";
-                if (IsProcessorAmd) return "AMD";
-                if (IsProcessorArm) return "ARM";
-
-                throw new ArgumentOutOfRangeException(
-                    $"Unknown processor manufacturer: {(string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value}");
-            }
-        }
-
-        public bool IsProcessorX86 =>
-            (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x86;
-
-        public bool IsProcessorX64 =>
-            (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x64;
-
-        public bool IsProcessorAmd =>
-            (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
-
-        public bool IsProcessorArm =>
-            (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM ||
-            (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.ARM64;
-
-        public bool IsProcessorIntel =>
-            (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "GenuineIntel";
+        // @formatter:int_align_fields false
 
         #endregion
     }
