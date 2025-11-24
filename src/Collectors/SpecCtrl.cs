@@ -259,32 +259,33 @@ namespace QueryHardwareSecurity.Collectors {
             var fbsdpHwProtectedSecure = false;
             var psdpHwProtectedSecure = false;
             var fbClearEnabledSecure = false;
+            var fbClearReportedSecure = false;
 
-            if (fbClearReported) {
-                /*
-                 * The SpeculationControl PowerShell module always sets the
-                 * three HardwareProtected variables to true for non-Intel
-                 * processors. These bits are seemingly not set in the actual
-                 * structure on these platforms, so we will erroneously report
-                 * the system is vulnerable if we don't override them.
-                 */
-                if (!SystemInfo.IsProcessorIntel) {
-                    sbdrSsdpHwProtected = true;
-                    fbsdpHwProtected = true;
-                    psdpHwProtected = true;
-                }
+            if ((fbClearReported && !SystemInfo.IsProcessorIntel) || (!fbClearReported && SystemInfo.IsProcessorArm)) {
+                // ARM builds of Windows don't set the FbClearReported bit so
+                // set the secure status to reflect they are never vulnerable.
+                if (!fbClearReported && SystemInfo.IsProcessorArm) fbClearReportedSecure = true;
 
+                // On non-Intel processors the hardware protected bits aren't
+                // set. Override them as such systems are never vulnerable.
+                sbdrSsdpHwProtected = true;
+                fbsdpHwProtected = true;
+                psdpHwProtected = true;
+            }
+
+            if (fbClearReported || fbClearReportedSecure) {
                 sbdrSsdpHwProtectedSecure = sbdrSsdpHwProtected.Value;
                 fbsdpHwProtectedSecure = fbsdpHwProtected.Value;
                 psdpHwProtectedSecure = psdpHwProtected.Value;
                 fbClearEnabledSecure = fbClearEnabled.Value || (sbdrSsdpHwProtected.Value && fbsdpHwProtected.Value && psdpHwProtected.Value);
+                fbClearReportedSecure = true;
             }
 
             WriteOutputEntry("SbdrSsdpHardwareProtected", sbdrSsdpHwProtected, sbdrSsdpHwProtectedSecure);
             WriteOutputEntry("FbsdpHardwareProtected", fbsdpHwProtected, fbsdpHwProtectedSecure);
             WriteOutputEntry("PsdpHardwareProtected", psdpHwProtected, psdpHwProtectedSecure);
             WriteOutputEntry("FbClearEnabled", fbClearEnabled, fbClearEnabledSecure);
-            WriteOutputEntry("FbClearReported", fbClearReported, fbClearReported);
+            WriteOutputEntry("FbClearReported", fbClearReported, fbClearReportedSecure);
 
             /*
              * Branch History Injection (BHI)
@@ -297,7 +298,12 @@ namespace QueryHardwareSecurity.Collectors {
             var bhbDisabledSystemPolicy = _specCtrlInfo.Flags2.BhbDisabledSystemPolicy;
             var bhbDisabledNoHwSupport = _specCtrlInfo.Flags2.BhbDisabledNoHardwareSupport;
 
-            WriteOutputEntry("BhbEnabled", bhbEnabled, bhbEnabled); // TODO: Fix secure state
+            // There's no "BhbReported" bit so we'll just set the status as
+            // secure for non-Intel systems, even though the system may not
+            // have the applicable Windows update.
+            var bhbEnabledSecure = bhbEnabled || !SystemInfo.IsProcessorIntel;
+
+            WriteOutputEntry("BhbEnabled", bhbEnabled, bhbEnabledSecure);
             WriteOutputEntry("BhbDisabledSystemPolicy", bhbDisabledSystemPolicy, !bhbDisabledSystemPolicy);
             WriteOutputEntry("BhbDisabledNoHardwareSupport", bhbDisabledNoHwSupport, !bhbDisabledNoHwSupport);
 
@@ -365,16 +371,26 @@ namespace QueryHardwareSecurity.Collectors {
             var gdsReported = _specCtrlInfo.Flags2.GdsReported;
             var gdsStatus = gdsReported ? (SpeculationControlGdsStatus?)_specCtrlInfo.Flags2.GdsStatus : null;
 
+            var gdsReportedSecure = false;
             var gdsStatusSecure = false;
 
+            // ARM builds of Windows don't set these bits so make some
+            // adjustments to reflect that ARM systems are never vulnerable.
+            if (!gdsReported && SystemInfo.IsProcessorArm) {
+                gdsStatus = SpeculationControlGdsStatus.HardwareImmune;
+
+                gdsReportedSecure = true;
+                gdsStatusSecure = true;
+            }
+
             if (gdsReported) {
+                gdsReportedSecure = true;
                 gdsStatusSecure = gdsStatus == SpeculationControlGdsStatus.HardwareImmune ||
                                   gdsStatus == SpeculationControlGdsStatus.Mitigated ||
                                   gdsStatus == SpeculationControlGdsStatus.MitigatedAndLocked;
             }
 
-
-            WriteOutputEntry("GdsReported", gdsReported, gdsReported);
+            WriteOutputEntry("GdsReported", gdsReported, gdsReportedSecure);
             WriteOutputEntry("GdsStatus", gdsStatus, gdsStatusSecure);
 
             /*
@@ -388,14 +404,25 @@ namespace QueryHardwareSecurity.Collectors {
             var srsoReported = _specCtrlInfo.Flags2.SrsoReported;
             var srsoStatus = srsoReported ? (SpeculationControlSrsoStatus?)_specCtrlInfo.Flags2.SrsoStatus : null;
 
+            var srsoReportedSecure = false;
             var srsoStatusSecure = false;
 
+            // ARM builds of Windows don't set these bits so make some
+            // adjustments to reflect that ARM systems are never vulnerable.
+            if (!srsoReported && SystemInfo.IsProcessorArm) {
+                srsoStatus = SpeculationControlSrsoStatus.HardwareImmune;
+
+                srsoReportedSecure = true;
+                srsoStatusSecure = true;
+            }
+
             if (srsoReported) {
+                srsoReportedSecure = true;
                 srsoStatusSecure = srsoStatus == SpeculationControlSrsoStatus.HardwareImmune ||
                                    srsoStatus == SpeculationControlSrsoStatus.Mitigated;
             }
 
-            WriteOutputEntry("SrsoReported", srsoReported, srsoReported);
+            WriteOutputEntry("SrsoReported", srsoReported, srsoReportedSecure);
             WriteOutputEntry("SrsoStatus", srsoStatus, srsoStatusSecure);
 
             /*
@@ -408,14 +435,25 @@ namespace QueryHardwareSecurity.Collectors {
             var dbzReported = _specCtrlInfo.Flags2.DivideByZeroReported;
             var dbzStatus = dbzReported ? (SpeculationControlDivideByZeroStatus?)_specCtrlInfo.Flags2.DivideByZeroStatus : null;
 
+            var dbzReportedSecure = false;
             var dbzStatusSecure = false;
 
+            // ARM builds of Windows don't set these bits so make some
+            // adjustments to reflect that ARM systems are never vulnerable.
+            if (!dbzReported && SystemInfo.IsProcessorArm) {
+                dbzStatus = SpeculationControlDivideByZeroStatus.HardwareImmune;
+
+                dbzReportedSecure = true;
+                dbzStatusSecure = true;
+            }
+
             if (dbzReported) {
+                dbzReportedSecure = true;
                 dbzStatusSecure = dbzStatus == SpeculationControlDivideByZeroStatus.HardwareImmune ||
                                   dbzStatus == SpeculationControlDivideByZeroStatus.Mitigated;
             }
 
-            WriteOutputEntry("DivideByZeroReported", dbzReported, dbzReported);
+            WriteOutputEntry("DivideByZeroReported", dbzReported, dbzReportedSecure);
             WriteOutputEntry("DivideByZeroStatus", dbzStatus, dbzStatusSecure);
 
             /*
@@ -428,14 +466,25 @@ namespace QueryHardwareSecurity.Collectors {
             var rfdsReported = _specCtrlInfo.Flags2.RfdsReported;
             var rfdsStatus = rfdsReported ? (SpeculationControlRfdsStatus?)_specCtrlInfo.Flags2.RfdsStatus : null;
 
+            var rfdsReportedSecure = false;
             var rfdsStatusSecure = false;
 
+            // ARM builds of Windows don't set these bits so make some
+            // adjustments to reflect that ARM systems are never vulnerable.
+            if (!rfdsReported && SystemInfo.IsProcessorArm) {
+                rfdsStatus = SpeculationControlRfdsStatus.HardwareImmune;
+
+                rfdsReportedSecure = true;
+                rfdsStatusSecure = true;
+            }
+
             if (rfdsReported) {
+                rfdsReportedSecure = true;
                 rfdsStatusSecure = rfdsStatus == SpeculationControlRfdsStatus.HardwareImmune ||
                                    rfdsStatus == SpeculationControlRfdsStatus.Mitigated;
             }
 
-            WriteOutputEntry("RfdsReported", rfdsReported, rfdsReported);
+            WriteOutputEntry("RfdsReported", rfdsReported, rfdsReportedSecure);
             WriteOutputEntry("RfdsStatus", rfdsStatus, rfdsStatusSecure);
         }
 

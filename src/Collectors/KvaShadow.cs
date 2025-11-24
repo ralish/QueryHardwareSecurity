@@ -111,6 +111,7 @@ namespace QueryHardwareSecurity.Collectors {
              *     of values, and sets the mitigation as required if any match.
              */
             // TODO: Handle secure states and implement the above logic
+            // TODO: Need to override the ARM case as secure.
             WriteOutputEntry("InvalidPteBit", invalidPteBit);
             WriteOutputEntry("L1DataCacheFlushSupported", l1DataCacheFlushSupported);
             WriteOutputEntry("L1TerminalFaultMitigationPresent", l1tfMitigationPresent, l1tfMitigationPresent);
