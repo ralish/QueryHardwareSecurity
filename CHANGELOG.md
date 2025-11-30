@@ -1,6 +1,43 @@
 Changelog
 =========
 
+v0.3.0
+------
+
+- Added new collector for Isolated User Mode: `Ium`
+- Added new collector for Pointer Authentication: `PointerAuth`
+- Relevant collectors now include an additional `Secure` column  
+  Indicates if the value is considered secure for the given system.
+- `KernelDma` collector
+  - Added description for field
+  - Renamed collector from `DmaGuardPolicy`
+- `KvaShadow` collector
+  - Tweaks to field descriptions
+  - Renamed collector from `KernelVaShadow`
+- `SecureBoot` collector
+  - Added descriptions for fields
+- `ShadowStacks`
+  - Added descriptions for fields
+  - Renamed collector from `ShadowStack`
+- `SkSpecCtrl`
+  - Added support for 4 new fields
+  - Added descriptions for existing fields
+  - Renamed collector from `SecureSpeculationControl`
+- `SpecCtrl`
+  - Added support for 15 new fields with descriptions
+  - Renamed collector from `SpeculationControl`
+- `Vbs`
+  - Added support for additional VBS security services
+  - Renamed collector from `WindowsDefender`
+- `Vsm`
+  - Added descriptions for fields
+  - Renamed collector from `VsmProtection`
+- Added several sections to the `README.md`
+- Overhauled the glossary section of `README.md`
+- Huge number of code quality & tooling improvements
+- Updated `System.CommandLine` to v2.0.0
+- Updated all other NuGet dependencies
+
 v0.2.1
 ------
 
