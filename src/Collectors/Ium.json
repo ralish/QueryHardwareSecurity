@@ -1,0 +1,41 @@
+{
+    "SecureKernelRunning": {
+        "description": "Secure Kernel running"
+    },
+    "HvciEnabled": {
+        "description": "Memory integrity (HVCI) enabled"
+    },
+    "HvciStrictMode": {
+        "description": "Memory integrity (HVCI) enabled in strict mode"
+    },
+    "DebugEnabled": {
+        "description": "Memory integrity (HVCI) enabled in debug mode"
+    },
+    "FirmwarePageProtection": {
+        "description": "Firmware implements page protections"
+    },
+    "EncryptionKeyAvailable": {
+        "description": "VSM encryption key available"
+    },
+    "TrustletRunning": {
+        "description": "Unknown"
+    },
+    "HvciDisableAllowed": {
+        "description": "Memory integrity (HVCI) permitted to be disabled"
+    },
+    "HardwareEnforcedVbs": {
+        "description": "Unknown"
+    },
+    "NoSecrets": {
+        "description": "Unknown"
+    },
+    "EncryptionKeyPersistent": {
+        "description": "VSM encryption key persisted to firmware"
+    },
+    "HardwareEnforcedHvpt": {
+        "description": "Hypervisor-enforced Paging Translation enforced"
+    },
+    "HardwareHvptAvailable": {
+        "description": "Hardware supports Hypervisor-enforced Paging Translation"
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "KvaShadowSupported": {
+        "description": "Windows supports Kernel VA Shadowing"
+    },
+    "KvaShadowEnabled": {
+        "description": "Kernel VA Shadowing enabled"
+    },
+    "KvaShadowUserGlobal": {
+        "description": "User pages are marked as global"
+    },
+    "KvaShadowPcid": {
+        "description": "Processor supports PCID"
+    },
+    "MbClearEnabled": {
+        "description": "MDS vulnerability mitigations enabled"
+    },
+    "L1TFMitigated": {
+        "description": "L1TF vulnerability mitigation enabled"
+    },
+    "BpbEnabled": {
+        "description": "BTI mitigations enabled"
+    },
+    "IbrsPresent": {
+        "description": "Processor supports IBRS"
+    },
+    "EnhancedIbrs": {
+        "description": "Processor supports EIBRS"
+    },
+    "StibpPresent": {
+        "description": "Processor supports STIBP"
+    },
+    "SsbdSupported": {
+        "description": "Processor supports SSBD"
+    },
+    "SsbdRequired": {
+        "description": "Processor vulnerable to SSB"
+    },
+    "BpbKernelToUser": {
+        "description": "BTI mitigations enabled for kernel to user-mode transitions"
+    },
+    "BpbUserToKernel": {
+        "description": "BTI mitigations enabled for user-mode to kernel transitions"
+    },
+    "ReturnSpeculate": {
+        "description": "Unknown"
+    },
+    "BranchConfusionSafe": {
+        "description": "Unknown"
+    },
+    "SsbsEnabledAlways": {
+        "description": "Unknown"
+    },
+    "SsbsEnabledKernel": {
+        "description": "Unknown"
+    }
+}

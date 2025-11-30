@@ -1,0 +1,155 @@
+{
+    "BpbEnabled": {
+        "description": "BTI mitigations enabled"
+    },
+    "BpbDisabledSystemPolicy": {
+        "description": "BTI mitigations disabled by system policy"
+    },
+    "BpbDisabledNoHardwareSupport": {
+        "description": "BTI mitigations disabled due to missing hardware support"
+    },
+    "SpecCtrlEnumerated": {
+        "description": "Processor supports IA32_SPEC_CTRL"
+    },
+    "SpecCmdEnumerated": {
+        "description": "Processor supports IA32_PRED_CMD"
+    },
+    "IbrsPresent": {
+        "description": "Processor supports IBRS"
+    },
+    "StibpPresent": {
+        "description": "Processor supports STIBP"
+    },
+    "SmepPresent": {
+        "description": "Processor supports SMEP"
+    },
+    "SpeculativeStoreBypassDisableAvailable": {
+        "description": "Windows supports SSBD"
+    },
+    "SpeculativeStoreBypassDisableSupported": {
+        "description": "Processor supports SSBD"
+    },
+    "SpeculativeStoreBypassDisabledSystemWide": {
+        "description": "SSBD enabled system-wide"
+    },
+    "SpeculativeStoreBypassDisabledKernel": {
+        "description": "SSBD enabled for kernel-mode transitions"
+    },
+    "SpeculativeStoreBypassDisableRequired": {
+        "description": "Processor vulnerable to SSB"
+    },
+    "BpbDisabledKernelToUser": {
+        "description": "BTI mitigations disabled for kernel to user-mode transitions"
+    },
+    "SpecCtrlRetpolineEnabled": {
+        "description": "Retpoline mitigation enabled for compatible drivers"
+    },
+    "SpecCtrlImportOptimizationEnabled": {
+        "description": "Retpoline mitigation import address table optimisation enabled"
+    },
+    "EnhancedIbrs": {
+        "description": "Processor supports EIBRS"
+    },
+    "HvL1tfStatusAvailable": {
+        "description": "Windows supports L1TF VMM vulnerability mitigation"
+    },
+    "HvL1tfProcessorNotAffected": {
+        "description": "Processor unaffected by L1TF VMM vulnerability"
+    },
+    "HvL1tfMitigationEnabled": {
+        "description": "L1TF VMM vulnerability mitigation enabled"
+    },
+    "HvL1tfMigitationNotEnabled_Hardware": {
+        "description": "L1TF VMM mitigation disabled due to missing hardware support"
+    },
+    "HvL1tfMigitationNotEnabled_LoadOption": {
+        "description": "L1TF VMM mitigation disabled by hypervisor load option"
+    },
+    "HvL1tfMigitationNotEnabled_CoreScheduler": {
+        "description": "L1TF VMM mitigation not required due to use of Core scheduler"
+    },
+    "EnhancedIbrsReported": {
+        "description": "Windows supports reporting EIBRS availability"
+    },
+    "MdsHardwareProtected": {
+        "description": "Processor unaffected by MDS vulnerabilities"
+    },
+    "MbClearEnabled": {
+        "description": "MDS vulnerability mitigations enabled"
+    },
+    "MbClearReported": {
+        "description": "Windows supports MDS vulnerability mitigations"
+    },
+    "TsxCtrlStatusRtm": {
+        "description": "TSX RTM feature disabled (XBEGIN instruction)"
+    },
+    "TsxCtrlStatusEnum": {
+        "description": "TSX RTM & HLE feature enumeration disabled"
+    },
+    "TsxCtrlReported": {
+        "description": "Windows supports TAA vulnerability mitigation"
+    },
+    "TaaHardwareImmune": {
+        "description": "Processor unaffected by TAA vulnerability"
+    },
+    "SbdrSsdpHardwareProtected": {
+        "description": "Processor unaffected by SBDR and SSDP vulnerability"
+    },
+    "FbsdpHardwareProtected": {
+        "description": "Processor unaffected by FBSDP vulnerability"
+    },
+    "PsdpHardwareProtected": {
+        "description": "Processor unaffected by PSDP vulnerability"
+    },
+    "FbClearEnabled": {
+        "description": "MMIO Stale Data vulnerability mitigations enabled"
+    },
+    "FbClearReported": {
+        "description": "Windows supports MMIO Stale Data vulnerability mitigations"
+    },
+    "BhbEnabled": {
+        "description": "BHI mitigations enabled"
+    },
+    "BhbDisabledSystemPolicy": {
+        "description": "BHI mitigations disabled by system policy"
+    },
+    "BhbDisabledNoHardwareSupport": {
+        "description": "BHI mitigations disabled by missing hardware support"
+    },
+    "BranchConfusionStatus": {
+        "description": "Status of BTC vulnerabilities"
+    },
+    "BranchConfusionReported": {
+        "description": "Windows supports BTC vulnerability mitigations"
+    },
+    "RdclHardwareProtectedReported": {
+        "description": "Windows supports RDCL vulnerability mitigation"
+    },
+    "RdclHardwareProtected": {
+        "description": "Processor unaffected by RDCL vulnerability"
+    },
+    "GdsReported": {
+        "description": "Windows supports GDS vulnerability mitigation"
+    },
+    "GdsStatus": {
+        "description": "Status of GDS vulnerability"
+    },
+    "SrsoReported": {
+        "description": "Windows supports SRSO vulnerability mitigation"
+    },
+    "SrsoStatus": {
+        "description": "Status of SRSO vulnerability"
+    },
+    "DivideByZeroReported": {
+        "description": "Windows supports Division-by-Zero vulnerability mitigation"
+    },
+    "DivideByZeroStatus": {
+        "description": "Status of Division-by-Zero vulnerability"
+    },
+    "RfdsReported": {
+        "description": "Windows supports RFDS vulnerability mitigation"
+    },
+    "RfdsStatus": {
+        "description": "Status of RFDS vulnerability"
+    }
+}

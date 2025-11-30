@@ -1,0 +1,5 @@
+{
+    "DmaGuardPolicyEnabled": {
+        "description": "Kernel DMA Protection enabled"
+    }
+}
