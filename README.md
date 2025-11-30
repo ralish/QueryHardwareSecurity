@@ -1,6 +1,7 @@
 QueryHardwareSecurity
 =====================
 
+![GitHub Release](https://img.shields.io/github/v/release/ralish/QueryHardwareSecurity?include_prereleases)
 [![azure devops](https://dev.azure.com/nexiom/QueryHardwareSecurity/_apis/build/status/QueryHardwareSecurity)](https://dev.azure.com/nexiom/QueryHardwareSecurity/_build/latest?definitionId=1)
 [![license](https://img.shields.io/github/license/ralish/QueryHardwareSecurity)](https://choosealicense.com/licenses/mit/)
 
@@ -28,7 +29,9 @@ Requirements
 - Supported .NET runtimes
   - .NET Framework 4.6.2 (or newer)  
     *Built-in since Windows 10 1607 and Server 2016*
-  - .NET 8.0  
+  - .NET 8 (or newer)  
+    Install manually: [Download](https://dotnet.microsoft.com/en-us/download/dotnet)
+    Install with WinGet: `winget install Microsoft.DotNet.Runtime.8`
 
 Resources
 ---------
@@ -86,24 +89,30 @@ Glossary
   Advanced Programmable Interrupt Controller
 - **AVIC**  
   Advanced Virtual Interrupt Controller
+- **BPB**  
+  Branch Prediction Barrier
 - **CET**  
   Control-Flow Enforcement Technology
 - **IBRS**  
   Indirect Branch Restricted Speculation
   - **EIBRS**  
-    Enhanced IBRS
-- **INVPCID**  
-  Invalidate Process-Context Identifier
-- **MBE**  
+    Enhanced Indirect Branch Restricted Speculation
+- **MBEC**  
   Mode-Based Execution Control
 - **NX**  
   No-execute
 - **PCID**  
   Process-Context Identifiers
+  - **INVPCID**  
+    Invalidate Process-Context Identifier
+- **RSB**  
+  Return Stack Buffer
 - **SMEP**  
   Supervisor Mode Execution Protection
-- **SSBD**  
-  Speculative Store Bypass Disable
+- **SSB**  
+  Speculative Store Bypass
+  - **SSBD**  
+    Speculative Store Bypass Disable
 - **STIBP**  
   Single Thread Indirect Branch Predictor
 - **TSX**  
@@ -151,12 +160,20 @@ Glossary
   Memory-mapped I/O Stale Data
   - **DRPW**  
     Device Register Partial Write
+  - **FBSDP**  
+    Fill Buffer Stale Data Propagator
+  - **PSDP**  
+    Primary Stale Data Propagator
   - **SBDR**  
     Shared Buffers Data Read
   - **SBDS**  
     Shared Buffers Data Sampling
   - **SRBDS Update**  
     Special Register Buffer Data Sampling Update
+  - **SSDP**  
+    Sideband Stale Data Propagator
+- **BHI**  
+  Branch History Injection
 
 ### Windows features
 
