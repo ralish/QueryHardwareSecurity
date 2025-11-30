@@ -33,17 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Collectors\KernelVaShadow.json" />
-    <None Remove="Collectors\SpeculationControl.json" />
-    <None Remove="Metadata\Vulnerabilities.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Collectors\KernelVaShadow.json" />
-    <EmbeddedResource Include="Collectors\SpeculationControl.json" />
-    <EmbeddedResource Include="Metadata\Vulnerabilities.json">
-      <LogicalName>Vulnerabilities.json</LogicalName>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Collectors\*.json" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
