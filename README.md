@@ -5,13 +5,12 @@ QueryHardwareSecurity
 [![azure devops](https://dev.azure.com/nexiom/QueryHardwareSecurity/_apis/build/status/QueryHardwareSecurity)](https://dev.azure.com/nexiom/QueryHardwareSecurity/_build/latest?definitionId=1)
 [![license](https://img.shields.io/github/license/ralish/QueryHardwareSecurity)](https://choosealicense.com/licenses/mit/)
 
-A work-in-progress utility to query Windows support for security features and mitigations with hardware dependencies.
+A utility to query Windows support for security features and mitigations with hardware dependencies.
 
+- [Overview](#overview)
 - [Requirements](#requirements)
-- [Resources](#resources)
-  - [Microsoft](#microsoft)
-  - [CPU vendors](#cpu-vendors)
-  - [Miscellaneous](#miscellaneous)
+- [Collectors](#collectors)
+- [Output](#output)
 - [Glossary](#glossary)
   - [General](#general)
   - [Firmware](#firmware)
@@ -20,7 +19,20 @@ A work-in-progress utility to query Windows support for security features and mi
   - [Processor features](#processor-features)
   - [Processor vulnerabilities](#processor-vulnerabilities)
   - [Windows features](#windows-features)
+- [Resources](#resources)
+  - [Microsoft](#microsoft)
+  - [CPU vendors](#cpu-vendors)
+  - [Miscellaneous](#miscellaneous)
 - [License](#license)
+
+Overview
+--------
+
+It's increasingly the case that many modern system security features depend on not only operating system support but underlying hardware capabilities. For example, many Windows security features leverage a TPM or virtualisation technology which requires CPU support. In addition, a significant number of processor security vulnerabilities have been disclosed in recent years, most prominently seen in the speculative execution class of vulnerabilities. Mitigating these vulnerabilities often requires the combination of a processor microcode update and associated operating system update to leverage the vulnerability mitigations on the processor which were introduced by the microcode update.
+
+This utility is designed to query a Windows system to determine its support for and the configuration of security features which have dependencies on the underlying hardware. This includes both general-purpose security features (e.g. *Virtualisation-based Security*) and security features introduced to mitigate processor vulnerabilities (e.g. speculative execution mitigations). In addition, where applicable the utility attempts to determine if the state of a given security setting is considered "secure".
+
+Determining if a given setting is secure can be non-trivial. While typically straightforward for general-purpose security features (they should be enabled), security settings introduced to mitigate a processor vulnerability are usually specific to certain processor architectures and further constrained to certain models. These settings being disabled is not necessarily insecure; it's only problematic if the processor itself is vulnerable. Further, some output is purely informational, such as indicating if certain processor features are supported. These features may reduce the performance impact of vulnerability mitigations, but their absence does not represent a security issue. The utility tries to take all this into account, taking a conservative approach, indicating a setting is "secure" only if there's a high degree of confidence.
 
 Requirements
 ------------
@@ -35,24 +47,41 @@ Requirements
     Install manually: [Download](https://dotnet.microsoft.com/en-us/download/dotnet)
     Install with WinGet: `winget install Microsoft.DotNet.Runtime.8`
 
-Resources
----------
+Collectors
+----------
 
-### Microsoft
+By default all available collectors are run:
 
-- [KB4072698: Windows Server guidance to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4072698)
-- [KB4073119: Windows client guidance for IT Pros to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4073119)
-- [KB4073757: Protect your Windows devices against speculative execution side-channel attacks](https://support.microsoft.com/en-us/help/4073757)
-- [KB4457951: Windows guidance to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4457951)
+| Name           | Description                   | Notes                                                |
+| -------------- | ----------------------------- | ---------------------------------------------------- |
+| `Ium`          | Isolated User Mode            | Depends on *Virtualisation-based Security* feature   |
+| `KernelDma`    | Kernel DMA Protection         |                                                      |
+| `KvaShadow`    | Kernel VA Shadow              | Mitigation of speculative execution vulnerabilities  |
+| `PointerAuth`  | Pointer Authentication        | Currently only supported on ARM processors           |
+| `SecureBoot`   | Secure Boot                   |                                                      |
+| `ShadowStacks` | Shadow Stacks                 | Currently only supported on Intel and AMD processors |
+| `SkSpecCtrl`   | Secure Speculation Control    | Depends on *Virtualisation-based Security* feature   |
+| `SpecCtrl`     | Speculation Control           | Mitigation of speculative execution vulnerabilities  |
+| `SystemInfo`   | System Information            |                                                      |
+| `Tpm`          | Trusted Platform Module       |                                                      |
+| `Vbs`          | Virtualisation-based Security |                                                      |
+| `Vsm`          | Virtual Secure Mode           | Depends on *Virtualisation-based Security* feature   |
 
-### CPU vendors
+To select the collector to run use the `-c` or `--collectors` command-line parameter. The parameter can be specified multiple times to select multiple collectors.
 
-- [AMD Product Security](https://www.amd.com/en/corporate/product-security)
-- [ARM Security Updates](https://developer.arm.com/support/arm-security-updates)
+Output
+------
 
-### Miscellaneous
+Multiple output formats are supported:
 
-- [Transient Execution Attacks](https://transient.fail/)
+- `table` (*default*)  
+  Easiest to interpret and designed for human consumption. This is the only format that also outputs if a given setting is considered secure.
+- `raw`  
+  A more minimal format without pretty table formatting.
+- `json`  
+  The raw data structures retrieved from querying the system. Primarily designed for programmatic ingestion and processing of the results.
+
+To change the output format use the `-o` or `--output` command-line parameter.
 
 Glossary
 --------
@@ -240,6 +269,25 @@ Glossary
   Virtual Secure Mode
 - **WSMT**  
   Windows SMM Security Mitigations Table
+
+Resources
+---------
+
+### Microsoft
+
+- [KB4072698: Windows Server guidance to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4072698)
+- [KB4073119: Windows client guidance for IT Pros to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4073119)
+- [KB4073757: Protect your Windows devices against speculative execution side-channel attacks](https://support.microsoft.com/en-us/help/4073757)
+- [KB4457951: Windows guidance to protect against speculative execution side-channel vulnerabilities](https://support.microsoft.com/en-us/help/4457951)
+
+### CPU vendors
+
+- [AMD Product Security](https://www.amd.com/en/corporate/product-security)
+- [ARM Security Updates](https://developer.arm.com/support/arm-security-updates)
+
+### Miscellaneous
+
+- [Transient Execution Attacks](https://transient.fail/)
 
 License
 -------
