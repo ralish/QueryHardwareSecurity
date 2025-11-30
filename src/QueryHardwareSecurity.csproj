@@ -3,6 +3,8 @@
   <PropertyGroup>
     <!-- Build configuration -->
     <TargetFrameworks Condition=" '$(TargetFrameworks)' == '' ">net462;net472;net8.0</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>annotations</Nullable>
     <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <StartupObject>QueryHardwareSecurity.Program</StartupObject>
