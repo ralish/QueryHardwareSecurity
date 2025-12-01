@@ -262,9 +262,14 @@ namespace QueryHardwareSecurity.Collectors {
             var fbClearReportedSecure = false;
 
             if ((fbClearReported && !SystemInfo.IsProcessorIntel) || (!fbClearReported && SystemInfo.IsProcessorArm)) {
-                // ARM builds of Windows don't set the FbClearReported bit so
-                // set the secure status to reflect they are never vulnerable.
-                if (!fbClearReported && SystemInfo.IsProcessorArm) fbClearReportedSecure = true;
+                // ARM builds of Windows don't set these bits so make some
+                // adjustments to reflect that they're never vulnerable.
+                if (!fbClearReported && SystemInfo.IsProcessorArm) {
+                    fbClearReportedSecure = true;
+
+                    fbClearEnabled = false;
+                    fbClearEnabledSecure = true;
+                }
 
                 // On non-Intel processors the hardware protected bits aren't
                 // set. Override them as such systems are never vulnerable.
