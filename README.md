@@ -117,15 +117,17 @@ Glossary
 - **BHB**  
   Branch History Barrier
 - **BPB**  
-  Branch Prediction Barrier
-- **IBPB** (*AMD / Intel*)  
-  Indirect Branch Predictor Barrier
+  Branch Predictor Barrier
+  - **IBPB** (*AMD / Intel*)  
+    Indirect BPB
+  - **SBPB** (*AMD*)  
+    Selective BPB
 - **IBRS** (*AMD / Intel*)  
   Indirect Branch Restricted Speculation
-  - **Automatic IBRS** (*AMD*)  
-    Automatic Indirect Branch Restricted Speculation
+  - **AutoIBRS** (*AMD*)  
+    Automatic IBRS
   - **eIBRS** (*Intel*)  
-    Enhanced Indirect Branch Restricted Speculation
+    Enhanced IBRS
 - **SSBD** (*AMD / ARM / Intel*)  
   Speculative Store Bypass Disable
 - **SSBS** (*ARM*)  
@@ -147,35 +149,69 @@ Glossary
     Return Address Store
   - **RSB** (*Intel*)  
     Return Stack Buffer
+    - **RSBA**  
+      RSB Alternate
+    - **RRSBA**  
+      Restricted RSBA
 
 ### Processor features
 
-- **APIC**  
-  Advanced Programmable Interrupt Controller
-  - **APICv** (*Intel*)  
-    APIC Virtualization
-  - **AVIC** (*AMD*)  
-    Advanced Virtual Interrupt Controller
-- **CET** (*Intel*)  
-  Control-Flow Enforcement Technology
-- **NX**  
-  No-execute
-- **PCID**  
-  Process-Context Identifiers
-  - **INVPCID**  
-    Invalidate Process-Context Identifier
-- **QARMA**  
-  Qualcomm ARM Authenticator
+- **CFI**  
+  Control-flow integrity
+  - **CET** (*Intel*)  
+    Control-flow Enforcement Technology
+  - **PAC** (*ARM*)  
+    Pointer Authentication Code
+    - **QARMA**  
+      Qualcomm ARM Authenticator
+  - **SS** (*AMD*)  
+    Shadow Stack
+- Firmware runtime execution
+  - **SMM** (*AMD / Intel*)  
+    System Management Mode
+  - **SMM** (*ARM*)  
+    Secure Monitor Mode
+- Interupt controllers
+  - **APIC** (*AMD / Intel*)  
+    Advanced Programmable Interrupt Controller
+    - **APICv** (*Intel*)  
+      APIC Virtualisation
+    - **AVIC** (*AMD*)  
+      Advanced Virtual Interrupt Controller
+  - **GIC** (*ARM*)  
+    Generic Interrupt Controller
+    - **GICv3**  
+      GIC version 3
+    - **GICv4**  
+      GIC version 4
+- Non-executable memory protection (W^X)
+  - **NX** (*AMD*)  
+    No eXecute
+  - **XD** (*Intel*)  
+    eXecute Disable
+  - **XN** (*ARM*)  
+    eXecute Never
+- Non-executable userland in kernel
+  - **PXN** (*ARM*)  
+    Privileged eXecute Never
+  - **SMEP** (*AMD / Intel*)  
+    Supervisor Mode Execution Protection
 - **SLAT**  
   Second Level Address Translation
   - **GMET** (*AMD*)  
     Guest Mode Execute Trap
   - **MBEC** (*Intel*)  
     Mode-Based Execution Control
-- **SMEP**  
-  Supervisor Mode Execution Protection
-- **SMM**  
-  System Management Mode
+  - **TTS2UXN** (*ARM*)  
+    Translation Table Stage 2 Unprivileged eXecute-Never
+- **TLB entry management**  
+  Translation Lookaside Buffer
+  - **ASID** (*ARM*)  
+    Address Space Identifier
+  - **PCID** (*AMD / Intel*)  
+    Process-Context Identifiers
+    - **INVPCID**  
+      Invalidate Process-Context Identifier
 - **TSX** (*Intel*)  
   Transactional Synchronization Extensions
   - **HLE**  
@@ -231,7 +267,7 @@ Glossary
     Sideband Stale Data Propagator
 - **RFDS**  
   Register File Data Sampling
-- **SCSB**
+- **SCSB**  
   Speculative Code Store Bypass
 - **Spectre**
   - **BCB** (*Spectre: Variant 1*)  
@@ -240,7 +276,7 @@ Glossary
     Bounds Check Bypass Store
   - **BHB** (*Spectre-BHB*)  
     Branch History Buffer
-  - **BTI** (*Spectre: Variant 2*)  
+  - **BTI** (*Spectre: Variant 2*, *Spectre-BTB*)  
     Branch Target Injection
   - **RDCL** (*Spectre: Variant 3*, *Meltdown*)  
     Rogue Data Cache Load
