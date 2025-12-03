@@ -1,24 +1,21 @@
 {
+    "InvalidPteBit": {
+        "description": "Physical address bit for invalid page table entries"
+    },
     "KvaShadowEnabled": {
         "description": "Kernel VA Shadowing enabled"
-    },
-    "KvaShadowUserGlobal": {
-        "description": "User pages are marked as global"
-    },
-    "KvaShadowPcid": {
-        "description": "Processor supports PCID (AMD / Intel) or ASID (ARM)"
     },
     "KvaShadowInvpcid": {
         "description": "Processor supports INVPCID"
     },
     "KvaShadowRequired": {
-        "description": "Processor vulnerable to RDCL"
+        "description": "Processor affected by RDCL vulnerability"
     },
     "KvaShadowRequiredAvailable": {
         "description": "Windows supports Kernel VA Shadowing"
     },
-    "InvalidPteBit": {
-        "description": "Physical address bit for invalid page table entries"
+    "KvaShadowUserGlobal": {
+        "description": "User pages are marked as global"
     },
     "L1DataCacheFlushSupported": {
         "description": "Processor supports optimized data cache flush for L1TF"
