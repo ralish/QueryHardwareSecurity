@@ -106,6 +106,9 @@ namespace QueryHardwareSecurity {
                 } catch (TargetInvocationException) { }
             }
 
+            // Return early if no collectors were initialised
+            if (collectors.Count == 0) return;
+
             // Add a blank line between verbose/debug output and main output
             if (VerboseOutput) Console.WriteLine();
 
