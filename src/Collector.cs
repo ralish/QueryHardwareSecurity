@@ -122,7 +122,7 @@ namespace QueryHardwareSecurity {
                     break;
                 default:
                     var symbolicNtStatus = GetSymbolicNtStatus(ntStatus);
-                    WriteVerbose($"Error requesting {Name} information: {ntStatus} ({symbolicNtStatus})");
+                    WriteError($"Error requesting {Name} information: {ntStatus} ({symbolicNtStatus})");
                     throw new Win32Exception(symbolicNtStatus);
             }
         }
