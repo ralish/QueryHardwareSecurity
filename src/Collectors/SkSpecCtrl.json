@@ -9,7 +9,7 @@
         "description": "User pages are marked as global"
     },
     "KvaShadowPcid": {
-        "description": "Processor supports PCID"
+        "description": "Processor supports PCID (AMD / Intel) or ASID (ARM)"
     },
     "MbClearEnabled": {
         "description": "MDS vulnerability mitigations enabled"
@@ -18,7 +18,7 @@
         "description": "L1TF vulnerability mitigation enabled"
     },
     "BpbEnabled": {
-        "description": "BTI mitigations enabled"
+        "description": "Processor supports speculative execution mitigations"
     },
     "IbrsPresent": {
         "description": "Processor supports IBRS"
@@ -36,16 +36,16 @@
         "description": "Processor vulnerable to SSB"
     },
     "BpbKernelToUser": {
-        "description": "BTI mitigations enabled for kernel to user-mode transitions"
+        "description": "BPB flushed for kernel to user-mode transitions"
     },
     "BpbUserToKernel": {
-        "description": "BTI mitigations enabled for user-mode to kernel transitions"
+        "description": "BPB flushed for user to kernel-mode transitions"
     },
     "ReturnSpeculate": {
-        "description": "Unknown"
+        "description": "Processor speculates on return addresses"
     },
     "BranchConfusionSafe": {
-        "description": "Unknown"
+        "description": "Processor does not speculate on every instruction"
     },
     "SsbsEnabledAlways": {
         "description": "Unknown"

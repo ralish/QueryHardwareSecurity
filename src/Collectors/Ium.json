@@ -9,7 +9,7 @@
         "description": "Memory integrity (HVCI) enabled in strict mode"
     },
     "DebugEnabled": {
-        "description": "Memory integrity (HVCI) enabled in debug mode"
+        "description": "Debugging of W^X pages enabled"
     },
     "FirmwarePageProtection": {
         "description": "Firmware implements page protections"
@@ -27,13 +27,13 @@
         "description": "Unknown"
     },
     "NoSecrets": {
-        "description": "Unknown"
+        "description": "VSM encryption key is ephemeral"
     },
     "EncryptionKeyPersistent": {
         "description": "VSM encryption key persisted to firmware"
     },
     "HardwareEnforcedHvpt": {
-        "description": "Hypervisor-enforced Paging Translation enforced"
+        "description": "Hypervisor-enforced Paging Translation enabled"
     },
     "HardwareHvptAvailable": {
         "description": "Hardware supports Hypervisor-enforced Paging Translation"

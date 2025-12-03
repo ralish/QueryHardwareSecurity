@@ -1,12 +1,12 @@
 {
     "KvaShadowEnabled": {
-        "description": "Keneral VA Shadowing enabled"
+        "description": "Kernel VA Shadowing enabled"
     },
     "KvaShadowUserGlobal": {
         "description": "User pages are marked as global"
     },
     "KvaShadowPcid": {
-        "description": "Processor supports PCID"
+        "description": "Processor supports PCID (AMD / Intel) or ASID (ARM)"
     },
     "KvaShadowInvpcid": {
         "description": "Processor supports INVPCID"

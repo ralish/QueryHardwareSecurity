@@ -39,7 +39,7 @@
         "description": "Processor vulnerable to SSB"
     },
     "BpbDisabledKernelToUser": {
-        "description": "BTI mitigations disabled for kernel to user-mode transitions"
+        "description": "BPB flushed for kernel to user-mode transitions"
     },
     "SpecCtrlRetpolineEnabled": {
         "description": "Retpoline mitigation enabled for compatible drivers"
