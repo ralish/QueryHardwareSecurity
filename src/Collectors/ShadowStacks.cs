@@ -21,6 +21,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             var ntStatus = NtQuerySystemInformation(ShadowStackInfoClass, out _shadowStackInfo, (uint)shadowStackInfoLength, IntPtr.Zero);
             if (ntStatus != 0) NtQsiFailure(ntStatus);
+            WriteDebug($"Result: 0x{_shadowStackInfo._RawBits:X8}");
         }
 
         internal override string ConvertToJson() {
@@ -60,7 +61,7 @@ namespace QueryHardwareSecurity.Collectors {
         // ReSharper disable InconsistentNaming
 
         private struct ShadowStackInfo {
-            private uint _RawBits;
+            internal uint _RawBits;
 
             public bool CetCapable => (_RawBits & 0x1) == 1;                       // Bit 0
             public bool UserCetAllowed => ((_RawBits >> 1) & 0x1) == 1;            // Bit 1
