@@ -1,41 +1,44 @@
 {
-    "SecureKernelRunning": {
-        "description": "Secure Kernel running"
+    "DebugEnabled": {
+        "description": "Debugging W^X pages enabled"
+    },
+    "EncryptionKeyAvailable": {
+        "description": "VSM master encryption key available"
+    },
+    "EncryptionKeyPersistent": {
+        "description": "VSM master encryption key persisted to firmware"
+    },
+    "FirmwarePageProtection": {
+        "description": "Firmware implements page protection"
+    },
+    "HardwareEnforcedHvpt": {
+        "description": "HVPT enabled"
+    },
+    "HardwareEnforcedVbs": {
+        "description": "VSM enforced by hardware"
+    },
+    "HardwareHvptAvailable": {
+        "description": "Hardware supports HVPT"
+    },
+    "HvciDisableAllowed": {
+        "description": "Memory integrity (HVCI) may be disabled"
     },
     "HvciEnabled": {
         "description": "Memory integrity (HVCI) enabled"
     },
     "HvciStrictMode": {
-        "description": "Memory integrity (HVCI) enabled in strict mode"
-    },
-    "DebugEnabled": {
-        "description": "Debugging of W^X pages enabled"
-    },
-    "FirmwarePageProtection": {
-        "description": "Firmware implements page protections"
-    },
-    "EncryptionKeyAvailable": {
-        "description": "VSM encryption key available"
-    },
-    "TrustletRunning": {
-        "description": "Unknown"
-    },
-    "HvciDisableAllowed": {
-        "description": "Memory integrity (HVCI) permitted to be disabled"
-    },
-    "HardwareEnforcedVbs": {
-        "description": "Unknown"
+        "description": "Memory integrity (HVCI) in strict mode"
     },
     "NoSecrets": {
-        "description": "VSM encryption key is ephemeral"
+        "description": "VSM master encryption key is never persisted"
     },
-    "EncryptionKeyPersistent": {
-        "description": "VSM encryption key persisted to firmware"
+    "SecretsTpmBound": {
+        "description": "VSM secrets are bound to TPM"
     },
-    "HardwareEnforcedHvpt": {
-        "description": "Hypervisor-enforced Paging Translation enabled"
+    "SecureKernelRunning": {
+        "description": "Secure Kernel running"
     },
-    "HardwareHvptAvailable": {
-        "description": "Hardware supports Hypervisor-enforced Paging Translation"
+    "TrustletRunning": {
+        "description": "LsaIso trustlet running"
     }
 }
