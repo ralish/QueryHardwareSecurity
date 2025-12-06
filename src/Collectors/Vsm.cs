@@ -32,16 +32,39 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputHeader();
 
             var dmaProtectionsAvailable = _vsmProtectionInfo.DmaProtectionsAvailable;
-            var dmaProtectionsInUse = _vsmProtectionInfo.DmaProtectionsInUse;
-            var hardwareMbecAvailable = _vsmProtectionInfo.HardwareMbecAvailable;
-            var apicVirtualizationAvailable = _vsmProtectionInfo.ApicVirtualizationAvailable;
-
-            var dmaProtectionsInUseSecure = dmaProtectionsAvailable && dmaProtectionsInUse;
-
             WriteOutputEntry("DmaProtectionsAvailable", dmaProtectionsAvailable, dmaProtectionsAvailable);
+
+            var dmaProtectionsInUse = _vsmProtectionInfo.DmaProtectionsInUse;
+            var dmaProtectionsInUseSecure = dmaProtectionsAvailable && dmaProtectionsInUse;
             WriteOutputEntry("DmaProtectionsInUse", dmaProtectionsInUse, dmaProtectionsInUseSecure);
-            WriteOutputEntry("HardwareMbecAvailable", hardwareMbecAvailable, hardwareMbecAvailable);
-            WriteOutputEntry("ApicVirtualizationAvailable", apicVirtualizationAvailable, apicVirtualizationAvailable);
+
+            // TODO: Verify if added in Windows 10 version 1803
+            var hardwareMbecAvailable = _vsmProtectionInfo.HardwareMbecAvailable;
+            var hardwareMbecDescription = "Processor supports ";
+            if (SystemInfo.IsProcessorIntel) {
+                hardwareMbecDescription += "MBEC (Intel)";
+            } else if (SystemInfo.IsProcessorAmd) {
+                hardwareMbecDescription += "GMET (AMD)";
+            } else if (SystemInfo.IsProcessorArm) {
+                hardwareMbecDescription += "TTS2UXN (ARM)";
+            } else {
+                hardwareMbecDescription += "Mode Based Execution Control";
+            }
+            WriteOutputEntry("HardwareMbecAvailable", hardwareMbecAvailable, hardwareMbecAvailable, hardwareMbecDescription);
+
+            // TODO: Verify if added in Windows 10 version 20H1
+            var apicVirtualizationAvailable = _vsmProtectionInfo.ApicVirtualizationAvailable;
+            var apicVirtualizationDescription = "Processor supports ";
+            if (SystemInfo.IsProcessorIntel) {
+                apicVirtualizationDescription += "APICv (Intel)";
+            } else if (SystemInfo.IsProcessorAmd) {
+                apicVirtualizationDescription += "AVEC (AMD)";
+            } else if (SystemInfo.IsProcessorArm) {
+                apicVirtualizationDescription += "GIC Virtualization Extensions (ARM)";
+            } else {
+                apicVirtualizationDescription += "virtualisation of interrupts";
+            }
+            WriteOutputEntry("ApicVirtualizationAvailable", apicVirtualizationAvailable, apicVirtualizationAvailable, apicVirtualizationDescription);
         }
 
         #region P/Invoke
