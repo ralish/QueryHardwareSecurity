@@ -202,12 +202,17 @@ namespace QueryHardwareSecurity {
         ///     A boolean which represents if the <see cref="value" /> is considered secure. This parameter is
         ///     only used with the Table <see cref="OutputFormat" /> and is otherwise ignored.
         /// </param>
+        /// <param name="description">
+        ///     An optional description. If <see langword="null" />, the description specified in the collector's metadata for the
+        ///     corresponding key name will be used if present.
+        /// </param>
         /// <param name="valueColor">
-        ///     The <see cref="ConsoleColor" /> for the <see cref="secure" /> boolean value. If null, the foreground colour will
-        ///     not be modified. If the <see cref="OutputColor" /> setting is disabled this parameter is ignored.
+        ///     The <see cref="ConsoleColor" /> for the <see cref="secure" /> boolean value. If <see langword="null" />, the
+        ///     foreground colour will not be modified. If the <see cref="OutputColor" /> setting is disabled this parameter is
+        ///     ignored.
         /// </param>
         /// <remarks>The output format depends on the configured <see cref="OutputFormat" />.</remarks>
-        protected void WriteOutputEntry(string name, string value, bool? secure = null, ConsoleColor? valueColor = null) {
+        protected void WriteOutputEntry(string name, string value, bool? secure = null, string? description = null, ConsoleColor? valueColor = null) {
             if (OutputFormat == OutputFormat.Raw) {
                 Console.WriteLine($"{name,-RawNameWidth} {value}");
                 return;
@@ -233,7 +238,7 @@ namespace QueryHardwareSecurity {
                 }
 
                 // Description
-                var description = _metadata.TryGetValue(name, out var metadata) ? metadata.description : string.Empty;
+                description ??= _metadata.TryGetValue(name, out var metadata) ? metadata.description : string.Empty;
                 Console.Write($" | {description.PadRight(TableDescWidth)}");
             }
 
@@ -243,49 +248,64 @@ namespace QueryHardwareSecurity {
         /// <summary>Write the provided key and its boolean value to standard output.</summary>
         /// <param name="name">The name of the key.</param>
         /// <param name="value">
-        ///     The value of the key. If not null, the string representation of the boolean value will be output. If null and using
-        ///     the Table <see cref="OutputFormat" />, the value will be "-" characters that fill the column.
+        ///     The value of the key. If not <see langword="null" />, the string representation of the boolean value will be
+        ///     output. If <see langword="null" /> and using the Table <see cref="OutputFormat" />, the value will be "-"
+        ///     characters that fill the column.
         /// </param>
         /// <param name="secure">
         ///     A boolean which represents if the <see cref="value" /> is considered secure. This parameter is
         ///     only used with the Table <see cref="OutputFormat" /> and is otherwise ignored.
         /// </param>
+        /// <param name="description">
+        ///     An optional description. If <see langword="null" />, the description specified in the collector's metadata for the
+        ///     corresponding key name will be used if present.
+        /// </param>
         /// <remarks>The output format depends on the configured <see cref="OutputFormat" />.</remarks>
-        protected void WriteOutputEntry(string name, bool? value, bool? secure = null) {
+        protected void WriteOutputEntry(string name, bool? value, bool? secure = null, string? description = null) {
             var valStr = value != null ? value.ToString() : new string('-', TableValueWidth);
-            WriteOutputEntry(name, valStr, secure);
+            WriteOutputEntry(name, valStr, secure, description);
         }
 
         /// <summary>Write the provided key and its byte value to standard output.</summary>
         /// <param name="name">The name of the key.</param>
         /// <param name="value">
-        ///     The value of the key. If not null, the string representation of the byte value will be output. If null and using
-        ///     the Table <see cref="OutputFormat" />, the value will be "-" characters that fill the column.
+        ///     The value of the key. If not <see langword="null" />, the string representation of the byte value will be output.
+        ///     If <see langword="null" /> and using the Table <see cref="OutputFormat" />, the value will be "-" characters that
+        ///     fill the column.
         /// </param>
         /// <param name="secure">
         ///     A boolean which represents if the <see cref="value" /> is considered secure. This parameter is
         ///     only used with the Table <see cref="OutputFormat" /> and is otherwise ignored.
         /// </param>
+        /// <param name="description">
+        ///     An optional description. If <see langword="null" />, the description specified in the collector's metadata for the
+        ///     corresponding key name will be used if present.
+        /// </param>
         /// <remarks>The output format depends on the configured <see cref="OutputFormat" />.</remarks>
-        protected void WriteOutputEntry(string name, byte? value, bool? secure = null) {
+        protected void WriteOutputEntry(string name, byte? value, bool? secure = null, string? description = null) {
             var valStr = value != null ? value.ToString() : new string('-', TableValueWidth);
-            WriteOutputEntry(name, valStr, secure);
+            WriteOutputEntry(name, valStr, secure, description);
         }
 
         /// <summary>Write the provided key and enumeration value to standard output.</summary>
         /// <param name="name">The name of the key.</param>
         /// <param name="value">
-        ///     The value of the key. If not null, the symbolic name of the enumeration value will be output. If null and using
-        ///     the Table <see cref="OutputFormat" />, the value will be "-" characters that fill the column.
+        ///     The value of the key. If not <see langword="null" />, the symbolic name of the enumeration value will be output. If
+        ///     <see langword="null" /> and using the Table <see cref="OutputFormat" />, the value will be "-" characters that fill
+        ///     the column.
         /// </param>
         /// <param name="secure">
         ///     A boolean which represents if the <see cref="value" /> is considered secure. This parameter is
         ///     only used with the Table <see cref="OutputFormat" /> and is otherwise ignored.
         /// </param>
+        /// <param name="description">
+        ///     An optional description. If <see langword="null" />, the description specified in the collector's metadata for the
+        ///     corresponding key name will be used if present.
+        /// </param>
         /// <remarks>The output format depends on the configured <see cref="OutputFormat" />.</remarks>
-        protected void WriteOutputEntry(string name, Enum? value, bool? secure = null) {
+        protected void WriteOutputEntry(string name, Enum? value, bool? secure = null, string? description = null) {
             var valStr = value != null ? value.ToString() : new string('-', TableValueWidth);
-            WriteOutputEntry(name, valStr, secure);
+            WriteOutputEntry(name, valStr, secure, description);
         }
 
         /// <summary>Writes the provided key and <see cref="List{string}" /> values to standard output.</summary>
