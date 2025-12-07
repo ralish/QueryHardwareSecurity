@@ -33,46 +33,33 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputHeader();
 
             /*
-             * Rogue Data Cache Load (RDCL)
-             * Aka. Spectre: Variant 3, Meltdown
-             *
-             * Affects:     ARM, Intel
-             * CVE IDs:     CVE-2017-5754
+             * Processor features
              */
 
-            var kvaShadowSupported = _secSpecCtrlInfo.KvaShadowSupported;
-            var kvaShadowEnabled = _secSpecCtrlInfo.KvaShadowEnabled; // TODO: Fix secure state
-            var kvaShadowUserGlobal = _secSpecCtrlInfo.KvaShadowUserGlobal;
-            var kvaShadowPcid = _secSpecCtrlInfo.KvaShadowPcid;
+            // AMD, Intel
+            var ibrsPresent = _secSpecCtrlInfo.IbrsPresent;
+            var ibrsPresentSecure = ibrsPresent || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("IbrsPresent", ibrsPresent, ibrsPresentSecure);
 
-            WriteOutputEntry("KvaShadowSupported", kvaShadowSupported, kvaShadowSupported);
-            WriteOutputEntry("KvaShadowEnabled", kvaShadowEnabled, kvaShadowEnabled);
-            WriteOutputEntry("KvaShadowUserGlobal", kvaShadowUserGlobal);
-            WriteOutputEntry("KvaShadowPcid", kvaShadowPcid);
+            // Intel only
+            var enhancedIbrs = _secSpecCtrlInfo.EnhancedIbrs;
+            var enhancedIbrsSecure = enhancedIbrs || !SystemInfo.IsProcessorIntel;
+            WriteOutputEntry("EnhancedIbrs", enhancedIbrs, enhancedIbrsSecure);
 
-            /*
-             * Microarchitectural Data Sampling (MDS)
-             * Aka. CacheOut, Fallout, RIDL, ZombieLoad
-             *
-             * Affects:     Intel
-             * CVE IDs:     CVE-2018-12126, CVE-2018-12127, CVE-2018-12130, CVE-2019-11091, CVE-2019-11135, CVE-2020-0548, CVE-2020-0549
-             */
+            // AMD, Intel
+            var stibpPresent = _secSpecCtrlInfo.StibpPresent;
+            var stibpPresentSecure = stibpPresent || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("StibpPresent", stibpPresent, stibpPresentSecure);
 
-            var mbClearEnabled = _secSpecCtrlInfo.MbClearEnabled;
+            // ARM only
+            var ssbsEnabledAlways = _secSpecCtrlInfo.SsbsEnabledAlways;
+            var ssbsEnabledAlwaysSecure = ssbsEnabledAlways || !SystemInfo.IsProcessorArm;
+            WriteOutputEntry("SsbsEnabledAlways", ssbsEnabledAlways, ssbsEnabledAlwaysSecure);
 
-            WriteOutputEntry("MbClearEnabled", mbClearEnabled, mbClearEnabled);
-
-            /*
-             * L1 Terminal Fault
-             * Aka. Foreshadow-NG: OS
-             *
-             * Affects:     Intel
-             * CVE IDs:     CVE-2018-3620
-             */
-
-            var l1tfMitigated = _secSpecCtrlInfo.L1TFMitigated;
-
-            WriteOutputEntry("L1TFMitigated", l1tfMitigated, l1tfMitigated);
+            // ARM only
+            var ssbsEnabledKernel = _secSpecCtrlInfo.SsbsEnabledKernel;
+            var ssbsEnabledKernelSecure = ssbsEnabledAlways || ssbsEnabledKernel || !SystemInfo.IsProcessorArm;
+            WriteOutputEntry("SsbsEnabledKernel", ssbsEnabledKernel, ssbsEnabledKernelSecure);
 
             /*
              * Branch Target Injection (BTI)
@@ -82,21 +69,47 @@ namespace QueryHardwareSecurity.Collectors {
              * CVE IDs:     CVE-2017-5715
              */
 
+            // Although an identically named flag is present in the Speculation
+            // Control information class, this flag appears to have different
+            // semantics. It seems to indicate if the processor has support for
+            // branch target injection mitigations and doesn't apply to ARM.
             var bpbEnabled = _secSpecCtrlInfo.BpbEnabled;
+            var bpbEnabledSecure = bpbEnabled || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("BpbEnabled", bpbEnabled, bpbEnabledSecure);
 
-            WriteOutputEntry("BpbEnabled", bpbEnabled, bpbEnabled);
+            var bpbKernelToUser = _secSpecCtrlInfo.BpbKernelToUser;
+            WriteOutputEntry("BpbKernelToUser", bpbKernelToUser);
+
+            var bpbUserToKernel = _secSpecCtrlInfo.BpbUserToKernel;
+            WriteOutputEntry("BpbUserToKernel", bpbUserToKernel);
 
             /*
-             * Processor features
+             * Rogue Data Cache Load (RDCL)
+             * Aka. Spectre: Variant 3, Meltdown
+             *
+             * Affects:     ARM, Intel
+             * CVE IDs:     CVE-2017-5754
              */
 
-            var ibrsPresent = _secSpecCtrlInfo.IbrsPresent;
-            var enhancedIbrs = _secSpecCtrlInfo.EnhancedIbrs;
-            var stibpPresent = _secSpecCtrlInfo.StibpPresent;
+            var kvaShadowSupported = _secSpecCtrlInfo.KvaShadowSupported;
+            WriteOutputEntry("KvaShadowSupported", kvaShadowSupported, kvaShadowSupported);
 
-            WriteOutputEntry("IbrsPresent", ibrsPresent);
-            WriteOutputEntry("EnhancedIbrs", enhancedIbrs);
-            WriteOutputEntry("StibpPresent", stibpPresent);
+            var kvaShadowEnabled = _secSpecCtrlInfo.KvaShadowEnabled; // TODO: Fix secure state
+            WriteOutputEntry("KvaShadowEnabled", kvaShadowEnabled, kvaShadowEnabled);
+
+            var kvaShadowUserGlobal = _secSpecCtrlInfo.KvaShadowUserGlobal;
+            WriteOutputEntry("KvaShadowUserGlobal", kvaShadowUserGlobal);
+
+            var kvaShadowPcid = _secSpecCtrlInfo.KvaShadowPcid;
+            var kvaShadowPcidDescription = "Processor supports ";
+            if (SystemInfo.IsProcessorAmdOrIntel) {
+                kvaShadowPcidDescription += "PCID (AMD / Intel)";
+            } else if (SystemInfo.IsProcessorArm) {
+                kvaShadowPcidDescription += "ASID (ARM)";
+            } else {
+                kvaShadowPcidDescription += "assigning memory pages to processes";
+            }
+            WriteOutputEntry("KvaShadowPcid", kvaShadowPcid, description: kvaShadowPcidDescription);
 
             /*
              * Speculative Store Bypass (SSB)
@@ -107,39 +120,64 @@ namespace QueryHardwareSecurity.Collectors {
              */
 
             var ssbdSupported = _secSpecCtrlInfo.SsbdSupported;
-            var ssbdRequired = _secSpecCtrlInfo.SsbdRequired;
-
             WriteOutputEntry("SsbdSupported", ssbdSupported, ssbdSupported);
+
+            var ssbdRequired = _secSpecCtrlInfo.SsbdRequired;
             WriteOutputEntry("SsbdRequired", ssbdRequired, !ssbdRequired);
 
             /*
-             * Additional BTI settings
+             * L1 Terminal Fault
+             * Aka. Foreshadow-NG: VMM
+             *
+             * Affects:     Intel
+             * CVE IDs:     CVE-2018-3620
+             *
+             * See the comments on L1TF in the KvaShadow collector for further
+             * detection information.
              */
 
-            var bpbKernelToUser = _secSpecCtrlInfo.BpbKernelToUser;
-            var bpbUserToKernel = _secSpecCtrlInfo.BpbUserToKernel;
+            // ReSharper disable InconsistentNaming
 
-            WriteOutputEntry("BpbKernelToUser", bpbKernelToUser);
-            WriteOutputEntry("BpbUserToKernel", bpbUserToKernel);
+            var l1tfMitigated = _secSpecCtrlInfo.L1TFMitigated;
+            var l1tfMitigatedSecure = l1tfMitigated || !SystemInfo.IsProcessorIntel;
+            WriteOutputEntry("L1TFMitigated", l1tfMitigated, l1tfMitigatedSecure);
 
-            // TODO
-            WriteOutputEntry("ReturnSpeculate", _secSpecCtrlInfo.ReturnSpeculate, _secSpecCtrlInfo.ReturnSpeculate);
+            // ReSharper enable InconsistentNaming
+
+            /*
+             * Microarchitectural Data Sampling (MDS)
+             * Aka. CacheOut, Fallout, RIDL, ZombieLoad
+             *
+             * Affects:     Intel
+             * CVE IDs:     CVE-2018-12126, CVE-2018-12127, CVE-2018-12130, CVE-2019-11091, CVE-2019-11135, CVE-2020-0548, CVE-2020-0549
+             */
+
+            var mbClearEnabled = _secSpecCtrlInfo.MbClearEnabled;
+            var mbClearEnabledSecure = mbClearEnabled || !SystemInfo.IsProcessorIntel;
+            WriteOutputEntry("MbClearEnabled", mbClearEnabled, mbClearEnabledSecure);
+
+            /*
+             * Branch History Injection (BHI)
+             *
+             * Affects:     Intel
+             * CVE IDs:     CVE-2022-0001, CVE-2022-0002
+             */
+
+            var branchConfusionSafe = _secSpecCtrlInfo.BranchConfusionSafe;
+            var branchConfusionSafeSecure = branchConfusionSafe || !SystemInfo.IsProcessorIntel;
+            WriteOutputEntry("BranchConfusionSafe", branchConfusionSafe, branchConfusionSafeSecure);
 
             /*
              * Branch Type Confusion (BTC)
              * Aka. Phantom, Retbleed
              *
-             * Affects:     AMD, ARM, Intel
+             * Affects:     AMD, Intel
              * CVE IDs:     CVE-2022-23825, CVE-2022-29900, CVE-2022-29901
              */
 
-            var branchConfusionSafe = _secSpecCtrlInfo.BranchConfusionSafe;
-
-            WriteOutputEntry("BranchConfusionSafe", branchConfusionSafe, branchConfusionSafe);
-
-            // TODO
-            WriteOutputEntry("SsbsEnabledAlways", _secSpecCtrlInfo.SsbsEnabledAlways, _secSpecCtrlInfo.SsbsEnabledAlways);
-            WriteOutputEntry("SsbsEnabledKernel", _secSpecCtrlInfo.SsbsEnabledKernel, _secSpecCtrlInfo.SsbsEnabledKernel);
+            var returnSpeculate = _secSpecCtrlInfo.ReturnSpeculate;
+            var returnSpeculateSecure = !returnSpeculate || !SystemInfo.IsProcessorX86OrX64;
+            WriteOutputEntry("ReturnSpeculate", returnSpeculate, returnSpeculateSecure);
         }
 
         #region P/Invoke

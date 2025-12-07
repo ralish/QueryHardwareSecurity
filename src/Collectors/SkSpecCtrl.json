@@ -1,39 +1,6 @@
 {
-    "KvaShadowSupported": {
-        "description": "Windows supports Kernel VA Shadowing"
-    },
-    "KvaShadowEnabled": {
-        "description": "Kernel VA Shadowing enabled"
-    },
-    "KvaShadowUserGlobal": {
-        "description": "User pages are marked as global"
-    },
-    "KvaShadowPcid": {
-        "description": "Processor supports PCID (AMD / Intel) or ASID (ARM)"
-    },
-    "MbClearEnabled": {
-        "description": "MDS vulnerability mitigations enabled"
-    },
-    "L1TFMitigated": {
-        "description": "L1TF vulnerability mitigation enabled"
-    },
     "BpbEnabled": {
         "description": "Processor supports speculative execution mitigations"
-    },
-    "IbrsPresent": {
-        "description": "Processor supports IBRS"
-    },
-    "EnhancedIbrs": {
-        "description": "Processor supports EIBRS"
-    },
-    "StibpPresent": {
-        "description": "Processor supports STIBP"
-    },
-    "SsbdSupported": {
-        "description": "Processor supports SSBD"
-    },
-    "SsbdRequired": {
-        "description": "Processor vulnerable to SSB"
     },
     "BpbKernelToUser": {
         "description": "BPB flushed for kernel to user-mode transitions"
@@ -41,16 +8,46 @@
     "BpbUserToKernel": {
         "description": "BPB flushed for user to kernel-mode transitions"
     },
-    "ReturnSpeculate": {
-        "description": "Processor speculates on return addresses"
-    },
     "BranchConfusionSafe": {
-        "description": "Processor does not speculate on every instruction"
+        "description": "Processor unaffected by BHI vulnerabilities"
+    },
+    "EnhancedIbrs": {
+        "description": "Processor supports EIBRS"
+    },
+    "IbrsPresent": {
+        "description": "Processor supports IBRS"
+    },
+    "KvaShadowEnabled": {
+        "description": "Kernel VA Shadowing enabled"
+    },
+    "KvaShadowSupported": {
+        "description": "Windows supports Kernel VA Shadowing"
+    },
+    "KvaShadowUserGlobal": {
+        "description": "User pages are marked as global"
+    },
+    "L1TFMitigated": {
+        "description": "L1TF vulnerability mitigation enabled"
+    },
+    "MbClearEnabled": {
+        "description": "MDS vulnerability mitigations enabled"
+    },
+    "ReturnSpeculate": {
+        "description": "Processor affected by BTC vulnerabilities"
+    },
+    "SsbdRequired": {
+        "description": "Processor affected by SSB vulnerability"
+    },
+    "SsbdSupported": {
+        "description": "Processor supports SSBD"
+    },
+    "StibpPresent": {
+        "description": "Processor supports STIBP"
     },
     "SsbsEnabledAlways": {
-        "description": "Unknown"
+        "description": "SSBS enabled system-wide"
     },
     "SsbsEnabledKernel": {
-        "description": "Unknown"
+        "description": "SSBS enabled for kernel"
     }
 }
