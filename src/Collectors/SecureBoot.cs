@@ -31,13 +31,12 @@ namespace QueryHardwareSecurity.Collectors {
             SetOutputSettings(format, color);
             WriteOutputHeader();
 
-            var secureBootEnabled = _secureBootInfo.SecureBootEnabled;
             var secureBootCapable = _secureBootInfo.SecureBootCapable;
-
-            var secureBootEnabledSecure = secureBootCapable && secureBootEnabled;
-
-            WriteOutputEntry("SecureBootEnabled", secureBootEnabled, secureBootEnabledSecure);
             WriteOutputEntry("SecureBootCapable", secureBootCapable, secureBootCapable);
+
+            var secureBootEnabled = _secureBootInfo.SecureBootEnabled;
+            var secureBootEnabledSecure = secureBootCapable && secureBootEnabled;
+            WriteOutputEntry("SecureBootEnabled", secureBootEnabled, secureBootEnabledSecure);
         }
 
         #region P/Invoke

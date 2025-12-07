@@ -32,7 +32,6 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputHeader();
 
             var dmaGuardPolicyEnabled = _dmaGuardPolicyInfo.DmaGuardPolicyEnabled;
-
             WriteOutputEntry("DmaGuardPolicyEnabled", dmaGuardPolicyEnabled, dmaGuardPolicyEnabled);
         }
 

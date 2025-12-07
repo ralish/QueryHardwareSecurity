@@ -33,26 +33,29 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputHeader();
 
             var addressAuthSupported = _pointerAuthInfo.AddressAuthSupported;
-            var addressAuthQarma = _pointerAuthInfo.AddressAuthQarma;
-            var genericAuthSupported = _pointerAuthInfo.GenericAuthSupported;
-            var genericAuthQarma = _pointerAuthInfo.GenericAuthQarma;
-            var addressAuthFaulting = _pointerAuthInfo.AddressAuthFaulting;
-
             WriteOutputEntry("AddressAuthSupported", addressAuthSupported, addressAuthSupported);
+
+            var addressAuthQarma = _pointerAuthInfo.AddressAuthQarma;
             WriteOutputEntry("AddressAuthQarma", addressAuthQarma, addressAuthQarma);
+
+            var genericAuthSupported = _pointerAuthInfo.GenericAuthSupported;
             WriteOutputEntry("GenericAuthSupported", genericAuthSupported, genericAuthSupported);
+
+            var genericAuthQarma = _pointerAuthInfo.GenericAuthQarma;
             WriteOutputEntry("GenericAuthQarma", genericAuthQarma, genericAuthQarma);
+
+            var addressAuthFaulting = _pointerAuthInfo.AddressAuthFaulting;
             WriteOutputEntry("AddressAuthFaulting", addressAuthFaulting, addressAuthFaulting);
 
-            var userPerProcessIpAuthEnabled = _pointerAuthInfo.UserPerProcessIpAuthEnabled;
-            var userGlobalIpAuthEnabled = _pointerAuthInfo.UserGlobalIpAuthEnabled;
             var kernelIpAuthEnabled = _pointerAuthInfo.KernelIpAuthEnabled;
-
-            var userPerProcessIpAuthEnabledSecure = userPerProcessIpAuthEnabled || userGlobalIpAuthEnabled;
-
-            WriteOutputEntry("UserPerProcessIpAuthEnabled", userPerProcessIpAuthEnabled, userPerProcessIpAuthEnabledSecure);
-            WriteOutputEntry("UserGlobalIpAuthEnabled", userGlobalIpAuthEnabled, userGlobalIpAuthEnabled);
             WriteOutputEntry("KernelIpAuthEnabled", kernelIpAuthEnabled, kernelIpAuthEnabled);
+
+            var userGlobalIpAuthEnabled = _pointerAuthInfo.UserGlobalIpAuthEnabled;
+            WriteOutputEntry("UserGlobalIpAuthEnabled", userGlobalIpAuthEnabled, userGlobalIpAuthEnabled);
+
+            var userPerProcessIpAuthEnabled = _pointerAuthInfo.UserPerProcessIpAuthEnabled;
+            var userPerProcessIpAuthEnabledSecure = userPerProcessIpAuthEnabled || userGlobalIpAuthEnabled;
+            WriteOutputEntry("UserPerProcessIpAuthEnabled", userPerProcessIpAuthEnabled, userPerProcessIpAuthEnabledSecure);
         }
 
         #region P/Invoke

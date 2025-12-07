@@ -1,26 +1,26 @@
 {
-    "AddressAuthSupported": {
-        "description": "Address authentication supported"
+    "AddressAuthFaulting": {
+        "description": "Fault on failed pointer authentication"
     },
     "AddressAuthQarma": {
         "description": "Pointer authentication uses QARMA block cipher"
     },
-    "GenericAuthSupported": {
-        "description": "Generic authentication supported"
+    "AddressAuthSupported": {
+        "description": "Address authentication supported"
     },
     "GenericAuthQarma": {
         "description": "Generic authentication uses QARMA block cipher"
     },
-    "AddressAuthFaulting": {
-        "description": "Fault on failed pointer authentication"
+    "GenericAuthSupported": {
+        "description": "Generic authentication supported"
     },
-    "UserPerProcessIpAuthEnabled": {
-        "description": "Instruction Pointer authentication enabled for user-mode (per-process)"
+    "KernelIpAuthEnabled": {
+        "description": "Instruction Pointer authentication enabled for kernel-mode"
     },
     "UserGlobalIpAuthEnabled": {
         "description": "Instruction Pointer authentication enabled for user-mode (global)"
     },
-    "KernelIpAuthEnabled": {
-        "description": "Instruction Pointer authentication enabled for kernel-mode"
+    "UserPerProcessIpAuthEnabled": {
+        "description": "Instruction Pointer authentication enabled for user-mode (per-process)"
     }
 }
