@@ -176,15 +176,21 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
-        internal static bool IsProcessorX86 => (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x86;
+        internal static bool IsProcessorX86OrX64 => IsProcessorX86 || IsProcessorX64;
 
-        internal static bool IsProcessorX64 => (int)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (int)ProcessorArchitecture.x64;
+        internal static bool IsProcessorX86 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.x86;
+
+        internal static bool IsProcessorX64 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.x64;
+
+        internal static bool IsProcessorArm => IsProcessorArm32 || IsProcessorArm64;
+
+        internal static bool IsProcessorArm32 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM;
+
+        internal static bool IsProcessorArm64 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM64;
+
+        internal static bool IsProcessorAmdOrIntel => IsProcessorAmd || IsProcessorIntel;
 
         internal static bool IsProcessorAmd => (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "AuthenticAMD";
-
-        internal static bool IsProcessorArm =>
-            (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM ||
-            (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM64;
 
         internal static bool IsProcessorIntel => (string)ProcessorInfo.CimInstanceProperties["Manufacturer"].Value == "GenuineIntel";
 
