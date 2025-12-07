@@ -39,6 +39,56 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputHeader();
 
             /*
+             * Processor features
+             */
+
+            // AMD, Intel
+            var specCtrlEnumerated = _specCtrlInfo.Flags.SpecCtrlEnumerated;
+            var specCtrlEnumeratedSecure = specCtrlEnumerated || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("SpecCtrlEnumerated", specCtrlEnumerated, specCtrlEnumeratedSecure);
+
+            // AMD, Intel
+            var specCmdEnumerated = _specCtrlInfo.Flags.SpecCmdEnumerated;
+            var specCmdEnumeratedSecure = specCmdEnumerated || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("SpecCmdEnumerated", specCmdEnumerated, specCmdEnumeratedSecure);
+
+            // AMD, Intel
+            var ibrsPresent = _specCtrlInfo.Flags.IbrsPresent;
+            var ibrsPresentSecure = ibrsPresent || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("IbrsPresent", ibrsPresent, ibrsPresentSecure);
+
+            // Intel only
+            var enhancedIbrsReported = _specCtrlInfo.Flags.EnhancedIbrsReported;
+            // Override on non-x86/x64 systems as it's never set
+            var enhancedIbrsReportedSecure = enhancedIbrsReported || !SystemInfo.IsProcessorX86OrX64;
+            WriteOutputEntry("EnhancedIbrsReported", enhancedIbrsReported, enhancedIbrsReportedSecure);
+
+            // Intel only
+            var enhancedIbrs = enhancedIbrsReported ? (bool?)_specCtrlInfo.Flags.EnhancedIbrs : null;
+            var enhancedIbrsSecure = (enhancedIbrsReported && enhancedIbrs.Value) || !SystemInfo.IsProcessorIntel;
+            WriteOutputEntry("EnhancedIbrs", enhancedIbrs, enhancedIbrsSecure);
+
+            // AMD, Intel
+            var stibpPresent = _specCtrlInfo.Flags.StibpPresent;
+            var stibpPresentSecure = stibpPresent || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("StibpPresent", stibpPresent, stibpPresentSecure);
+
+            // AMD, Intel
+            var smepPresent = _specCtrlInfo.Flags.SmepPresent;
+            var smepPresentSecure = smepPresent || !SystemInfo.IsProcessorAmdOrIntel;
+            WriteOutputEntry("SmepPresent", smepPresent, smepPresentSecure);
+
+            /*
+             * Performance optimisations
+             */
+
+            var specCtrlRetpolineEnabled = _specCtrlInfo.Flags.SpecCtrlRetpolineEnabled;
+            WriteOutputEntry("SpecCtrlRetpolineEnabled", specCtrlRetpolineEnabled);
+
+            var specCtrlImportOptimizationEnabled = _specCtrlInfo.Flags.SpecCtrlImportOptimizationEnabled;
+            WriteOutputEntry("SpecCtrlImportOptimizationEnabled", specCtrlImportOptimizationEnabled);
+
+            /*
              * Branch Target Injection (BTI)
              * Aka. Spectre: Variant 2
              *
@@ -62,30 +112,47 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputEntry("BpbDisabledSystemPolicy", bpbDisabledSystemPolicy, !bpbDisabledSystemPolicy);
             WriteOutputEntry("BpbDisabledNoHardwareSupport", bpbDisabledNoHwSupport, !bpbDisabledNoHwSupport);
 
+            var bpbDisabledKernelToUser = _specCtrlInfo.Flags.BpbDisabledKernelToUser;
+            WriteOutputEntry("BpbDisabledKernelToUser", bpbDisabledKernelToUser, !bpbDisabledKernelToUser);
+
             /*
-             * Speculation control processor features (Part 1)
+             * Rogue Data Cache Load (RDCL)
+             * Aka. Spectre: Variant 3, Meltdown
              *
-             * Affects:     AMD, Intel
+             * Affects:     ARM, Intel
+             * CVE IDs:     CVE-2017-5754
              */
 
-            var specCtrlEnumerated = _specCtrlInfo.Flags.SpecCtrlEnumerated;
-            var specCmdEnumerated = _specCtrlInfo.Flags.SpecCmdEnumerated;
-            var ibrsPresent = _specCtrlInfo.Flags.IbrsPresent;
-            var stibpPresent = _specCtrlInfo.Flags.StibpPresent;
-            var smepPresent = _specCtrlInfo.Flags.SmepPresent;
+            var rdclHwProtectedReported = _specCtrlInfo.Flags2.RdclHardwareProtectedReported;
+            var rdclHwProtected = rdclHwProtectedReported ? (bool?)_specCtrlInfo.Flags2.RdclHardwareProtected : null;
 
-            // None of these features are applicable to ARM processors
-            var specCtrlEnumeratedSecure = specCtrlEnumerated || SystemInfo.IsProcessorArm;
-            var specCmdEnumeratedSecure = specCmdEnumerated || SystemInfo.IsProcessorArm;
-            var ibrsPresentSecure = ibrsPresent || SystemInfo.IsProcessorArm;
-            var stibpPresentSecure = stibpPresent || SystemInfo.IsProcessorArm;
-            var smepPresentSecure = smepPresent || SystemInfo.IsProcessorArm;
+            bool rdclHwProtectedReportedSecure;
+            bool rdclHwProtectedSecure;
 
-            WriteOutputEntry("SpecCtrlEnumerated", specCtrlEnumerated, specCtrlEnumeratedSecure);
-            WriteOutputEntry("SpecCmdEnumerated", specCmdEnumerated, specCmdEnumeratedSecure);
-            WriteOutputEntry("IbrsPresent", ibrsPresent, ibrsPresentSecure);
-            WriteOutputEntry("StibpPresent", stibpPresent, stibpPresentSecure);
-            WriteOutputEntry("SmepPresent", smepPresent, smepPresentSecure);
+            if (rdclHwProtectedReported) {
+                rdclHwProtectedReportedSecure = true;
+
+                // It appears that the rdclHwProtected bit is only set for
+                // Intel processors so override the secure status for other
+                // processor manufacturers.
+                rdclHwProtectedSecure = rdclHwProtected.Value || !SystemInfo.IsProcessorIntel;
+            } else {
+                // Although this vulnerability does apply to ARM systems, I've
+                // yet to see one where Windows actually sets this bit. My best
+                // guess is that by the time this flag was introduced, which
+                // was years after the original mitigation was implemented,
+                // there were no supported ARM processors which were affected
+                // by this vulnerability on supported Windows releases.
+                rdclHwProtectedReportedSecure = !SystemInfo.IsProcessorX86OrX64;
+
+                // For unpatched systems with a non-Intel processor mark the
+                // status as secure given the vulnerability is not applicable.
+                // ARM systems appear to never set this bit.
+                rdclHwProtectedSecure = !SystemInfo.IsProcessorIntel;
+            }
+
+            WriteOutputEntry("RdclHardwareProtectedReported", rdclHwProtectedReported, rdclHwProtectedReportedSecure);
+            WriteOutputEntry("RdclHardwareProtected", rdclHwProtected, rdclHwProtectedSecure);
 
             /*
              * Speculative Store Bypass (SSB)
@@ -111,52 +178,16 @@ namespace QueryHardwareSecurity.Collectors {
                 ssbdRequiredSecure = !ssbdRequired.Value;
 
                 // ARM builds of Windows don't appear to ever set these bits,
-                // but the mitigation is always enabled per Microsoft docs.
-                ssbdSystemWideSecure = !ssbdRequired.Value || ssbdSystemWide.Value || SystemInfo.IsProcessorArm;
-                ssbdKernelSecure = !ssbdRequired.Value || ssbdSystemWide.Value || ssbdKernel.Value || SystemInfo.IsProcessorArm;
+                // but the mitigation is always enabled as per Microsoft docs.
+                ssbdSystemWideSecure = !ssbdRequired.Value || ssbdSystemWide.Value || !SystemInfo.IsProcessorX86OrX64;
+                ssbdKernelSecure = ssbdKernel.Value || ssbdSystemWideSecure;
             }
 
             WriteOutputEntry("SpeculativeStoreBypassDisableAvailable", ssbdAvailable, ssbdAvailable);
             WriteOutputEntry("SpeculativeStoreBypassDisableSupported", ssbdSupported, ssbdSupportedSecure);
+            WriteOutputEntry("SpeculativeStoreBypassDisableRequired", ssbdRequired, ssbdRequiredSecure);
             WriteOutputEntry("SpeculativeStoreBypassDisabledSystemWide", ssbdSystemWide, ssbdSystemWideSecure);
             WriteOutputEntry("SpeculativeStoreBypassDisabledKernel", ssbdKernel, ssbdKernelSecure);
-            WriteOutputEntry("SpeculativeStoreBypassDisableRequired", ssbdRequired, ssbdRequiredSecure);
-
-            /*
-             * Additional BTI settings
-             */
-
-            var bpbDisabledKernelToUser = _specCtrlInfo.Flags.BpbDisabledKernelToUser;
-
-            WriteOutputEntry("BpbDisabledKernelToUser", bpbDisabledKernelToUser, !bpbDisabledKernelToUser);
-
-            /*
-             * Performance optimisations
-             */
-
-            var specCtrlRetpolineEnabled = _specCtrlInfo.Flags.SpecCtrlRetpolineEnabled;
-            var specCtrlImportOptimizationEnabled = _specCtrlInfo.Flags.SpecCtrlImportOptimizationEnabled;
-
-            WriteOutputEntry("SpecCtrlRetpolineEnabled", specCtrlRetpolineEnabled);
-            WriteOutputEntry("SpecCtrlImportOptimizationEnabled", specCtrlImportOptimizationEnabled);
-
-            /*
-             * Speculation control processor features (Part 2)
-             *
-             * Affects:     Intel
-             */
-
-            // Output after the L1TF mitigations but we need to retrieve the
-            // value now so we can determine if EnhancedIbrs was actually set.
-            var enhancedIbrsReported = _specCtrlInfo.Flags.EnhancedIbrsReported;
-
-            var enhancedIbrs = enhancedIbrsReported ? (bool?)_specCtrlInfo.Flags.EnhancedIbrs : null;
-
-            // Override the EIBRS secure status for non-Intel processors as the
-            // feature is specific to Intel processors.
-            var enhancedIbrsSecure = (enhancedIbrsReported && enhancedIbrs.Value) || !SystemInfo.IsProcessorIntel;
-
-            WriteOutputEntry("EnhancedIbrs", enhancedIbrs, enhancedIbrsSecure);
 
             /*
              * L1 Terminal Fault
@@ -165,12 +196,14 @@ namespace QueryHardwareSecurity.Collectors {
              * Affects:     Intel
              * CVE IDs:     CVE-2018-3620
              *
-             * Although this vulnerability isn't applicable to ARM builds of
-             * Windows the bits are correctly set.
+             * See the comments on L1TF in the KvaShadow collector for further
+             * detection information.
              *
-             * See the comments on L1TF in the KvaShadow collector for
-             * additional detection information.
+             * Although this vulnerability isn't applicable to ARM processors,
+             * Windows still correctly set these bits.
              */
+
+            // ReSharper disable InconsistentNaming
 
             var hvL1tfStatusAvailable = _specCtrlInfo.Flags.HvL1tfStatusAvailable;
             var hvL1tfProcessorNotAffected = hvL1tfStatusAvailable ? (bool?)_specCtrlInfo.Flags.HvL1tfProcessorNotAffected : null;
@@ -184,14 +217,16 @@ namespace QueryHardwareSecurity.Collectors {
             bool hvL1tfMitigationNotEnabledHwSecure;
             bool hvL1tfMitigationNotEnabledLoSecure;
 
+            // ReSharper enableInconsistentNaming
+
             if (hvL1tfStatusAvailable) {
                 hvL1tfProcessorNotAffectedSecure = hvL1tfProcessorNotAffected.Value || !SystemInfo.IsProcessorIntel;
-                hvL1tfMitigationEnabledSecure = hvL1tfProcessorNotAffected.Value || hvL1tfMitigationEnabled.Value || !SystemInfo.IsProcessorIntel;
+                hvL1tfMitigationEnabledSecure = hvL1tfMitigationEnabled.Value || hvL1tfProcessorNotAffectedSecure;
                 hvL1tfMitigationNotEnabledHwSecure = !hvL1tfMitigationNotEnabledHw.Value;
                 hvL1tfMitigationNotEnabledLoSecure = !hvL1tfMitigationNotEnabledLo.Value;
             } else {
-                // For unpatched systems using a non-Intel processor be a
-                // little cheeky and mark the status as secure anyway.
+                // For unpatched systems with a non-Intel processor mark the
+                // status as secure given the vulnerability is not applicable.
                 hvL1tfProcessorNotAffectedSecure = !SystemInfo.IsProcessorIntel;
                 hvL1tfMitigationEnabledSecure = !SystemInfo.IsProcessorIntel;
                 hvL1tfMitigationNotEnabledHwSecure = !SystemInfo.IsProcessorIntel;
@@ -206,26 +241,14 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputEntry("HvL1tfMigitationNotEnabled_CoreScheduler", hvL1tfMitigationNotEnabledCore);
 
             /*
-             * See earlier speculation control processor features (Part 2)
-             *
-             * Affects:     Intel
-             */
-
-            // Override the EIBRS reported secure status on ARM systems as
-            // Windows never sets this bit (and the feature isn't applicable).
-            var enhancedIbrsReportedSecure = enhancedIbrsReported || SystemInfo.IsProcessorArm;
-
-            WriteOutputEntry("EnhancedIbrsReported", enhancedIbrsReported, enhancedIbrsReportedSecure);
-
-            /*
              * Microarchitectural Data Sampling (MDS)
              * Aka. CacheOut, Fallout, RIDL, ZombieLoad
              *
              * Affects:     Intel
              * CVE IDs:     CVE-2018-12126, CVE-2018-12127, CVE-2018-12130, CVE-2019-11091, CVE-2019-11135, CVE-2020-0548, CVE-2020-0549
              *
-             * Although this vulnerability isn't applicable to ARM builds of
-             * Windows the bits are correctly set.
+             * Although this vulnerability isn't applicable to ARM processors,
+             * Windows still correctly set these bits.
              */
 
             var mbClearReported = _specCtrlInfo.Flags.MbClearReported;
@@ -241,15 +264,15 @@ namespace QueryHardwareSecurity.Collectors {
                 mdsHwProtectedSecure = mdsHwProtected.Value || !SystemInfo.IsProcessorIntel;
                 mbClearEnabledSecure = mdsHwProtected.Value || mbClearEnabled.Value || !SystemInfo.IsProcessorIntel;
             } else {
-                // For unpatched systems using a non-Intel processor be a
-                // little cheeky and mark the status as secure anyway.
+                // For unpatched systems with a non-Intel processor mark the
+                // status as secure given the vulnerability is not applicable.
                 mdsHwProtectedSecure = !SystemInfo.IsProcessorIntel;
                 mbClearEnabledSecure = !SystemInfo.IsProcessorIntel;
             }
 
+            WriteOutputEntry("MbClearReported", mbClearReported, mbClearReported);
             WriteOutputEntry("MdsHardwareProtected", mdsHwProtected, mdsHwProtectedSecure);
             WriteOutputEntry("MbClearEnabled", mbClearEnabled, mbClearEnabledSecure);
-            WriteOutputEntry("MbClearReported", mbClearReported, mbClearReported);
 
             /*
              * TSX Asynchronous Abort (TAA)
@@ -276,19 +299,19 @@ namespace QueryHardwareSecurity.Collectors {
                 taaHwImmuneSecure = taaHwImmune.Value;
             } else {
                 // Never set on ARM systems so we need to override
-                tsxCtrlReportedSecure = SystemInfo.IsProcessorArm;
+                tsxCtrlReportedSecure = !SystemInfo.IsProcessorX86OrX64;
 
-                // For unpatched systems using a non-Intel processor be a
-                // little cheeky and mark the status as secure anyway. Also
-                // important for ARM systems as they never set these bits.
+                // For unpatched systems with a non-Intel processor mark the
+                // status as secure given the vulnerability is not applicable.
+                // ARM systems appear to never set these bits.
                 tsxCtrlRtmDisabledSecure = !SystemInfo.IsProcessorIntel;
                 tsxCtrlRtmAndHleEnumDisabledSecure = !SystemInfo.IsProcessorIntel;
                 taaHwImmuneSecure = !SystemInfo.IsProcessorIntel;
             }
 
+            WriteOutputEntry("TsxCtrlReported", tsxCtrlReported, tsxCtrlReportedSecure);
             WriteOutputEntry("TsxCtrlStatusRtm", tsxCtrlRtmDisabled, tsxCtrlRtmDisabledSecure);
             WriteOutputEntry("TsxCtrlStatusEnum", tsxCtrlRtmAndHleEnumDisabled, tsxCtrlRtmAndHleEnumDisabledSecure);
-            WriteOutputEntry("TsxCtrlReported", tsxCtrlReported, tsxCtrlReportedSecure);
             WriteOutputEntry("TaaHardwareImmune", taaHwImmune, taaHwImmuneSecure);
 
             /*
@@ -304,41 +327,40 @@ namespace QueryHardwareSecurity.Collectors {
             var psdpHwProtected = fbClearReported ? (bool?)_specCtrlInfo.Flags2.PsdpHardwareProtected : null;
             var fbClearEnabled = fbClearReported ? (bool?)_specCtrlInfo.Flags2.FbClearEnabled : null;
 
+            bool fbClearReportedSecure;
             bool sbdrSsdpHwProtectedSecure;
             bool fbsdpHwProtectedSecure;
             bool psdpHwProtectedSecure;
             bool fbClearEnabledSecure;
-            bool fbClearReportedSecure;
 
             if (fbClearReported) {
+                fbClearReportedSecure = true;
+
                 // These bits aren't set on non-Intel processors even when
                 // fbClearReported is set.
                 sbdrSsdpHwProtectedSecure = sbdrSsdpHwProtected.Value || !SystemInfo.IsProcessorIntel;
                 fbsdpHwProtectedSecure = fbsdpHwProtected.Value || !SystemInfo.IsProcessorIntel;
                 psdpHwProtectedSecure = psdpHwProtected.Value || !SystemInfo.IsProcessorIntel;
 
-                fbClearEnabledSecure = fbClearEnabled.Value ||
-                                       (sbdrSsdpHwProtected.Value && fbsdpHwProtected.Value && psdpHwProtected.Value) ||
-                                       !SystemInfo.IsProcessorIntel;
-                fbClearReportedSecure = true;
+                fbClearEnabledSecure = fbClearEnabled.Value || (sbdrSsdpHwProtectedSecure && fbsdpHwProtectedSecure && psdpHwProtectedSecure);
             } else {
                 // Never set on ARM systems so we need to override
-                fbClearReportedSecure = SystemInfo.IsProcessorArm;
+                fbClearReportedSecure = !SystemInfo.IsProcessorX86OrX64;
 
-                // For unpatched systems using a non-Intel processor be a
-                // little cheeky and mark the status as secure anyway. Also
-                // important for ARM systems as they never set these bits.
-                fbClearEnabledSecure = !SystemInfo.IsProcessorIntel;
+                // For unpatched systems with a non-Intel processor mark the
+                // status as secure given the vulnerability is not applicable.
+                // ARM systems appear to never set these bits.
                 sbdrSsdpHwProtectedSecure = !SystemInfo.IsProcessorIntel;
                 fbsdpHwProtectedSecure = !SystemInfo.IsProcessorIntel;
                 psdpHwProtectedSecure = !SystemInfo.IsProcessorIntel;
+                fbClearEnabledSecure = !SystemInfo.IsProcessorIntel;
             }
 
+            WriteOutputEntry("FbClearReported", fbClearReported, fbClearReportedSecure);
+            WriteOutputEntry("FbClearEnabled", fbClearEnabled, fbClearEnabledSecure);
             WriteOutputEntry("SbdrSsdpHardwareProtected", sbdrSsdpHwProtected, sbdrSsdpHwProtectedSecure);
             WriteOutputEntry("FbsdpHardwareProtected", fbsdpHwProtected, fbsdpHwProtectedSecure);
             WriteOutputEntry("PsdpHardwareProtected", psdpHwProtected, psdpHwProtectedSecure);
-            WriteOutputEntry("FbClearEnabled", fbClearEnabled, fbClearEnabledSecure);
-            WriteOutputEntry("FbClearReported", fbClearReported, fbClearReportedSecure);
 
             /*
              * Branch History Injection (BHI)
@@ -378,72 +400,34 @@ namespace QueryHardwareSecurity.Collectors {
             bool btcReportedSecure;
             bool btcStatusSecure;
 
-            /*
-             * The SpeculationControl PowerShell module implements custom logic
-             * instead of simply using the value of BranchConfusionStatus when
-             * BranchConfusionReported is set. It's unclear if it's necessary
-             * so isn't implemented, but here's the logic used for reference:
-             *
-             * - For AMD CPUs, use BranchConfusionStatus.
-             * - For Intel CPUs, ignore BranchConfusionStatus and:
-             *   - Return HardwareImmune if neither SpecCtrlEnumerated or
-             *     SpecCmdEnumerated are set.
-             *   - Otherwise, return Mitigated if BpbEnabled is set.
-             *   - Otherwise, return MitigationDisabled.
-             * - For other CPUs, implicitly defaults to MitigationUnsupported.
-             *
-             * All of the above only applies if BranchConfusionReported is set.
-             */
+            // The SpeculationControl PowerShell module implements custom logic
+            // instead of simply using the value of BranchConfusionStatus when
+            // BranchConfusionReported is set. It's unclear if it's necessary
+            // so isn't implemented, but here's the logic used for reference:
+            //
+            // - For AMD CPUs, use BranchConfusionStatus.
+            // - For Intel CPUs, ignore BranchConfusionStatus and:
+            //   - Return HardwareImmune if neither SpecCtrlEnumerated or
+            //     SpecCmdEnumerated are set.
+            //   - Otherwise, return Mitigated if BpbEnabled is set.
+            //   - Otherwise, return MitigationDisabled.
+            // - For other CPUs, implicitly defaults to MitigationUnsupported.
+            //
+            // All of the above only applies if BranchConfusionReported is set.
             if (btcReported) {
                 btcReportedSecure = true;
                 btcStatusSecure = btcStatus == SpeculationControlBranchConfusionStatus.HardwareImmune ||
                                   btcStatus == SpeculationControlBranchConfusionStatus.Mitigated;
             } else {
-                // ARM builds of Windows don't appear to ever set these bits,
-                // while on x86/64 builds we can't easily determine the secure
-                // status given both AMD and Intel processors are affected.
-                btcReportedSecure = SystemInfo.IsProcessorArm;
-                btcStatusSecure = SystemInfo.IsProcessorArm;
+                // Windows on ARM doesn't appear to ever set these bits, while
+                // on x86/64 builds we can't easily determine the secure status
+                // given both AMD and Intel processors are affected.
+                btcReportedSecure = !SystemInfo.IsProcessorX86OrX64;
+                btcStatusSecure = !SystemInfo.IsProcessorX86OrX64;
             }
 
-            WriteOutputEntry("BranchConfusionStatus", btcStatus, btcStatusSecure);
             WriteOutputEntry("BranchConfusionReported", btcReported, btcReportedSecure);
-
-            /*
-             * Rogue Data Cache Load (RDCL)
-             * Aka. Spectre: Variant 3, Meltdown
-             *
-             * Affects:     ARM, Intel
-             * CVE IDs:     CVE-2017-5754
-             */
-
-            var rdclHwProtectedReported = _specCtrlInfo.Flags2.RdclHardwareProtectedReported;
-            var rdclHwProtected = rdclHwProtectedReported ? (bool?)_specCtrlInfo.Flags2.RdclHardwareProtected : null;
-
-            bool rdclHwProtectedReportedSecure;
-            bool rdclHwProtectedSecure;
-
-            if (rdclHwProtectedReported) {
-                rdclHwProtectedReportedSecure = true;
-                rdclHwProtectedSecure = rdclHwProtected.Value;
-            } else {
-                // Although this vulnerability does apply to ARM systems, I've
-                // yet to see one where Windows actually sets this bit. My best
-                // guess is that by the time this flag was introduced, which
-                // was years after the original mitigation was implemented,
-                // there were no supported ARM processors on supported builds
-                // of Windows which were affected by the vulnerability.
-                rdclHwProtectedReportedSecure = SystemInfo.IsProcessorArm;
-
-                // For unpatched systems using a non-Intel processor be a
-                // little cheeky and mark the status as secure anyway. Also
-                // important for ARM systems as they never appear to set this
-                // bit (see comment directly above).
-                rdclHwProtectedSecure = !SystemInfo.IsProcessorIntel;
-            }
-
-            WriteOutputEntry("RdclHardwareProtectedReported", rdclHwProtectedReported, rdclHwProtectedReportedSecure);
-            WriteOutputEntry("RdclHardwareProtected", rdclHwProtected, rdclHwProtectedSecure);
+            WriteOutputEntry("BranchConfusionStatus", btcStatus, btcStatusSecure);
 
             /*
              * Gather Data Sample (GDS)
@@ -466,11 +450,11 @@ namespace QueryHardwareSecurity.Collectors {
                                   gdsStatus == SpeculationControlGdsStatus.MitigatedAndLocked;
             } else {
                 // Never set on ARM systems so we need to override
-                gdsReportedSecure = SystemInfo.IsProcessorArm;
+                gdsReportedSecure = !SystemInfo.IsProcessorX86OrX64;
 
-                // For unpatched systems using a non-Intel processor be a
-                // little cheeky and mark the status as secure anyway. Also
-                // important for ARM systems as they never set this bit.
+                // For unpatched systems with a non-Intel processor mark the
+                // status as secure given the vulnerability is not applicable.
+                // ARM systems appear to never set this bit.
                 gdsStatusSecure = !SystemInfo.IsProcessorIntel;
             }
 
@@ -497,11 +481,11 @@ namespace QueryHardwareSecurity.Collectors {
                                    srsoStatus == SpeculationControlSrsoStatus.Mitigated;
             } else {
                 // Never set on ARM systems so we need to override
-                srsoReportedSecure = SystemInfo.IsProcessorArm;
+                srsoReportedSecure = !SystemInfo.IsProcessorX86OrX64;
 
-                // For unpatched systems using a non-AMD processor be a little
-                // cheeky and mark the status as secure anyway. Also important
-                // for ARM systems as they never set this bit.
+                // For unpatched systems with a non-AMD processor mark the
+                // status as secure given the vulnerability is not applicable.
+                // ARM systems appear to never set this bit.
                 srsoStatusSecure = !SystemInfo.IsProcessorAmd;
             }
 
@@ -527,11 +511,11 @@ namespace QueryHardwareSecurity.Collectors {
                                   dbzStatus == SpeculationControlDivideByZeroStatus.Mitigated;
             } else {
                 // Never set on ARM systems so we need to override
-                dbzReportedSecure = SystemInfo.IsProcessorArm;
+                dbzReportedSecure = !SystemInfo.IsProcessorX86OrX64;
 
-                // For unpatched systems using a non-AMD processor be a little
-                // cheeky and mark the status as secure anyway. Also important
-                // for ARM systems as they never set this bit.
+                // For unpatched systems with a non-AMD processor mark the
+                // status as secure given the vulnerability is not applicable.
+                // ARM systems appear to never set this bit.
                 dbzStatusSecure = !SystemInfo.IsProcessorAmd;
             }
 
@@ -557,11 +541,11 @@ namespace QueryHardwareSecurity.Collectors {
                                    rfdsStatus == SpeculationControlRfdsStatus.Mitigated;
             } else {
                 // Never set on ARM systems so we need to override
-                rfdsReportedSecure = SystemInfo.IsProcessorArm;
+                rfdsReportedSecure = !SystemInfo.IsProcessorX86OrX64;
 
-                // For unpatched systems using a non-Intel processor be a
-                // little cheeky and mark the status as secure anyway. Also
-                // important for ARM systems as they never set this bit.
+                // For unpatched systems with a non-Intel processor mark the
+                // status as secure given the vulnerability is not applicable.
+                // ARM systems appear to never set this bit.
                 rfdsStatusSecure = !SystemInfo.IsProcessorIntel;
             }
 
