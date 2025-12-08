@@ -4,6 +4,12 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Isolated User Mode
+     *
+     * Introduced:  Windows 10 1507, Windows Server 2016
+     * Platforms:   ARM64, x86-64
+     */
     internal sealed class Ium : Collector {
         private const int IsolatedUserModeInfoClass = 0xA5;
 

@@ -4,6 +4,12 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Secure Boot
+     *
+     * Introduced:  Windows Vista, Windows Server 2008
+     * Platforms:   ARM32, ARM64, x86, x86-64
+     */
     internal sealed class SecureBoot : Collector {
         private const int SecureBootInfoClass = 0x91;
 

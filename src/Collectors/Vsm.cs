@@ -4,6 +4,12 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Virtual Secure Mode
+     *
+     * Introduced:  Windows 10 1507, Windows Server 2016
+     * Platforms:   ARM64, x86-64
+     */
     internal sealed class Vsm : Collector {
         private const int VsmProtectionInfoClass = 0xA9;
 

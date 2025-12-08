@@ -4,6 +4,13 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Kernel DMA Protection
+     *
+     * Introduced:  Windows 10 1903 (unverified), Windows Server 2019
+     * Platforms:   x86-64
+     * Notes:       Information class is present on ARM64
+     */
     internal sealed class KernelDma : Collector {
         private const int DmaGuardPolicyInfoClass = 0xCA;
 

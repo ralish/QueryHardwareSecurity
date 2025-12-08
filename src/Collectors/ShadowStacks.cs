@@ -4,6 +4,13 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Shadow Stacks
+     *
+     * Introduced:  Windows 10 2004, Windows Server 2022
+     * Platforms:   x86-64
+     * Notes:       Information class is present on ARM64
+     */
     internal sealed class ShadowStacks : Collector {
         private const int ShadowStackInfoClass = 0xDD;
 

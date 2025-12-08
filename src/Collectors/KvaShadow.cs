@@ -4,6 +4,12 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Kernel VA Shadow
+     *
+     * Introduced:  Windows 7 (with updates), Windows Server 2008 (with updates)
+     * Platforms:   ARM32, ARM64, x86, x86-64
+     */
     internal sealed class KvaShadow : Collector {
         private const int KernelVaShadowInfoClass = 0xC4;
 

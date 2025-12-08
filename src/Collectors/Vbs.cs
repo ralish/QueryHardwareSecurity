@@ -8,6 +8,12 @@ using Newtonsoft.Json;
 using static QueryHardwareSecurity.Utilities;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Virtualisation-based Security
+     *
+     * Introduced:  Windows 10 1507, Windows Server 2016
+     * Platforms:   ARM64, x86-64
+     */
     internal sealed class Vbs : Collector {
         private static readonly string[] CiStatuses = { "Disabled", "Audit mode", "Enforced" };
 

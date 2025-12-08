@@ -3,6 +3,12 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Speculation Control
+     *
+     * Introduced:  Windows 7 (with updates), Windows Server 2008 (with updates)
+     * Platforms:   ARM32, ARM64, x86, x86-64
+     */
     internal sealed class SpecCtrl : Collector {
         private const int SpeculationControlInfoClass = 0xC9;
 

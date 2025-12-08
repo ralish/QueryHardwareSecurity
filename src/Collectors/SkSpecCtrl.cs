@@ -4,6 +4,12 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Secure Kernel Speculation Control
+     *
+     * Introduced:  UNKNOWN, Windows Server 2022
+     * Platforms:   ARM64, x86-64
+     */
     internal sealed class SkSpecCtrl : Collector {
         private const int SecureSpeculationControlInfoClass = 0xD5;
 

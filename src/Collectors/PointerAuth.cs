@@ -4,6 +4,12 @@ using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace QueryHardwareSecurity.Collectors {
+    /*
+     * Pointer Authentication
+     *
+     * Introduced:  Windows 11 22H2
+     * Platforms:   ARM64
+     */
     internal sealed class PointerAuth : Collector {
         private const int PointerAuthInfoClass = 0xEC;
 
