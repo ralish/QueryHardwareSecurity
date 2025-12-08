@@ -1,14 +1,11 @@
 {
-    "CetCapable": {
-        "description": "Processor supports CET (Intel) or Shadow Stacks (AMD)"
-    },
-    "UserCetAllowed": {
-        "description": "Hardware-enforced stack protection allowed for user-mode"
+    "KernelCetAuditModeEnabled": {
+        "description": "Kernel-mode hardware-enforced stack protection in audit mode"
     },
     "KernelCetEnabled": {
         "description": "Kernel-mode hardware-enforced stack protection enabled"
     },
-    "KernelCetAuditModeEnabled": {
-        "description": "Kernel-mode hardware-enforced stack protection in audit mode"
+    "UserCetAllowed": {
+        "description": "Hardware-enforced stack protection allowed for user-mode"
     }
 }

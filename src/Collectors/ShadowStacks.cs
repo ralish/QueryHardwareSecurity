@@ -33,17 +33,33 @@ namespace QueryHardwareSecurity.Collectors {
             WriteOutputHeader();
 
             var cetCapable = _shadowStackInfo.CetCapable;
-            var userCetAllowed = _shadowStackInfo.UserCetAllowed;
+            var cetCapableDescription = "Processor supports ";
+            if (SystemInfo.IsProcessorIntel) {
+                cetCapableDescription += "CET (Intel)";
+            } else if (SystemInfo.IsProcessorAmd) {
+                cetCapableDescription += "Shadow Stack (AMD)";
+            } else {
+                cetCapableDescription += "hardware-enforced stack protection";
+            }
+            WriteOutputEntry("CetCapable", cetCapable, cetCapable, cetCapableDescription);
+
             var kernelCetEnabled = _shadowStackInfo.KernelCetEnabled;
-            var kernelCetAuditModeEnabled = _shadowStackInfo.KernelCetAuditModeEnabled;
-
-            var userCetAllowedSecure = cetCapable && userCetAllowed;
             var kernelCetEnabledSecure = cetCapable && kernelCetEnabled;
-
-            WriteOutputEntry("CetCapable", cetCapable, cetCapable);
-            WriteOutputEntry("UserCetAllowed", userCetAllowed, userCetAllowedSecure);
             WriteOutputEntry("KernelCetEnabled", kernelCetEnabled, kernelCetEnabledSecure);
+
+            var kernelCetAuditModeEnabled = _shadowStackInfo.KernelCetAuditModeEnabled;
             WriteOutputEntry("KernelCetAuditModeEnabled", kernelCetAuditModeEnabled);
+
+            var userCetAllowed = _shadowStackInfo.UserCetAllowed;
+            var userCetAllowedSecure = cetCapable && userCetAllowed;
+            WriteOutputEntry("UserCetAllowed", userCetAllowed, userCetAllowedSecure);
+
+            /*
+             * TODO: Check if hypervisor supports CET within guest VMs
+             *
+             * Invoke CPUID 0x40000003 (Hypervisor Feature Identification) and
+             * test bit 6 (Supervisor Shadow Stack is available) is set in ECX.
+             */
         }
 
         #region P/Invoke
