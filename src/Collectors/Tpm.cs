@@ -70,7 +70,12 @@ namespace QueryHardwareSecurity.Collectors {
 
             WriteDebug("Connecting to TPM ...");
             using var tpmDevice = new TbsDevice();
-            tpmDevice.Connect();
+            try {
+                tpmDevice.Connect();
+            } catch (Exception ex) {
+                WriteError(ex.Message);
+                throw new NotSupportedException(ex.Message, ex);
+            }
             using var tpm = new Tpm2(tpmDevice);
 
             WriteDebug("Retrieving TPM capability: TPM_PROPERTIES (Property: PT_FIXED)");
