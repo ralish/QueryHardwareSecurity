@@ -7,9 +7,17 @@ namespace QueryHardwareSecurity.Collectors {
     internal sealed class SkSpecCtrl : Collector {
         private const int SecureSpeculationControlInfoClass = 0xD5;
 
+        private readonly bool _kvaShadowRequired;
+
         private SecureSpeculationControlInfo _secSpecCtrlInfo;
 
         public SkSpecCtrl() : base("Secure Kernel Speculation Control", TableStyle.Full) {
+            _kvaShadowRequired = true;
+            RetrieveInfo();
+        }
+
+        public SkSpecCtrl(bool kvaShadowRequired) : base("Secure Kernel Speculation Control", TableStyle.Full) {
+            _kvaShadowRequired = kvaShadowRequired;
             RetrieveInfo();
         }
 
@@ -94,8 +102,9 @@ namespace QueryHardwareSecurity.Collectors {
             var kvaShadowSupported = _secSpecCtrlInfo.KvaShadowSupported;
             WriteOutputEntry("KvaShadowSupported", kvaShadowSupported, kvaShadowSupported);
 
-            var kvaShadowEnabled = _secSpecCtrlInfo.KvaShadowEnabled; // TODO: Fix secure state
-            WriteOutputEntry("KvaShadowEnabled", kvaShadowEnabled, kvaShadowEnabled);
+            var kvaShadowEnabled = _secSpecCtrlInfo.KvaShadowEnabled;
+            var kvaShadowEnabledSecure = !(_kvaShadowRequired & !kvaShadowEnabled);
+            WriteOutputEntry("KvaShadowEnabled", kvaShadowEnabled, kvaShadowEnabledSecure);
 
             var kvaShadowUserGlobal = _secSpecCtrlInfo.KvaShadowUserGlobal;
             WriteOutputEntry("KvaShadowUserGlobal", kvaShadowUserGlobal);

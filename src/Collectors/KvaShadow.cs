@@ -13,6 +13,8 @@ namespace QueryHardwareSecurity.Collectors {
             RetrieveInfo();
         }
 
+        internal bool IsKvaShadowRequired => _kernelVaShadowInfo.KvaShadowRequired;
+
         private void RetrieveInfo() {
             WriteVerbose($"Retrieving {Name} info ...");
 

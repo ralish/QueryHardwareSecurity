@@ -82,9 +82,16 @@ namespace QueryHardwareSecurity {
             var outputOption = parseResult.GetValue<string>("--output");
             Enum.TryParse(outputOption, true, out OutputFormat outputFormat);
 
-            var collectors = new List<Collector>();
-            var collectorsSelected = parseResult.GetValue<string[]>("--collectors");
-            collectorsSelected = collectorsSelected.Length != 0 ? collectorsSelected : AllCollectors;
+            var collectors = new Dictionary<string, Collector>();
+            var collectorsSuppressed = new List<string>();
+            var collectorsSelected = parseResult.GetValue<string[]>("--collectors").ToList();
+            collectorsSelected = collectorsSelected.Count != 0 ? collectorsSelected : AllCollectors.ToList();
+
+            // SkSpecCtrl collector requires KvaShadow collector
+            if (collectorsSelected.Contains(nameof(SkSpecCtrl)) && !collectorsSelected.Contains(nameof(KvaShadow))) {
+                collectorsSelected.Add(nameof(KvaShadow));
+                collectorsSuppressed.Add(nameof(KvaShadow));
+            }
 
             // Ensure order of execution is deterministic
             var collectorsToRun = collectorsSelected
@@ -102,26 +109,46 @@ namespace QueryHardwareSecurity {
             foreach (var collectorName in collectorsToRun) {
                 var collectorType = Type.GetType($"{CollectorsNamespace}.{collectorName}");
                 try {
-                    collectors.Add((Collector)Activator.CreateInstance(collectorType!));
+                    switch (collectorName) {
+                        case nameof(SkSpecCtrl):
+                            var kvaShadowRequired = true;
+                            try {
+                                var kvaShadowCollector = (KvaShadow)collectors[nameof(KvaShadow)];
+                                kvaShadowRequired = kvaShadowCollector.IsKvaShadowRequired;
+                            } catch (KeyNotFoundException) { }
+
+                            collectors.Add(collectorName, (Collector)Activator.CreateInstance(collectorType!, new object[] { kvaShadowRequired }));
+                            break;
+                        default:
+                            collectors.Add(collectorName, (Collector)Activator.CreateInstance(collectorType!));
+                            break;
+                    }
                 } catch (TargetInvocationException) { }
             }
 
-            // Return early if no collectors were initialised
-            if (collectors.Count == 0) return;
+            // Determine which collectors to output
+            var collectorsToOutput = collectorsToRun.Where(collector => !collectorsSuppressed.Contains(collector)).ToArray();
+
+            // Return early if there's no output
+            if (collectorsToOutput.Length == 0) return;
 
             // Add a blank line between verbose/debug output and main output
             if (VerboseOutput) Console.WriteLine();
 
             // Output collector results in JSON
             if (outputFormat == OutputFormat.Json) {
+                var collectorsData = new ExpandoObject();
+
                 /*
                  * The serialization and immediate deserialization provides a copy of the
                  * underlying collector metadata. Definitely not at all efficient, but it
                  * works and and we're not dealing with any large JSON data structures.
                  */
-                var collectorsData = new ExpandoObject();
-                foreach (var collector in collectors) {
-                    ((IDictionary<string, object>)collectorsData)[collector.JsonName] = JsonConvert.DeserializeObject(collector.ConvertToJson());
+                foreach (var collectorName in collectorsToOutput) {
+                    try {
+                        var collector = collectors[collectorName];
+                        ((IDictionary<string, object>)collectorsData)[collector.JsonName] = JsonConvert.DeserializeObject(collector.ConvertToJson());
+                    } catch (KeyNotFoundException) { }
                 }
 
                 var collectorsJson = JsonConvert.SerializeObject(collectorsData, Formatting.Indented);
@@ -131,10 +158,13 @@ namespace QueryHardwareSecurity {
 
             // Output collector results in raw or table format
             var consoleFirstOutput = true;
-            foreach (var collector in collectors) {
-                if (!consoleFirstOutput && outputFormat == OutputFormat.Raw) Console.WriteLine();
-                collector.WriteOutput(outputFormat, colorOutput);
-                consoleFirstOutput = false;
+            foreach (var collectorName in collectorsToOutput) {
+                try {
+                    var collector = collectors[collectorName];
+                    if (!consoleFirstOutput && outputFormat == OutputFormat.Raw) Console.WriteLine();
+                    collector.WriteOutput(outputFormat, colorOutput);
+                    consoleFirstOutput = false;
+                } catch (KeyNotFoundException) { }
             }
 
             if (outputFormat == OutputFormat.Table) Console.WriteLine(new string('-', 159));
