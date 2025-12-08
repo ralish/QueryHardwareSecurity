@@ -44,7 +44,7 @@ Requirements
   - .NET Framework 4.6.2 (or newer)  
     *Built-in since Windows 10 1607 and Server 2016*
   - .NET 8 (or newer)  
-    Install manually: [Download](https://dotnet.microsoft.com/en-us/download/dotnet)
+    Install manually: [Download](https://dotnet.microsoft.com/en-us/download/dotnet)  
     Install with WinGet: `winget install Microsoft.DotNet.Runtime.8`
 
 Collectors
@@ -324,6 +324,7 @@ Resources
 ### Miscellaneous
 
 - [Transient Execution Attacks](https://transient.fail/)
+- [Understanding Spectre v2 Mitigations on x86](https://blogs.oracle.com/linux/understanding-spectre-v2-mitigations-on-x86)
 
 License
 -------
