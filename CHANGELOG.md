@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.3.1
+------
+
+- Output `NtQuerySystemInformation` errors as errors (not verbose)
+- Fix `PointerAuth` collector on .NET runtimes (non-Framework)
+- Fix uninitialised `fbClearEnabled` flag on ARM platforms
+
 v0.3.0
 ------
 
