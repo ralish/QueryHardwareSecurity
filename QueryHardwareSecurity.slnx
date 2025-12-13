@@ -1,7 +1,17 @@
 <Solution xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
   <Folder Name="/Solution Items/">
     <File Path="CHANGELOG.md" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="src/QueryHardwareSecurity/QueryHardwareSecurity.csproj" />
+  <Project Path="src/QueryHardwareSecurity/QueryHardwareSecurity.csproj">
+    <BuildDependency Project="src/QueryHardwareSecurityLib/QueryHardwareSecurityLib.vcxproj" />
+  </Project>
+  <Project Path="src/QueryHardwareSecurityLib/QueryHardwareSecurityLib.vcxproj" Id="8d8d7649-2c29-45e6-90f7-cc8732e8d52f">
+    <Build Solution="*|x86" Project="false" />
+  </Project>
 </Solution>

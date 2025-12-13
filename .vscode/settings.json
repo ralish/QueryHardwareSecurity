@@ -1,6 +1,10 @@
 {
     // File paths to language mappings
     "files.associations": {
+        // Code analysis
+        "*.ruleset": "xml",
+        // LLVM
+        ".clang-tidy": "yaml",
         // ReSharper
         "*.DotSettings": "xml",
         "*.DotSettings.user": "xml",
@@ -34,6 +38,10 @@
         "editor.rulers": [79],
     },
 
+    "[c]": {
+        "editor.rulers": [79]
+    },
+
     "[csharp]": {
         "editor.rulers": [159]
     },
@@ -54,6 +62,10 @@
 
         // Trailing whitespace has special meaning
         "files.trimTrailingWhitespace": false
+    },
+
+    "[rc-script]": {
+        "editor.rulers": [79],
     },
 
     "[xml]": {

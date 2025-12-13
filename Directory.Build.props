@@ -8,7 +8,41 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 
     <!-- Store .NET build outputs in a top-level bin/ directory -->
-    <OutputPath>$(RepoRoot)bin\$(Configuration)\</OutputPath>
+    <OutputPath Condition=" '$(MSBuildProjectExtension)' == '.csproj' ">$(RepoRoot)bin\$(Configuration)\</OutputPath>
+
+    <!-- Create a platform directory for intermediate build outputs of Win32 builds -->
+    <IntDir Condition=" '$(MSBuildProjectExtension)' == '.vcxproj' and '$(IntDir)' == '' AND '$(IntermediateOutputPath)' == '' AND '$(Platform)' == 'Win32' ">x86\$(Configuration)\</IntDir>
+    <IntDir Condition=" '$(MSBuildProjectExtension)' == '.vcxproj' and '$(IntDir)' == '' AND '$(IntermediateOutputPath)' == '' AND '$(Platform)' != 'Win32' ">$(Platform)\$(Configuration)\</IntDir>
+
+    <!-- Store native build outputs in a top-level bin/ directory -->
+    <OutDir Condition=" '$(MSBuildProjectExtension)' == '.vcxproj' and '$(OutDir)' == '' AND '$(SolutionDir)' != '' AND '$(Platform)' == 'Win32' ">$(SolutionDir)bin\$(Configuration)\x86\</OutDir>
+    <OutDir Condition=" '$(MSBuildProjectExtension)' == '.vcxproj' and '$(OutDir)' == '' AND '$(SolutionDir)' != '' AND '$(Platform)' != 'Win32' ">$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
   </PropertyGroup>
+
+  <ItemDefinitionGroup Condition=" '$(MSBuildProjectExtension)' == '.vcxproj' ">
+    <ClCompile>
+      <!-- General -->
+      <AdditionalIncludeDirectories>$(SolutionDir)src\Common</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <!-- Language -->
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <ConformanceMode>true</ConformanceMode>
+      <!-- Precompiled headers -->
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <!-- Advanced -->
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <Link>
+      <!-- Debugging -->
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <ResourceCompile>
+      <!-- General -->
+      <AdditionalIncludeDirectories>$(SolutionDir)src\Common</AdditionalIncludeDirectories>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
 
 </Project>
