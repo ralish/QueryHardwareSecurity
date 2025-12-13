@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/QueryHardwareSecurity.csproj",
+                "${workspaceFolder}/src/QueryHardwareSecurity/QueryHardwareSecurity.csproj",
                 "/consoleLoggerParameters:NoSummary",
                 "/property:GenerateFullPaths=true"
             ],
