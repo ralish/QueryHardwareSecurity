@@ -28,6 +28,9 @@ ARM64/
 x64/
 x86/
 
+# Generated RPC stubs
+Rpc*.[ch]
+
 # Visual C++
 *.aps
 

@@ -122,6 +122,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Midl Include="LsaIsoStatus.idl">
+      <WarnAsError>true</WarnAsError>
+      <WarningLevel>4</WarningLevel>
+      <MinimumTargetSystem>NT100</MinimumTargetSystem>
+      <GenerateServerFiles>None</GenerateServerFiles>
+      <ClientStubFile>Rpc%(Filename).c</ClientStubFile>
+      <HeaderFileName>Rpc%(Filename).h</HeaderFileName>
+      <AdditionalOptions Condition=" '$(Platform)' == 'ARM64' or '$(Platform)' == 'x64' ">/protocol ndr64</AdditionalOptions>
+    </Midl>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
