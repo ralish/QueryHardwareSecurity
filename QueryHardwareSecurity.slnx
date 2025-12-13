@@ -3,5 +3,5 @@
     <File Path="CHANGELOG.md" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="src/QueryHardwareSecurity.csproj" />
+  <Project Path="src/QueryHardwareSecurity/QueryHardwareSecurity.csproj" />
 </Solution>
