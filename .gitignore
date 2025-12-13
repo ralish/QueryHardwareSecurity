@@ -22,6 +22,14 @@ temp/
 # Build
 bin/
 obj/
+Debug/
+Release/
+ARM64/
+x64/
+x86/
+
+# Visual C++
+*.aps
 
 # Visual Studio
 *.user

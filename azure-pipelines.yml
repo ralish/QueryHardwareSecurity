@@ -6,7 +6,6 @@ pool:
 
 variables:
   solution: QueryHardwareSecurity.slnx
-  buildPlatform: Any CPU
 
 steps:
 - task: NuGetToolInstaller@1
@@ -20,14 +19,28 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: $(solution)
-    platform: $(buildPlatform)
+    platform: x86
     configuration: Debug
     maximumCpuCount: true
 
 - task: VSBuild@1
   inputs:
     solution: $(solution)
-    platform: $(buildPlatform)
+    platform: x86
+    configuration: Release
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  inputs:
+    solution: $(solution)
+    platform: x64
+    configuration: Debug
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  inputs:
+    solution: $(solution)
+    platform: x64
     configuration: Release
     maximumCpuCount: true
 

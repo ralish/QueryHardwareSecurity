@@ -4,8 +4,10 @@
         "editorconfig.editorconfig",
         "ms-azure-devops.azure-pipelines",
         "ms-dotnettools.csdevkit",
+        "ms-vscode.cpptools-extension-pack",
         "redhat.vscode-xml",
         "redhat.vscode-yaml",
+        "willasm.rc-script",
         "yzhang.markdown-all-in-one"
     ]
 }
