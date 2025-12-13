@@ -1,0 +1,19 @@
+[
+    uuid(EDA3C9E4-0D4C-4BB7-B612-0E89D4F0607D),
+    version(1.0),
+    endpoint("ncalrpc:[LSA_ISO_RPC_SERVER]"),
+    helpstring("Isolated Local Security Authority (LsaIso) Status")
+]
+
+interface LsaIsoStatus {
+    /*
+     * Returns a bitmask representing the running services
+     *
+     * Valid flags:
+     * - 0x1    Key Guard
+     * - 0x2    Credential Guard
+     */
+    int GetRunningServices(
+        [in] handle_t Binding
+    );
+}
