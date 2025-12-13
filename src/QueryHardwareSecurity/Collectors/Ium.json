@@ -29,6 +29,12 @@
     "HvciStrictMode": {
         "description": "Memory integrity (HVCI) in strict mode"
     },
+    "LsaIsoCredentialGuard": {
+        "description": "Isolated LSA Credential Guard service running"
+    },
+    "LsaIsoKeyGuard": {
+        "description": "Isolated LSA Key Guard service running"
+    },
     "NoSecrets": {
         "description": "VSM master encryption key is never persisted"
     },
@@ -39,6 +45,6 @@
         "description": "Secure Kernel running"
     },
     "TrustletRunning": {
-        "description": "LsaIso trustlet running"
+        "description": "Isolated LSA trustlet running"
     }
 }

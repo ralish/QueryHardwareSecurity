@@ -1,14 +1,49 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Options;
 
+using QueryHardwareSecurity.Collectors;
+
 namespace QueryHardwareSecurity {
     internal static class Utilities {
         #region Platform
+
+        internal static void AddNativeLibPath() {
+            // Native library functions only apply to 64-bit systems
+            if (!Environment.Is64BitProcess) return;
+
+            var archDirName = string.Empty;
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+            switch (SystemInfo.ProcessorArchitecture) {
+                case SystemInfo.ProcessorArch.ARM64:
+                    archDirName = "arm64";
+                    break;
+                case SystemInfo.ProcessorArch.x64:
+                    archDirName = "x64";
+                    break;
+                default:
+                    WriteError($"Unsupported processor architecture: {SystemInfo.ProcessorArchitecture}");
+                    Environment.Exit(1);
+                    break;
+            }
+
+            var asmDirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var archDirPath = Path.Combine(asmDirPath!, archDirName);
+
+            WriteDebug($"Adding native library directory to DLL search path: {archDirPath}");
+            var status = AddDllDirectory(archDirPath);
+            if (status == IntPtr.Zero) {
+                var err = Marshal.GetLastWin32Error();
+                WriteError($"Failure adding native library directory to DLL search path: {err}");
+                Environment.Exit(1);
+            }
+        }
 
 #if NETCOREAPP
         /// <summary>Checks if the platform is supported and immediately exits with a non-zero exit code if not.</summary>
@@ -113,6 +148,9 @@ namespace QueryHardwareSecurity {
         #endregion
 
         #region P/Invoke
+
+        [DllImport("kernel32", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
+        private static extern IntPtr AddDllDirectory(string NewDirectory);
 
         [DllImport("kernel32", EntryPoint = "FormatMessageW", ExactSpelling = true, SetLastError = true)]
         private static extern uint FormatMessage(uint dwFlags,

@@ -16,8 +16,8 @@ using static QueryHardwareSecurity.Utilities;
 // Mark assembly as not CLS compliant
 [assembly: CLSCompliant(false)]
 
-// For P/Invoke only search in %windir%\System32
-[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+// For P/Invoke only search "safe" directories
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
 
 namespace QueryHardwareSecurity {
     internal static class Program {
@@ -103,6 +103,10 @@ namespace QueryHardwareSecurity {
             if (collectorsSelected.Contains(nameof(SystemInfo))) {
                 collectorsToRun.Insert(0, nameof(SystemInfo));
             }
+
+            // Could be done earlier but must be performed after parsing the
+            // debug parameter to ensure debug output is handled if requested.
+            AddNativeLibPath();
 
             // Initialise each selected collector
             // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator

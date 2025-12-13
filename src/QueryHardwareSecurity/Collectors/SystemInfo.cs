@@ -176,17 +176,19 @@ namespace QueryHardwareSecurity.Collectors {
             }
         }
 
+        internal static ProcessorArch ProcessorArchitecture => (ProcessorArch)ProcessorInfo.CimInstanceProperties["Architecture"].Value;
+
         internal static bool IsProcessorX86OrX64 => IsProcessorX86 || IsProcessorX64;
 
-        internal static bool IsProcessorX86 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.x86;
+        internal static bool IsProcessorX86 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArch.x86;
 
-        internal static bool IsProcessorX64 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.x64;
+        internal static bool IsProcessorX64 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArch.x64;
 
         internal static bool IsProcessorArm => IsProcessorArm32 || IsProcessorArm64;
 
-        internal static bool IsProcessorArm32 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM;
+        internal static bool IsProcessorArm32 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArch.ARM;
 
-        internal static bool IsProcessorArm64 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArchitecture.ARM64;
+        internal static bool IsProcessorArm64 => (ushort)ProcessorInfo.CimInstanceProperties["Architecture"].Value == (ushort)ProcessorArch.ARM64;
 
         internal static bool IsProcessorAmdOrIntel => IsProcessorAmd || IsProcessorIntel;
 
@@ -198,9 +200,10 @@ namespace QueryHardwareSecurity.Collectors {
 
         // @formatter:int_align_fields true
 
-        private enum ProcessorArchitecture : ushort {
+        internal enum ProcessorArch : ushort {
             x86   = 0,
             ARM   = 5,
+            IA64  = 6,
             x64   = 9,
             ARM64 = 12
         }
