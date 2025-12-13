@@ -17,7 +17,7 @@ using static QueryHardwareSecurity.Utilities;
 [assembly: CLSCompliant(false)]
 
 // For P/Invoke only search in %windir%\System32
-[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory | DllImportSearchPath.System32)]
 
 namespace QueryHardwareSecurity {
     internal static class Program {

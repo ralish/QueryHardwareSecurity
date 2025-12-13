@@ -63,6 +63,9 @@ dotnet_diagnostic.CA1305.severity = none
 # CA1812: Avoid uninstantiated internal classes
 dotnet_diagnostic.CA1812.severity = none
 
+# CA5392: Do not use unsafe DllImportSearchPath value
+dotnet_code_quality.CA5393.unsafe_DllImportSearchPath_bits = 5378
+
 # Requires .NET 5+
 dotnet_diagnostic.CA2263.severity = none
 

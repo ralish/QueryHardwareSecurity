@@ -16,6 +16,7 @@ namespace QueryHardwareSecurity.Collectors {
         private readonly bool _kvaShadowRequired;
 
         private SecureSpeculationControlInfo _secSpecCtrlInfo;
+        private LsaIsoRunningServices _lsaIsoRunningServices;
 
         public SkSpecCtrl() : base("Secure Kernel Speculation Control", TableStyle.Full) {
             _kvaShadowRequired = true;
@@ -36,6 +37,9 @@ namespace QueryHardwareSecurity.Collectors {
             var ntStatus = NtQuerySystemInformation(SecureSpeculationControlInfoClass, out _secSpecCtrlInfo, (uint)secureSpecCtrlInfoLength, IntPtr.Zero);
             if (ntStatus != 0) NtQsiFailure(ntStatus);
             WriteDebug($"Result: 0x{_secSpecCtrlInfo._RawBits:X8}");
+
+            var rpcStatus = GetLsaIsoRunningServices(out _lsaIsoRunningServices);
+            if (rpcStatus != RPC_STATUS.RPC_S_OK) { WriteError($"Error requesting LsaIso running services: {rpcStatus:X8} ({rpcStatus})"); }
         }
 
         internal override string ConvertToJson() {
@@ -193,9 +197,35 @@ namespace QueryHardwareSecurity.Collectors {
             var returnSpeculate = _secSpecCtrlInfo.ReturnSpeculate;
             var returnSpeculateSecure = !returnSpeculate || !SystemInfo.IsProcessorX86OrX64;
             WriteOutputEntry("ReturnSpeculate", returnSpeculate, returnSpeculateSecure);
+
+            WriteOutputEntry("RunningServices", _lsaIsoRunningServices);
         }
 
         #region P/Invoke
+
+        [DllImport("QueryHardwareSecurity", EntryPoint = "LsaIsoStatus_GetRunningServices")]
+        private static extern RPC_STATUS GetLsaIsoRunningServices(out LsaIsoRunningServices runningServices);
+
+        [Flags]
+        private enum LsaIsoRunningServices {
+            KeyGuard = 0x1,
+            CredentialGuard = 0x2
+        }
+
+        private enum RPC_STATUS {
+            RPC_S_OK = 0,
+            RPC_S_INVALID_ARG = 87,
+            RPC_S_INVALID_STRING_BINDING = 1700,
+            RPC_S_WRONG_KIND_OF_BINDING = 1701,
+            RPC_S_INVALID_BINDING = 1702,
+            RPC_S_PROTSEQ_NOT_SUPPORTED = 1703,
+            RPC_S_INVALID_RPC_PROTSEQ = 1704,
+            RPC_S_INVALID_STRING_UUID = 1705,
+            RPC_S_INVALID_ENDPOINT_FORMAT = 1706,
+            RPC_S_INVALID_NET_ADDR = 1707,
+            RPC_S_STRING_TOO_LONG = 1743,
+            RPC_S_INVALID_NAF_ID = 1763
+        }
 
         [DllImport("ntdll", ExactSpelling = true)]
         private static extern int NtQuerySystemInformation(int systemInformationClass,
