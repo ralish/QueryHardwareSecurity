@@ -6,5 +6,12 @@
 // Source-code Annotation Language (SAL)
 #include <sal.h>
 
+// CRT headers
+#include <stdlib.h>
+#include <malloc.h>
+
 // Windows headers
 #include <windows.h>
+
+// RPC headers
+#include <rpc.h>

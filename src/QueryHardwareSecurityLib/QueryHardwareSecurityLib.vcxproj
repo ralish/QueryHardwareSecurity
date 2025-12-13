@@ -71,6 +71,8 @@
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
+      <!-- Input -->
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);rpcrt4.lib</AdditionalDependencies>
       <!-- Manifest file -->
       <EnableUAC>false</EnableUAC>
       <!-- System -->
@@ -139,6 +141,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.c" />
+    <ClCompile Include="LsaIsoStatus.c" />
+    <ClCompile Include="RpcSupport.c" />
     <ClCompile Include="pch.c">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

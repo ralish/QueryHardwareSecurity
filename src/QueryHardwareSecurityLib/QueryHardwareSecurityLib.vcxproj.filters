@@ -32,6 +32,12 @@
     <ClCompile Include="DllMain.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LsaIsoStatus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RpcSupport.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="pch.c">
       <Filter>Source Files</Filter>
     </ClCompile>
