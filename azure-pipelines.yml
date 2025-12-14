@@ -6,7 +6,8 @@ pool:
 
 variables:
   solution: QueryHardwareSecurity.slnx
-  buildPlatform: Any CPU
+  platform: Any CPU
+  configuration: Release
 
 steps:
 - task: NuGetToolInstaller@1
@@ -20,49 +21,24 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: $(solution)
-    platform: $(buildPlatform)
-    configuration: Debug
-    maximumCpuCount: true
-
-- task: VSBuild@1
-  inputs:
-    solution: $(solution)
-    platform: $(buildPlatform)
-    configuration: Release
+    platform: $(platform)
+    configuration: $(configuration)
     maximumCpuCount: true
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: bin/Release/net462
+    targetPath: bin/$(configuration)/net462
     artifact: QueryHardwareSecurity-$(build.SourceVersion)-net462
     publishLocation: pipeline
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: bin/Debug/net462
-    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net462-dbg
-    publishLocation: pipeline
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: bin/Release/net472
+    targetPath: bin/$(configuration)/net472
     artifact: QueryHardwareSecurity-$(build.SourceVersion)-net472
     publishLocation: pipeline
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: bin/Debug/net472
-    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net472-dbg
-    publishLocation: pipeline
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: bin/Release/net8.0
-    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net8.0
-    publishLocation: pipeline
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: bin/Debug/net8.0
-    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net8.0-dbg
+    targetPath: bin/$(configuration)/net8.0
+    artifact: QueryHardwareSecurity-$(build.SourceVersion)-net80
     publishLocation: pipeline
