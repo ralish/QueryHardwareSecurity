@@ -12,19 +12,6 @@
                 "/property:GenerateFullPaths=true"
             ],
             "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "pack",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "pack",
-                "${workspaceFolder}/src/QueryHardwareSecurity.csproj",
-                "/consoleLoggerParameters:NoSummary",
-                "/property:GenerateFullPaths=true",
-                "/property:BuildDotNetTool=true"
-            ],
-            "problemMatcher": "$msCompile"
         }
     ]
 }

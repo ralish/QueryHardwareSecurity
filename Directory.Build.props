@@ -10,7 +10,7 @@
     <!-- Store intermediate build outputs in a top-level obj/ directory -->
     <BaseIntermediateOutputPath>$(RepoRoot)obj\</BaseIntermediateOutputPath>
 
-    <!-- Store build outputs in a top-level bin/ directory -->
+    <!-- Store .NET build outputs in a top-level bin/ directory -->
     <OutputPath>$(RepoRoot)bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
