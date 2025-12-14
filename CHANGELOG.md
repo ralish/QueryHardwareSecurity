@@ -1,6 +1,20 @@
 Changelog
 =========
 
+v0.4.0
+------
+
+- `Ium`: Add support for reporting on Credential Guard & Key Guard status
+- `ShadowStacks`: Add processor specific description for `CetCapable` field
+- `SkSpecCtrl`: Factor in KVA Shadow requirement for `KvaShadow` secure state
+- Major improvements to `Ium`, `SpecCtrl`, & `SkSpecCtrl` collectors
+- Field descriptions improved for many collectors
+- Minor improvements across all other collectors
+- Numerous additions & improvements to glossary
+- Error, verbose, and debug output improvements
+- Numerous code quality & tooling improvements
+- Updated `System.CommandLine` to v2.0.1
+
 v0.3.1
 ------
 
