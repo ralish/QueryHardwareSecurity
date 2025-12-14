@@ -35,7 +35,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             var ntStatus = NtQuerySystemInformationEx(IsolatedUserModeInfoClass, ref iumInput, sizeof(ulong), out _iumInfo, (uint)iumInfoLength, IntPtr.Zero);
             if (ntStatus != 0) NtQsiFailure(ntStatus);
-            WriteDebug($"Result: 0x{_iumInfo._RawBits:X8}");
+            WriteDebug($"NtQuerySystemInformation result: 0x{_iumInfo._RawBits:X8}");
 
             var rpcStatus = GetLsaIsoRunningServices(out _lsaIsoRunningServices);
             if (rpcStatus != RPC_STATUS.RPC_S_OK) WriteError($"Error requesting LsaIso running services: {rpcStatus:X4} ({rpcStatus})");

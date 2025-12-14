@@ -28,7 +28,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             var ntStatus = NtQuerySystemInformation(ShadowStackInfoClass, out _shadowStackInfo, (uint)shadowStackInfoLength, IntPtr.Zero);
             if (ntStatus != 0) NtQsiFailure(ntStatus);
-            WriteDebug($"Result: 0x{_shadowStackInfo._RawBits:X8}");
+            WriteDebug($"NtQuerySystemInformation result: 0x{_shadowStackInfo._RawBits:X8}");
         }
 
         internal override string ConvertToJson() {

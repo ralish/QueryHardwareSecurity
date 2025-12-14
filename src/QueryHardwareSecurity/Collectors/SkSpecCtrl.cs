@@ -35,7 +35,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             var ntStatus = NtQuerySystemInformation(SecureSpeculationControlInfoClass, out _secSpecCtrlInfo, (uint)secureSpecCtrlInfoLength, IntPtr.Zero);
             if (ntStatus != 0) NtQsiFailure(ntStatus);
-            WriteDebug($"Result: 0x{_secSpecCtrlInfo._RawBits:X8}");
+            WriteDebug($"NtQuerySystemInformation result: 0x{_secSpecCtrlInfo._RawBits:X8}");
         }
 
         internal override string ConvertToJson() {

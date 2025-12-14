@@ -27,7 +27,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             var ntStatus = NtQuerySystemInformation(PointerAuthInfoClass, out _pointerAuthInfo, (uint)pointerAuthInfoLength, IntPtr.Zero);
             if (ntStatus != 0) NtQsiFailure(ntStatus);
-            WriteDebug($"Result: 0x{_pointerAuthInfo._RawBits:X8}");
+            WriteDebug($"NtQuerySystemInformation result: 0x{_pointerAuthInfo._RawBits:X8}");
         }
 
         internal override string ConvertToJson() {

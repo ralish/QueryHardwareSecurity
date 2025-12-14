@@ -29,7 +29,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             var ntStatus = NtQuerySystemInformation(KernelVaShadowInfoClass, out _kernelVaShadowInfo, (uint)kernelVaShadowInfoLength, IntPtr.Zero);
             if (ntStatus != 0) NtQsiFailure(ntStatus);
-            WriteDebug($"Result: 0x{_kernelVaShadowInfo._RawBits:X8}");
+            WriteDebug($"NtQuerySystemInformation result: 0x{_kernelVaShadowInfo._RawBits:X8}");
         }
 
         internal override string ConvertToJson() {

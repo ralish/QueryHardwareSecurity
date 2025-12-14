@@ -28,10 +28,10 @@ namespace QueryHardwareSecurity.Collectors {
             WriteDebug($"Size of {nameof(SpeculationControlInfo)} structure: {returnLength} bytes");
 
             var specCtrlFlags = new SpeculationControlFlags { _RawBits = (uint)specCtrlInfo };
-            WriteDebug($"Flags: 0x{specCtrlFlags._RawBits:X8}");
+            WriteDebug($"NtQuerySystemInformation result (Flags): 0x{specCtrlFlags._RawBits:X8}");
 
             var specCtrlFlags2 = returnLength == 8 ? new SpeculationControlFlags2 { _RawBits = (uint)(specCtrlInfo >> 32) } : new SpeculationControlFlags2();
-            WriteDebug($"Flags2: 0x{specCtrlFlags2._RawBits:X8}");
+            WriteDebug($"NtQuerySystemInformation result (Flags2): 0x{specCtrlFlags2._RawBits:X8}");
 
             _specCtrlInfo = new SpeculationControlInfo { Flags = specCtrlFlags, Flags2 = specCtrlFlags2 };
         }
