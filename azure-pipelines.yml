@@ -6,8 +6,9 @@ pool:
 
 variables:
   solution: QueryHardwareSecurity.slnx
-  platform: Any CPU
   configuration: Release
+  projectDotnet: src/QueryHardwareSecurity/QueryHardwareSecurity.csproj
+  projectNative: src/QueryHardwareSecurityLib/QueryHardwareSecurityLib.vcxproj
 
 steps:
 - task: NuGetToolInstaller@1
@@ -20,8 +21,22 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    solution: $(solution)
-    platform: $(platform)
+    solution: $(projectNative)
+    platform: x64
+    configuration: $(configuration)
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  inputs:
+    solution: $(projectNative)
+    platform: ARM64
+    configuration: $(configuration)
+    maximumCpuCount: true
+
+- task: VSBuild@1
+  inputs:
+    solution: $(projectDotnet)
+    platform: Any CPU
     configuration: $(configuration)
     maximumCpuCount: true
 
