@@ -104,9 +104,11 @@ namespace QueryHardwareSecurity {
                 collectorsToRun.Insert(0, nameof(SystemInfo));
             }
 
+#if NETFRAMEWORK
             // Could be done earlier but must be performed after parsing the
             // debug parameter to ensure debug output is handled if requested.
             AddNativeLibPath();
+#endif
 
             // Initialise each selected collector
             // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator

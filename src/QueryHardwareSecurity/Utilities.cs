@@ -12,6 +12,7 @@ namespace QueryHardwareSecurity {
     internal static class Utilities {
         #region Platform
 
+#if NETFRAMEWORK
         internal static void AddNativeLibPath() {
             // Native library functions only apply to 64-bit systems
             if (!Environment.Is64BitProcess) return;
@@ -42,6 +43,7 @@ namespace QueryHardwareSecurity {
                 Environment.Exit(1);
             }
         }
+#endif
 
 #if NETCOREAPP
         /// <summary>Checks if the platform is supported and immediately exits with a non-zero exit code if not.</summary>

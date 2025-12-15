@@ -38,9 +38,14 @@
     <EmbeddedResource Include="Collectors\*.json" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
     <None Include="$(RepoRoot)bin\$(Configuration)\ARM64\*.dll" TargetPath="arm64\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <None Include="$(RepoRoot)bin\$(Configuration)\x64\*.dll" TargetPath="x64\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" !$(TargetFramework.StartsWith('net4')) ">
+    <None Include="$(RepoRoot)bin\$(Configuration)\ARM64\*.dll" TargetPath="runtimes\win-arm64\native\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(RepoRoot)bin\$(Configuration)\x64\*.dll" TargetPath="runtimes\win-x64\native\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net4')) ">
