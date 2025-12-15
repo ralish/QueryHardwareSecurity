@@ -36,7 +36,7 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: $(projectDotnet)
-    platform: Any CPU
+    platform: AnyCPU
     configuration: $(configuration)
     maximumCpuCount: true
 
