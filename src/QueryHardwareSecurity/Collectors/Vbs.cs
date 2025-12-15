@@ -90,6 +90,13 @@ namespace QueryHardwareSecurity.Collectors {
                 throw;
             }
 
+            var classVersion = (string)cimInstance.CimInstanceProperties["Version"].Value;
+            if (classVersion != "1.0") {
+                var msg = $"Unexpected Win32_DeviceGuard class version: {classVersion}";
+                WriteError(msg);
+                throw new NotSupportedException(msg);
+            }
+
             var vbsStatusRaw = (uint)cimInstance.CimInstanceProperties["VirtualizationBasedSecurityStatus"].Value;
             VbsStatus = vbsStatusRaw < VbsStatuses.Length
                             ? VbsStatuses[vbsStatusRaw]
