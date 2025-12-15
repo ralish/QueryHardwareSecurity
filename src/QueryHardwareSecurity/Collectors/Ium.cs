@@ -39,7 +39,7 @@ namespace QueryHardwareSecurity.Collectors {
 
             var rpcStatus = GetLsaIsoRunningServices(out _lsaIsoRunningServices);
             if (rpcStatus != RPC_STATUS.RPC_S_OK) WriteError($"Error requesting LsaIso running services: {rpcStatus:X4} ({rpcStatus})");
-            WriteDebug($"GetLsaIsoRunningServices result: 0x{(int)_lsaIsoRunningServices:X4}");
+            WriteDebug($"GetLsaIsoRunningServices result: 0x{(int)_lsaIsoRunningServices:X8}");
         }
 
         internal override string ConvertToJson() {
