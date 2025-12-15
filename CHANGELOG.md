@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.4.1
+------
+
+- Fix loading of native library under ARM64 on .NET 8 runtimes
+- Run as a native ARM64 binary on ARM64 platforms when under .NET Framework
+- `Vbs`: Add support for additional properties in `Win32_DeviceGuard` WMI class
+- Several durability, debug logging, and build fixes
+- Add custom code cleanup profile for ReSharper
+
 v0.4.0
 ------
 

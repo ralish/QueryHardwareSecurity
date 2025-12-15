@@ -25,8 +25,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,4,0,0
- PRODUCTVERSION 0,4,0,0
+ FILEVERSION 0,4,1,0
+ PRODUCTVERSION 0,4,1,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
  FILEFLAGS VS_FF_DEBUG
@@ -43,12 +43,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Samuel Leslie"
             VALUE "FileDescription", "Native support library for QueryHardwareSecurity"
-            VALUE "FileVersion", "0.4.0.0"
+            VALUE "FileVersion", "0.4.1.0"
             VALUE "InternalName", "QueryHardwareSecurityLib"
             VALUE "LegalCopyright", "(c) Samuel Leslie. All rights reserved."
             VALUE "OriginalFilename", "QueryHardwareSecurityLib.dll"
             VALUE "ProductName", "Query Hardware Security"
-            VALUE "ProductVersion", "0.4.0.0"
+            VALUE "ProductVersion", "0.4.1.0"
         END
     END
     BLOCK "VarFileInfo"
