@@ -127,7 +127,13 @@ namespace QueryHardwareSecurity {
                             collectors.Add(collectorName, (Collector)Activator.CreateInstance(collectorType!));
                             break;
                     }
-                } catch (TargetInvocationException) { }
+#pragma warning disable CS0168 // Variable is declared but never used
+                } catch (TargetInvocationException ex) {
+#pragma warning restore CS0168 // Variable is declared but never used
+#if DEBUG
+                    WriteError($"Exception initialising {collectorName} collector: {ex.InnerException!.Message}");
+#endif
+                }
             }
 
             // Determine which collectors to output
