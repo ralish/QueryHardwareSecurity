@@ -1,6 +1,10 @@
 #include "pch.h"
 
-#include "RpcLsaIsoStatus.c"  // NOLINT(bugprone-suspicious-include)
+#if defined(_M_ARM64)
+#include "RpcLsaIsoStatus-ARM64.c"  // NOLINT(bugprone-suspicious-include)
+#elif defined(_M_X64) || defined(_M_IX86)
+#include "RpcLsaIsoStatus-x64.c"  // NOLINT(bugprone-suspicious-include)
+#endif
 
 __declspec(dllexport)
 _Success_(return == RPC_S_OK)

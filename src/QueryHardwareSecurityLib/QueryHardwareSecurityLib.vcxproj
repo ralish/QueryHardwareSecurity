@@ -129,8 +129,8 @@
       <WarningLevel>4</WarningLevel>
       <MinimumTargetSystem>NT100</MinimumTargetSystem>
       <GenerateServerFiles>None</GenerateServerFiles>
-      <ClientStubFile>Rpc%(Filename).c</ClientStubFile>
-      <HeaderFileName>Rpc%(Filename).h</HeaderFileName>
+      <ClientStubFile>Rpc%(Filename)-$(Platform).c</ClientStubFile>
+      <HeaderFileName>Rpc%(Filename)-$(Platform).h</HeaderFileName>
       <AdditionalOptions Condition=" '$(Platform)' == 'ARM64' or '$(Platform)' == 'x64' ">/protocol ndr64</AdditionalOptions>
     </Midl>
   </ItemGroup>
