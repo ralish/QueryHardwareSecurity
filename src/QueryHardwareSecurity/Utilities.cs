@@ -8,8 +8,6 @@ using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Options;
 
-using QueryHardwareSecurity.Collectors;
-
 namespace QueryHardwareSecurity {
     internal static class Utilities {
         #region Platform
@@ -20,15 +18,15 @@ namespace QueryHardwareSecurity {
 
             var archDirName = string.Empty;
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (SystemInfo.ProcessorArchitecture) {
-                case SystemInfo.ProcessorArch.ARM64:
+            switch (RuntimeInformation.ProcessArchitecture) {
+                case Architecture.Arm64:
                     archDirName = "arm64";
                     break;
-                case SystemInfo.ProcessorArch.x64:
+                case Architecture.X64:
                     archDirName = "x64";
                     break;
                 default:
-                    WriteError($"Unsupported processor architecture: {SystemInfo.ProcessorArchitecture}");
+                    WriteError($"Unsupported processor architecture: {RuntimeInformation.ProcessArchitecture}");
                     Environment.Exit(1);
                     break;
             }
