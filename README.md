@@ -212,12 +212,32 @@ Glossary
     Process-Context Identifiers
     - **INVPCID**  
       Invalidate Process-Context Identifier
-- **TSX** (*Intel*)  
-  Transactional Synchronization Extensions
-  - **HLE**  
-    Hardware Lock Elision
-  - **RTM**  
-    Restricted Transactional Memory
+- Transactional memory
+  - **TSX** (*Intel*)  
+    Transactional Synchronization Extensions
+    - **HLE**  
+      Hardware Lock Elision
+    - **RTM**  
+      Restricted Transactional Memory
+- Trusted execution
+  - **SEV** (*AMD*)  
+    Secure Encrypted Virtualization
+    - **ES**  
+      Encrypted State (formerly *SEV-ES*)
+    - **SNP**  
+      Secure Nested Paging (formerly *SEV-SNP*)
+    - **TIO**  
+      Trusted I/O (formerly *SEV-TIO*)
+    - **TSME**  
+      Transparent Secure Memory Encryption
+  - **TDX** (*Intel*)  
+    Trust Domain Extensions
+    - **PAMT**  
+      Physical-Address-Metadata Table
+    - **SEAM**  
+      Secure Arbitration Mode
+    - **TME-MK**  
+      Total Memory Encryption - Multi-Key
 
 ### Processor vulnerabilities
 

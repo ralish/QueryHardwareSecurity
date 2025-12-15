@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,13 @@ namespace QueryHardwareSecurity.Collectors {
      * Platforms:   ARM64, x86-64
      */
     internal sealed class Vbs : Collector {
+        private static readonly List<string> NoneList = new List<string> { "None" };
+
         private static readonly string[] CiStatuses = { "Disabled", "Audit mode", "Enforced" };
+
+        private static readonly string[] SecurityFeatures = { "None", "Return Address Signing (Kernel-mode)" };
+
+        private static readonly string[] VbsStatuses = { "Disabled", "Enabled (inactive)", "Enabled (running)" };
 
         private static readonly string[] VbsProperties = {
             "None",
@@ -40,9 +47,7 @@ namespace QueryHardwareSecurity.Collectors {
             "Hypervisor-enforced Paging Translation (HVPT)"
         };
 
-        private static readonly string[] VbsStatuses = { "Disabled", "Enabled (inactive)", "Enabled (running)" };
-
-        private static readonly List<string> NoneList = new List<string> { "None" };
+        private static readonly string[] VmIsolationAllProperties = { "None", "AMD SEV-SNP", "Virtualization-based Security", "Intel TDX" };
 
         public Vbs() : base("Virtualisation-based Security", TableStyle.Basic) {
             RetrieveInfo();
@@ -70,10 +75,22 @@ namespace QueryHardwareSecurity.Collectors {
         public List<string> VbsServicesNotConfigured { get; private set; } = new List<string>();
 
         [JsonProperty]
-        public string KmciStatus { get; private set; } = "Unavailable";
+        public bool? VmIsolationStatus { get; private set; }
 
         [JsonProperty]
-        public string UmciStatus { get; private set; } = "Unavailable";
+        public List<string>? VmIsolationProperties { get; private set; }
+
+        [JsonProperty]
+        public List<string>? SecurityFeaturesEnabled { get; private set; }
+
+        [JsonProperty]
+        public string? SmmIsolationLevel { get; private set; }
+
+        [JsonProperty]
+        public string? KmciStatus { get; private set; }
+
+        [JsonProperty]
+        public string? UmciStatus { get; private set; }
 
         private void RetrieveInfo() {
             WriteVerbose($"Retrieving {Name} info ...");
@@ -142,7 +159,54 @@ namespace QueryHardwareSecurity.Collectors {
                 }
             }
 
-            // Not present on earlier Windows 10 releases
+            // Introduced in later Windows releases
+            var vmIsolationStatusProperty = cimInstance.CimInstanceProperties["VirtualMachineIsolation"];
+            if (vmIsolationStatusProperty != null) {
+                VmIsolationStatus = (bool)vmIsolationStatusProperty.Value;
+                VmIsolationProperties = new List<string>();
+
+                var vmIsolationPropertiesRaw = (uint[])cimInstance.CimInstanceProperties["VirtualMachineIsolationProperties"].Value;
+                foreach (var vmIsolationProperty in vmIsolationPropertiesRaw.Except(new uint[] { 0 })) {
+                    VmIsolationProperties.Add(vmIsolationProperty < VmIsolationAllProperties.Length
+                                                  ? VmIsolationAllProperties[vmIsolationProperty]
+                                                  : $"Unknown VM isolation property: {vmIsolationProperty}");
+                }
+            }
+
+            // Introduced in later Windows releases
+            var secFeatEnabledProperty = cimInstance.CimInstanceProperties["SecurityFeaturesEnabled"];
+            if (secFeatEnabledProperty != null) {
+                SecurityFeaturesEnabled = new List<string>();
+
+                var secFeatEnabledRaw = (uint[])secFeatEnabledProperty.Value;
+                foreach (var secFeatEnabled in secFeatEnabledRaw.Except(new uint[] { 0 })) {
+                    SecurityFeaturesEnabled.Add(secFeatEnabled < SecurityFeatures.Length
+                                                    ? SecurityFeatures[secFeatEnabled]
+                                                    : $"Unknown security feature: {secFeatEnabled}");
+                }
+            }
+
+            // Introduced in later Windows releases
+            var smmIsolationLevelProperty = cimInstance.CimInstanceProperties["SmmIsolationLevel"];
+            if (smmIsolationLevelProperty != null) {
+                var level = (byte)smmIsolationLevelProperty.Value;
+
+                switch (level) {
+                    case 0:
+                        SmmIsolationLevel = "None";
+                        break;
+                    case 10:
+                    case 20:
+                    case 30:
+                        SmmIsolationLevel = $"Firmware Protection Version {level / 10}";
+                        break;
+                    default:
+                        SmmIsolationLevel = $"Unknown Firmware Protection Version: {level}";
+                        break;
+                }
+            }
+
+            // Introduced in later Windows releases
             var kmciStatusProperty = cimInstance.CimInstanceProperties["CodeIntegrityPolicyEnforcementStatus"];
             if (kmciStatusProperty != null) {
                 var kmciStatusRaw = (uint)kmciStatusProperty.Value;
@@ -151,7 +215,7 @@ namespace QueryHardwareSecurity.Collectors {
                                  : $"Unknown security status: {kmciStatusRaw}";
             }
 
-            // Not present on earlier Windows 10 releases
+            // Introduced in later Windows releases
             var umciStatusProperty = cimInstance.CimInstanceProperties["UsermodeCodeIntegrityPolicyEnforcementStatus"];
             // ReSharper disable once InvertIf
             if (umciStatusProperty != null) {
@@ -165,6 +229,18 @@ namespace QueryHardwareSecurity.Collectors {
         internal override string ConvertToJson() {
             return JsonConvert.SerializeObject(this);
         }
+
+        public bool ShouldSerializeVmIsolationStatus() => VmIsolationStatus != null;
+
+        public bool ShouldSerializeVmIsolationProperties() => VmIsolationProperties != null;
+
+        public bool ShouldSerializeSecurityFeaturesEnabled() => SecurityFeaturesEnabled != null;
+
+        public bool ShouldSerializeSmmIsolationLevel() => SmmIsolationLevel != null;
+
+        public bool ShouldSerializeKmciStatus() => KmciStatus != null;
+
+        public bool ShouldSerializeUmciStatus() => UmciStatus != null;
 
         internal override void WriteOutput(OutputFormat format, bool color) {
             SetOutputSettings(format, color);
@@ -183,8 +259,21 @@ namespace QueryHardwareSecurity.Collectors {
                              VbsServicesRunning.Count != 0 ? VbsServicesRunning : NoneList);
             WriteOutputEntry("Security services not configured",
                              VbsServicesNotConfigured.Count != 0 ? VbsServicesNotConfigured : NoneList);
-            WriteOutputEntry("KMCI status", KmciStatus);
-            WriteOutputEntry("UMCI status", UmciStatus);
+
+            if (VmIsolationStatus != null) {
+                WriteOutputEntry("VM isolation status", VmIsolationStatus);
+                WriteOutputEntry("VM isolation properties",
+                                 VmIsolationProperties!.Count != 0 ? VmIsolationProperties : NoneList);
+            }
+
+            if (SecurityFeaturesEnabled != null) {
+                WriteOutputEntry("Security features enabled",
+                                 SecurityFeaturesEnabled.Count != 0 ? SecurityFeaturesEnabled : NoneList);
+            }
+
+            if (SmmIsolationLevel != null) WriteOutputEntry("SMM isolation level", SmmIsolationLevel);
+            if (KmciStatus != null) WriteOutputEntry("KMCI status", KmciStatus);
+            if (UmciStatus != null) WriteOutputEntry("UMCI status", UmciStatus);
         }
     }
 }
